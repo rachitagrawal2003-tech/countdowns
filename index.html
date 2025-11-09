@@ -5,6 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Countdowns ⏳</title>
   <style>
+    .header-image img {
+  width: 100%;
+  max-height: 250px;
+  object-fit: cover;
+  border-radius: 15px;
+  margin-top: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 1.4s ease;
+}
+
+/* Smooth fade-in */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(1.02); }
+  to { opacity: 1; transform: scale(1); }
+}
     body {
       font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       background: #fffafc;
@@ -120,7 +136,10 @@
   </style>
 </head>
 <body>
-
+<!-- Header Image -->
+<div class="header-image">
+  <img src="i-love-you.jpg" alt="I Love You" />
+</div>
 <h1>Countdowns ⏳</h1>
 
 <div class="countdowns">
@@ -255,3 +274,4 @@
 
 </body>
 </html>
+
