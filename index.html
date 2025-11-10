@@ -216,34 +216,63 @@
   <!-- Days Since Section -->
 <h2 style="margin-top: 40px;">✨ Our Journey So Far ✨</h2>
 
-<div class="card" id="first-talk">
+<div class="card" id="first-talk" onclick="toggleDetail('talk', '2025-04-22')">
   <h2>💬 Days Since We First Talked</h2>
   <p id="talk-days">Loading...</p>
 </div>
 
-<div class="card" id="first-date">
+<div class="card" id="first-date" onclick="toggleDetail('date', '2025-08-03')">
   <h2>🍰 Days Since Our First Date</h2>
   <p id="date-days">Loading...</p>
 </div>
 
-<div class="card" id="first-iloveyou">
+<div class="card" id="first-iloveyou" onclick="toggleDetail('love', '2025-08-28')">
   <h2>❤️ Days Since We Said "I Love You"</h2>
   <p id="love-days">Loading...</p>
 </div>
 
 <script>
-  function calculateDaysSince(dateString, elementId) {
-    const startDate = new Date(dateString);
-    const today = new Date();
-    const diffTime = today - startDate;
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    document.getElementById(elementId).textContent = `${diffDays} days 💫`;
+  const intervals = {};
+
+  function updateDetailedTime(startDate, elementId, mode = "days") {
+    const start = new Date(startDate);
+    const now = new Date();
+    const diff = now - start;
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    const element = document.getElementById(elementId);
+
+    if (mode === "days") {
+      element.textContent = `${days} days 💫`;
+    } else {
+      element.textContent = `${days} days, ${hours} hrs, ${minutes} mins, ${seconds} secs ✨`;
+    }
   }
 
-  // Dates (replace if needed)
-  calculateDaysSince("2025-04-22", "talk-days");
-  calculateDaysSince("2025-08-03", "date-days");
-  calculateDaysSince("2025-08-28", "love-days");
+  function toggleDetail(type, startDate) {
+    const elementId = `${type}-days`;
+    const card = document.getElementById(elementId);
+
+    if (intervals[type]) {
+      clearInterval(intervals[type]);
+      intervals[type] = null;
+      updateDetailedTime(startDate, elementId, "days");
+    } else {
+      updateDetailedTime(startDate, elementId, "full");
+      intervals[type] = setInterval(() => {
+        updateDetailedTime(startDate, elementId, "full");
+      }, 1000);
+    }
+  }
+
+  // Initial load (days only)
+  updateDetailedTime("2025-04-22", "talk-days");
+  updateDetailedTime("2025-08-03", "date-days");
+  updateDetailedTime("2025-08-28", "love-days");
 </script>
   
 </div>
@@ -324,6 +353,7 @@
 
 </body>
 </html>
+
 
 
 
