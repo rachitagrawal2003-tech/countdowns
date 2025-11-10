@@ -233,19 +233,6 @@
     </div>
   </div>
 
-  <!-- ---------- Gallery controls ---------- -->
-  <div class="gallery-controls">
-    <label class="file-input-label">
-      📤 Upload images
-      <input id="fileInput" type="file" multiple accept="image/*" style="display:none">
-    </label>
-
-    <input id="urlInput" class="url-input" type="url" placeholder="Paste image URL and press Add" />
-    <button id="addUrlBtn" class="add-url-btn">Add URL</button>
-
-    <div class="small-muted">Tip: click any gallery card to swap to a random image</div>
-  </div>
-
   <!-- ---------- Gallery grid ---------- -->
   <div id="gallery" class="gallery" aria-live="polite">
     <!-- Gallery cards will be appended here -->
@@ -449,57 +436,6 @@
     renderGallery();
   }
 
-  /* ---------- File uploads (multiple) ---------- */
-  const fileInput = document.getElementById('fileInput');
-  // open picker when label clicked (label already wraps the input)
-  fileInput.addEventListener('change', async (e) => {
-    const files = Array.from(e.target.files || []);
-    if (!files.length) return;
-    const reads = files.map(file => {
-      return new Promise((res) => {
-        const r = new FileReader();
-        r.onload = () => res(r.result);
-        r.readAsDataURL(file);
-      });
-    });
-    const results = await Promise.all(reads);
-    addImagesToLibrary(results);
-    // clear selection so same files can be re-uploaded if needed
-    fileInput.value = '';
-  });
-
-  /* ---------- Add image by URL ---------- */
-  const urlInput = document.getElementById('urlInput');
-  const addUrlBtn = document.getElementById('addUrlBtn');
-  addUrlBtn.addEventListener('click', () => {
-    const url = urlInput.value.trim();
-    if (!url) return;
-    // Basic validation: has image extension or data: or begins with http
-    if (!/^data:|^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|avif)$/i.test(url) && !/^https?:\/\//i.test(url)) {
-      // still allow generic URLs but warn in console
-      console.warn('Adding URL that may not be an image:', url);
-    }
-    addImagesToLibrary([url]);
-    urlInput.value = '';
-  });
-
-  // Basic UX: allow dropping images onto the gallery container
-  galleryEl.addEventListener('dragover', (e) => { e.preventDefault(); galleryEl.style.opacity = 0.9; });
-  galleryEl.addEventListener('dragleave', () => { galleryEl.style.opacity = 1; });
-  galleryEl.addEventListener('drop', (e) => {
-    e.preventDefault();
-    galleryEl.style.opacity = 1;
-    const dt = e.dataTransfer;
-    const files = Array.from(dt.files || []).filter(f => f.type.startsWith('image/'));
-    if (!files.length) return;
-    const reads = files.map(f => new Promise(res => {
-      const r = new FileReader();
-      r.onload = () => res(r.result);
-      r.readAsDataURL(f);
-    }));
-    Promise.all(reads).then(results => addImagesToLibrary(results));
-  });
-
   /* ---------- Optional: preload some images if you want ---------- */
   // Example: if you have images available by path on server, push them here.
   // addImagesToLibrary(['meeting.jpg','your-anniversary-image.jpg']); // uncomment & edit if desired
@@ -617,4 +553,5 @@ seedLibraryFromImagesFolder().then(() => {
   </script>
 </body>
 </html>
+
 
