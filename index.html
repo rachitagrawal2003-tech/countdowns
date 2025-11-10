@@ -6,21 +6,21 @@
   <title>Countdowns ⏳</title>
   <style>
     .header-image img {
-  width: 100%;
-  max-height: 250px;
-  object-fit: cover;
-  border-radius: 15px;
-  margin-top: 12px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  animation: fadeIn 1.4s ease;
-}
+      width: 100%;
+      max-height: 250px;
+      object-fit: cover;
+      border-radius: 15px;
+      margin-top: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      animation: fadeIn 1.4s ease;
+    }
 
-/* Smooth fade-in */
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(1.02); }
-  to { opacity: 1; transform: scale(1); }
-}
+    /* Smooth fade-in */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(1.02); }
+      to { opacity: 1; transform: scale(1); }
+    }
     body {
       font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       background: #fffafc;
@@ -134,229 +134,230 @@
     }
     .modal-close:hover { background: #ffd3e3; }
     #first-talk p, #first-date p, #first-iloveyou p {
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: #d47fa6;
-}
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #d47fa6;
+    }
   </style>
 </head>
 <body>
-<!-- Header Image -->
-<div class="header-image">
-  <img src="i-love-you.jpg" alt="I Love You" />
-</div>
-<h1>Countdowns ⏳</h1>
+  <!-- Header Image -->
+  <div class="header-image">
+    <img src="i-love-you.jpg" alt="I Love You" />
+  </div>
+  <h1>Countdowns ⏳</h1>
 
-<div class="countdowns">
+  <div class="countdowns">
+    <!-- Our Anniversary -->
+    <div class="card"
+      data-title="Our Anniversary 💞"
+      data-date="09-06"
+      data-note="Celebrating us, every 6th September 💌"
+      data-img="your-anniversary-image.jpg">
+      <div class="emoji">💞</div>
+      <div class="event">Our Anniversary</div>
+      <div class="days"></div>
+      <div class="note">Celebrating us, every 6th September 💌</div>
+      <img src="your-anniversary-image.jpg" alt="Our Anniversary"/>
+    </div>
 
-  <!-- Our Anniversary -->
-  <div class="card"
-    data-title="Our Anniversary 💞"
-    data-date="09-06"
-    data-note="Celebrating us, every 6th September 💌"
-    data-img="your-anniversary-image.jpg">
-    <div class="emoji">💞</div>
-    <div class="event">Our Anniversary</div>
-    <div class="days"></div>
-    <div class="note">Celebrating us, every 6th September 💌</div>
-    <img src="your-anniversary-image.jpg" alt="Our Anniversary"/>
+    <!-- Kitten’s Birthday -->
+    <div class="card"
+      data-title="Kitten’s Birthday 🎂"
+      data-date="01-02"
+      data-note="tehe"
+      data-img="kitten-birthday.jpg">
+      <div class="emoji">🎂</div>
+      <div class="event">Kitten’s Birthday</div>
+      <div class="days"></div>
+      <div class="note">tehe</div>
+      <img src="kitten-birthday.jpg" alt="Kitten Birthday"/>
+    </div>
+
+    <!-- Daddy’s Birthday -->
+    <div class="card"
+      data-title="Daddy’s Birthday 🎉"
+      data-date="04-14"
+      data-note="your special day, muah!"
+      data-img="daddy-birthday.jpg">
+      <div class="emoji">🎉</div>
+      <div class="event">Daddy’s Birthday</div>
+      <div class="days"></div>
+      <div class="note">your special day, muah!</div>
+      <img src="daddy-birthday.jpg" alt="Daddy Birthday"/>
+    </div>
+
+    <!-- End of Exams -->
+    <div class="card"
+      data-title="End of Exams 📚"
+      data-absolute="2025-12-30T23:59:59"
+      data-note="The end of stress🌷"
+      data-img="exam-end.jpg">
+      <div class="emoji">📚</div>
+      <div class="event">End of Exams</div>
+      <div class="days"></div>
+      <div class="note">The end of stress🌷</div>
+    </div>
+
+    <!-- We meet!! -->
+    <div class="card"
+      data-title="We meet!! 💞"
+      data-absolute="2025-11-27T00:00:00"
+      data-note="Finally together again 💖"
+      data-img="meeting.jpg">
+      <div class="emoji">💞</div>
+      <div class="event">We meet!!</div>
+      <div class="days"></div>
+      <div class="note">Finally together again 💖</div>
+      <img src="meeting.jpg" alt="Our Meeting"/>
+    </div>
+
+    <!-- Days Since Section -->
+    <h2 style="margin-top: 40px;">✨ Our Journey So Far ✨</h2>
+
+    <div class="card" id="first-talk" onclick="toggleDetail('talk', '2025-04-22')">
+      <h2>💬 Days Since We First Talked</h2>
+      <p id="talk-days">Loading...</p>
+    </div>
+
+    <div class="card" id="first-date" onclick="toggleDetail('date', '2025-08-03')">
+      <h2>🍰 Days Since Our First Date</h2>
+      <p id="date-days">Loading...</p>
+    </div>
+
+    <div class="card" id="first-iloveyou" onclick="toggleDetail('love', '2025-08-28')">
+      <h2>❤️ Days Since We Said "I Love You"</h2>
+      <p id="love-days">Loading...</p>
+    </div>
   </div>
 
-  <!-- Kitten’s Birthday -->
-  <div class="card"
-    data-title="Kitten’s Birthday 🎂"
-    data-date="01-02"
-    data-note="tehe"
-    data-img="kitten-birthday.jpg">
-    <div class="emoji">🎂</div>
-    <div class="event">Kitten’s Birthday</div>
-    <div class="days"></div>
-    <div class="note">tehe</div>
-    <img src="kitten-birthday.jpg" alt="Kitten Birthday"/>
+  <footer>Made with 💖 by Kitten</footer>
+
+  <!-- Modal -->
+  <div class="modal" id="modal">
+    <div class="modal-card">
+      <h3 class="modal-title" id="modalTitle"></h3>
+      <p class="modal-sub" id="modalNote"></p>
+      <div class="bigtime" id="liveTime"></div>
+      <div class="units">Days : Hours : Minutes : Seconds</div>
+      <button class="modal-close" id="closeBtn">Close</button>
+    </div>
   </div>
 
-  <!-- Daddy’s Birthday -->
-  <div class="card"
-    data-title="Daddy’s Birthday 🎉"
-    data-date="04-14"
-    data-note="your special day, muah!"
-    data-img="daddy-birthday.jpg">
-    <div class="emoji">🎉</div>
-    <div class="event">Daddy’s Birthday</div>
-    <div class="days"></div>
-    <div class="note">your special day, muah!</div>
-    <img src="daddy-birthday.jpg" alt="Daddy Birthday"/>
-  </div>
+  <script>
+    /* ---------- Shared refs & state (FIX) ---------- */
+    const modal = document.getElementById("modal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalNote = document.getElementById("modalNote");
+    const liveTime = document.getElementById("liveTime");
+    const closeBtn = document.getElementById("closeBtn");
+    let timer = null;
 
-  <!-- End of Exams -->
-  <div class="card"
-    data-title="End of Exams 📚"
-    data-absolute="2025-12-30T23:59:59"
-    data-note="The end of stress🌷"
-    data-img="exam-end.jpg">
-    <div class="emoji">📚</div>
-    <div class="event">End of Exams</div>
-    <div class="days"></div>
-    <div class="note">The end of stress🌷</div>
-  </div>
+    /* ---------- “Days Since” helpers (unchanged behavior) ---------- */
+    const intervals = {};
 
-  <!-- We meet!! -->
-  <div class="card"
-    data-title="We meet!! 💞"
-    data-absolute="2025-11-27T00:00:00"
-    data-note="Finally together again 💖"
-    data-img="meeting.jpg">
-    <div class="emoji">💞</div>
-    <div class="event">We meet!!</div>
-    <div class="days"></div>
-    <div class="note">Finally together again 💖</div>
-    <img src="meeting.jpg" alt="Our Meeting"/>
-  </div>
-  
-  <!-- Days Since Section -->
-<h2 style="margin-top: 40px;">✨ Our Journey So Far ✨</h2>
+    function updateDetailedTime(startDate, elementId, mode = "days") {
+      const start = new Date(startDate);
+      const now = new Date();
+      const diff = now - start;
 
-<div class="card" id="first-talk" onclick="toggleDetail('talk', '2025-04-22')">
-  <h2>💬 Days Since We First Talked</h2>
-  <p id="talk-days">Loading...</p>
-</div>
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
 
-<div class="card" id="first-date" onclick="toggleDetail('date', '2025-08-03')">
-  <h2>🍰 Days Since Our First Date</h2>
-  <p id="date-days">Loading...</p>
-</div>
+      const element = document.getElementById(elementId);
 
-<div class="card" id="first-iloveyou" onclick="toggleDetail('love', '2025-08-28')">
-  <h2>❤️ Days Since We Said "I Love You"</h2>
-  <p id="love-days">Loading...</p>
-</div>
-
-<script>
-  const intervals = {};
-
-  function updateDetailedTime(startDate, elementId, mode = "days") {
-    const start = new Date(startDate);
-    const now = new Date();
-    const diff = now - start;
-
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const minutes = Math.floor((diff / (1000 * 60)) % 60);
-    const seconds = Math.floor((diff / 1000) % 60);
-
-    const element = document.getElementById(elementId);
-
-    if (mode === "days") {
-      element.textContent = `${days} days 💫`;
-    } else {
-      element.textContent = `${days} days, ${hours} hrs, ${minutes} mins, ${seconds} secs ✨`;
+      if (mode === "days") {
+        element.textContent = `${days} days 💫`;
+      } else {
+        element.textContent = `${days} days, ${hours} hrs, ${minutes} mins, ${seconds} secs ✨`;
+      }
     }
-  }
 
-  function toggleDetail(type, startDate) {
-    const elementId = `${type}-days`;
-    const card = document.getElementById(elementId);
+    function toggleDetail(type, startDate) {
+      const elementId = `${type}-days`;
 
-    if (intervals[type]) {
-      clearInterval(intervals[type]);
-      intervals[type] = null;
-      updateDetailedTime(startDate, elementId, "days");
-    } else {
-      updateDetailedTime(startDate, elementId, "full");
-      intervals[type] = setInterval(() => {
+      if (intervals[type]) {
+        clearInterval(intervals[type]);
+        intervals[type] = null;
+        updateDetailedTime(startDate, elementId, "days");
+      } else {
         updateDetailedTime(startDate, elementId, "full");
-      }, 1000);
+        intervals[type] = setInterval(() => {
+          updateDetailedTime(startDate, elementId, "full");
+        }, 1000);
+      }
     }
-  }
 
-  // Initial load (days only)
-  updateDetailedTime("2025-04-22", "talk-days");
-  updateDetailedTime("2025-08-03", "date-days");
-  updateDetailedTime("2025-08-28", "love-days");
-</script>
-  
-</div>
+    // Initial load (days only)
+    updateDetailedTime("2025-04-22", "talk-days");
+    updateDetailedTime("2025-08-03", "date-days");
+    updateDetailedTime("2025-08-28", "love-days");
 
-<footer>Made with 💖 by Kitten</footer>
+    /* ---------- Countdown cards (tap to see exact time) ---------- */
+    function parseDate(card) {
+      // exact timestamp if provided
+      const abs = card.dataset.absolute;
+      if (abs) {
+        const d = new Date(abs);
+        return isNaN(d) ? null : d;
+      }
+      // else, month-day combo (e.g., "09-06")
+      const dd = card.dataset.date;
+      if (!dd) return null;
 
-<div class="modal" id="modal">
-  <div class="modal-card">
-    <h3 class="modal-title" id="modalTitle"></h3>
-    <p class="modal-sub" id="modalNote"></p>
-    <div class="bigtime" id="liveTime"></div>
-    <div class="units">Days : Hours : Minutes : Seconds</div>
-    <button class="modal-close" id="closeBtn">Close</button>
-  </div>
-</div>
+      const [month, day] = dd.split('-').map(Number);
+      const now = new Date();
+      let target = new Date(now.getFullYear(), month - 1, day, 0, 0, 0, 0);
+      if (target < now) target.setFullYear(now.getFullYear() + 1);
+      return target;
+    }
 
-<script>
-function parseDate(card) {
-  // if an exact timestamp is provided, use it directly
-  const abs = card.dataset.absolute;
-  if (abs) {
-    const d = new Date(abs);
-    return isNaN(d) ? null : d;
-  }
+    function openModal(card) {
+      const target = parseDate(card);
+      if (!target) return; // skip if bad/missing date
 
-  // otherwise, use the month-day combo (e.g., "09-06")
-  const dd = card.dataset.date;
-  if (!dd) return null;
+      modalTitle.textContent = card.dataset.title || "";
+      modalNote.textContent = card.dataset.note || "";
 
-  const [month, day] = dd.split('-').map(Number);
-  const now = new Date();
-  let target = new Date(now.getFullYear(), month - 1, day, 0, 0, 0, 0);
-  if (target < now) target.setFullYear(now.getFullYear() + 1);
-  return target;
-}
+      // clear any existing ticker
+      if (timer) clearInterval(timer);
 
-function openModal(card) {
-  // get the target date/time for this card
-  const target = parseDate(card);
-  if (!target) return; // skip cards without a date
+      const tick = () => {
+        const diff = Math.max(0, target - new Date());
+        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const m = Math.floor((diff / (1000 * 60)) % 60);
+        const s = Math.floor((diff / 1000) % 60);
 
-  // populate modal content
-  modalTitle.textContent = card.dataset.title || '';
-  modalNote.textContent = card.dataset.note || '';
-  clearInterval(timer);
+        liveTime.textContent =
+          `${String(d).padStart(2, '0')} : ${String(h).padStart(2, '0')} : ${String(m).padStart(2, '0')} : ${String(s).padStart(2, '0')}`;
+      };
 
-  // live updating countdown every second
-  const tick = () => {
-    const diff = Math.max(0, target - new Date());
-    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const m = Math.floor((diff / (1000 * 60)) % 60);
-    const s = Math.floor((diff / 1000) % 60);
+      tick(); // run once immediately
+      timer = setInterval(tick, 1000);
+      modal.classList.add("open");
+    }
 
-    liveTime.textContent = 
-      `${String(d).padStart(2, '0')} : ${String(h).padStart(2, '0')} : ${String(m).padStart(2, '0')} : ${String(s).padStart(2, '0')}`;
-  };
+    function closeModal() {
+      modal.classList.remove("open");
+      if (timer) clearInterval(timer);
+      timer = null;
+    }
 
-  tick(); // run once immediately
-  timer = setInterval(tick, 1000);
-  modal.classList.add("open");
-}
+    // Only bind countdown cards (those with date/absolute)
+    document.querySelectorAll('.card[data-date], .card[data-absolute]').forEach(card => {
+      card.addEventListener("click", () => openModal(card));
+    });
 
-  function closeModal() {
-    modal.classList.remove("open");
-    clearInterval(timer);
-  }
+    closeBtn.addEventListener("click", closeModal);
+    modal.addEventListener("click", e => { if (e.target === modal) closeModal(); });
 
-  document.querySelectorAll('.card[data-date], .card[data-absolute]').forEach(card => {
-  card.addEventListener("click", () => openModal(card));
-});
-
-  closeBtn.addEventListener("click", closeModal);
-  modal.addEventListener("click", e => { if (e.target === modal) closeModal(); });
-</script>
-
+    // ESC to close
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && modal.classList.contains("open")) closeModal();
+    });
+  </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
