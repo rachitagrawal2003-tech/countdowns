@@ -15,12 +15,7 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       animation: fadeIn 1.4s ease;
     }
-
-    /* Smooth fade-in */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(1.02); }
-      to { opacity: 1; transform: scale(1); }
-    }
+    @keyframes fadeIn { from { opacity: 0; transform: scale(1.02); } to { opacity: 1; transform: scale(1); } }
     body {
       font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       background: #fffafc;
@@ -28,18 +23,8 @@
       margin: 0;
       text-align: center;
     }
-    h1 {
-      font-size: 2rem;
-      color: #e08eb4;
-      margin: 28px 0 6px;
-    }
-    .countdowns {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      padding: 20px;
-    }
+    h1 { font-size: 2rem; color: #e08eb4; margin: 28px 0 6px; }
+    .countdowns { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; padding: 20px; }
     .card {
       background: #ffeef4;
       border-radius: 18px;
@@ -52,103 +37,36 @@
     }
     .card:hover { transform: translateY(-4px); }
     .emoji { font-size: 2rem; }
-    .event {
-      font-size: 1.2rem;
-      color: #ff7da5;
-      font-weight: 600;
-      margin-top: 8px;
-    }
-    .days {
-      font-size: 2.2rem;
-      color: #5a4f4f;
-      font-weight: 800;
-      margin: 6px 0;
-    }
-    .note {
-      font-size: .92rem;
-      color: #6d6262;
-      margin-top: 4px;
-    }
-    img {
-      width: 80%;
-      border-radius: 12px;
-      margin-top: 10px;
-    }
-    footer {
-      margin: 26px 0 36px;
-      font-size: .82rem;
-      color: #9b8b8b;
-    }
-    /* Modal */
+    .event { font-size: 1.2rem; color: #ff7da5; font-weight: 600; margin-top: 8px; }
+    .days { font-size: 2.2rem; color: #5a4f4f; font-weight: 800; margin: 6px 0; }
+    .note { font-size: .92rem; color: #6d6262; margin-top: 4px; }
+    img { width: 80%; border-radius: 12px; margin-top: 10px; }
+    footer { margin: 26px 0 36px; font-size: .82rem; color: #9b8b8b; }
     .modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.38);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      z-index: 999;
+      position: fixed; inset: 0; background: rgba(0,0,0,.38); display: none;
+      align-items: center; justify-content: center; padding: 20px; z-index: 999;
     }
     .modal.open { display: flex; }
     .modal-card {
-      background: #fff;
-      max-width: 520px;
-      width: 100%;
-      border-radius: 20px;
-      box-shadow: 0 12px 28px rgba(0,0,0,.18);
-      padding: 26px 22px;
+      background: #fff; max-width: 520px; width: 100%; border-radius: 20px;
+      box-shadow: 0 12px 28px rgba(0,0,0,.18); padding: 26px 22px;
     }
-    .modal-title {
-      font-size: 1.2rem;
-      color: #ff74a1;
-      margin: 0 0 6px;
-    }
-    .modal-sub {
-      font-size: .95rem;
-      color: #6d6262;
-      margin: 0 0 16px;
-    }
-    .bigtime {
-      font-variant-numeric: tabular-nums;
-      letter-spacing: .5px;
-      font-size: 2.4rem;
-      font-weight: 800;
-      color: #3f3a3a;
-      margin: 10px 0 6px;
-    }
-    .units {
-      font-size: .8rem;
-      color: #8a7f7f;
-      margin-bottom: 14px;
-    }
-    .modal-close {
-      margin-top: 10px;
-      background: #ffe0eb;
-      border: none;
-      color: #7a5b66;
-      padding: 10px 16px;
-      border-radius: 10px;
-      font-weight: 600;
-      cursor: pointer;
-    }
+    .modal-title { font-size: 1.2rem; color: #ff74a1; margin: 0 0 6px; }
+    .modal-sub { font-size: .95rem; color: #6d6262; margin: 0 0 16px; }
+    .bigtime { font-variant-numeric: tabular-nums; letter-spacing: .5px; font-size: 2.4rem; font-weight: 800; color: #3f3a3a; margin: 10px 0 6px; }
+    .units { font-size: .8rem; color: #8a7f7f; margin-bottom: 14px; }
+    .modal-close { margin-top: 10px; background: #ffe0eb; border: none; color: #7a5b66; padding: 10px 16px; border-radius: 10px; font-weight: 600; cursor: pointer; }
     .modal-close:hover { background: #ffd3e3; }
-    #first-talk p, #first-date p, #first-iloveyou p {
-      font-size: 1.1rem;
-      font-weight: 500;
-      color: #d47fa6;
-    }
+    #first-talk p, #first-date p, #first-iloveyou p { font-size: 1.1rem; font-weight: 500; color: #d47fa6; }
   </style>
 </head>
 <body>
-  <!-- Header Image -->
   <div class="header-image">
     <img src="i-love-you.jpg" alt="I Love You" />
   </div>
   <h1>Countdowns ⏳</h1>
 
   <div class="countdowns">
-    <!-- Our Anniversary -->
     <div class="card"
       data-title="Our Anniversary 💞"
       data-date="09-06"
@@ -161,7 +79,6 @@
       <img src="your-anniversary-image.jpg" alt="Our Anniversary"/>
     </div>
 
-    <!-- Kitten’s Birthday -->
     <div class="card"
       data-title="Kitten’s Birthday 🎂"
       data-date="01-02"
@@ -174,7 +91,6 @@
       <img src="kitten-birthday.jpg" alt="Kitten Birthday"/>
     </div>
 
-    <!-- Daddy’s Birthday -->
     <div class="card"
       data-title="Daddy’s Birthday 🎉"
       data-date="04-14"
@@ -187,7 +103,6 @@
       <img src="daddy-birthday.jpg" alt="Daddy Birthday"/>
     </div>
 
-    <!-- End of Exams -->
     <div class="card"
       data-title="End of Exams 📚"
       data-absolute="2025-12-30T23:59:59"
@@ -199,7 +114,6 @@
       <div class="note">The end of stress🌷</div>
     </div>
 
-    <!-- We meet!! -->
     <div class="card"
       data-title="We meet!! 💞"
       data-absolute="2025-11-27T00:00:00"
@@ -212,7 +126,6 @@
       <img src="meeting.jpg" alt="Our Meeting"/>
     </div>
 
-    <!-- Days Since Section -->
     <h2 style="margin-top: 40px;">✨ Our Journey So Far ✨</h2>
 
     <div class="card" id="first-talk" onclick="toggleDetail('talk', '2025-04-22')">
@@ -233,7 +146,6 @@
 
   <footer>Made with 💖 by Kitten</footer>
 
-  <!-- Modal -->
   <div class="modal" id="modal">
     <div class="modal-card">
       <h3 class="modal-title" id="modalTitle"></h3>
@@ -245,7 +157,7 @@
   </div>
 
   <script>
-    /* ---------- Shared refs & state (FIX) ---------- */
+    /* ---------- Shared refs & state ---------- */
     const modal = document.getElementById("modal");
     const modalTitle = document.getElementById("modalTitle");
     const modalNote = document.getElementById("modalNote");
@@ -253,75 +165,92 @@
     const closeBtn = document.getElementById("closeBtn");
     let timer = null;
 
-    /* ---------- “Days Since” helpers (unchanged behavior) ---------- */
+    /* ---------- Days-Since toggles (unchanged) ---------- */
     const intervals = {};
-
     function updateDetailedTime(startDate, elementId, mode = "days") {
       const start = new Date(startDate);
       const now = new Date();
       const diff = now - start;
-
       const days = Math.floor(diff / (1000 * 60 * 60 * 24));
       const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
       const minutes = Math.floor((diff / (1000 * 60)) % 60);
       const seconds = Math.floor((diff / 1000) % 60);
-
       const element = document.getElementById(elementId);
-
+      if (!element) return;
       if (mode === "days") {
         element.textContent = `${days} days 💫`;
       } else {
         element.textContent = `${days} days, ${hours} hrs, ${minutes} mins, ${seconds} secs ✨`;
       }
     }
-
     function toggleDetail(type, startDate) {
       const elementId = `${type}-days`;
-
       if (intervals[type]) {
         clearInterval(intervals[type]);
         intervals[type] = null;
         updateDetailedTime(startDate, elementId, "days");
       } else {
         updateDetailedTime(startDate, elementId, "full");
-        intervals[type] = setInterval(() => {
-          updateDetailedTime(startDate, elementId, "full");
-        }, 1000);
+        intervals[type] = setInterval(() => updateDetailedTime(startDate, elementId, "full"), 1000);
       }
     }
-
-    // Initial load (days only)
+    // initial load days-only
     updateDetailedTime("2025-04-22", "talk-days");
     updateDetailedTime("2025-08-03", "date-days");
     updateDetailedTime("2025-08-28", "love-days");
 
-    /* ---------- Countdown cards (tap to see exact time) ---------- */
-    function parseDate(card) {
-      // exact timestamp if provided
+    /* ---------- Countdown helpers ---------- */
+    function parseDateFromCard(card) {
       const abs = card.dataset.absolute;
       if (abs) {
         const d = new Date(abs);
         return isNaN(d) ? null : d;
       }
-      // else, month-day combo (e.g., "09-06")
       const dd = card.dataset.date;
       if (!dd) return null;
-
       const [month, day] = dd.split('-').map(Number);
       const now = new Date();
       let target = new Date(now.getFullYear(), month - 1, day, 0, 0, 0, 0);
+      // if today's date and time >= target (target is midnight of that day), then if target < now, go next year
       if (target < now) target.setFullYear(now.getFullYear() + 1);
       return target;
     }
 
-    function openModal(card) {
-      const target = parseDate(card);
-      if (!target) return; // skip if bad/missing date
+    // compute days remaining (integer)
+    function computeDaysRemaining(target) {
+      const now = new Date();
+      const diff = target - now;
+      if (diff <= 0) return 0;
+      const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+      return days;
+    }
 
+    // update visible .days text in each countdown card
+    function refreshCardsDays() {
+      document.querySelectorAll('.card[data-date], .card[data-absolute]').forEach(card => {
+        const target = parseDateFromCard(card);
+        const daysEl = card.querySelector('.days');
+        if (!daysEl) return;
+        if (!target) {
+          daysEl.textContent = '—';
+          return;
+        }
+        const days = computeDaysRemaining(target);
+        // show singular/plural nicely
+        daysEl.textContent = (days === 0) ? 'Today!' : `${days} day${days === 1 ? '' : 's'}`;
+      });
+    }
+
+    // initial update and periodic refresh (every 60s)
+    refreshCardsDays();
+    setInterval(refreshCardsDays, 60 * 1000);
+
+    /* ---------- Modal behavior (tap for exact HH:MM:SS) ---------- */
+    function openModal(card) {
+      const target = parseDateFromCard(card);
+      if (!target) return;
       modalTitle.textContent = card.dataset.title || "";
       modalNote.textContent = card.dataset.note || "";
-
-      // clear any existing ticker
       if (timer) clearInterval(timer);
 
       const tick = () => {
@@ -330,12 +259,11 @@
         const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
         const m = Math.floor((diff / (1000 * 60)) % 60);
         const s = Math.floor((diff / 1000) % 60);
-
         liveTime.textContent =
-          `${String(d).padStart(2, '0')} : ${String(h).padStart(2, '0')} : ${String(m).padStart(2, '0')} : ${String(s).padStart(2, '0')}`;
+          `${String(d).padStart(2,'0')} : ${String(h).padStart(2,'0')} : ${String(m).padStart(2,'0')} : ${String(s).padStart(2,'0')}`;
       };
 
-      tick(); // run once immediately
+      tick(); // immediate
       timer = setInterval(tick, 1000);
       modal.classList.add("open");
     }
@@ -346,18 +274,15 @@
       timer = null;
     }
 
-    // Only bind countdown cards (those with date/absolute)
+    // bind only countdown cards (so days-since cards don't get modal)
     document.querySelectorAll('.card[data-date], .card[data-absolute]').forEach(card => {
       card.addEventListener("click", () => openModal(card));
     });
 
     closeBtn.addEventListener("click", closeModal);
     modal.addEventListener("click", e => { if (e.target === modal) closeModal(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && modal.classList.contains("open")) closeModal(); });
 
-    // ESC to close
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && modal.classList.contains("open")) closeModal();
-    });
   </script>
 </body>
 </html>
