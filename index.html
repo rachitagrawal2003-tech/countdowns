@@ -96,31 +96,37 @@
       font-weight: 600;
     }
 
-    .gallery {
-      max-width: 980px;
-      margin: 14px auto 40px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 14px;
-      padding: 0 14px;
-    }
-    .gallery-card {
-      background: #fff1f7;
-      border-radius: 12px;
-      padding: 8px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    .gallery-card img {
-      max-width: 100%;
-      max-height: 140px;
-      border-radius: 8px;
-      object-fit: cover;
-    }
+.gallery {
+  max-width: 720px;
+  margin: 24px auto 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 0 14px;
+}
+
+.gallery-card {
+  background: #fff1f7;
+  border-radius: 12px;
+  padding: 8px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.08);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 640px;
+}
+
+.gallery-card img {
+  width: 100%;
+  height: auto;
+  max-height: 600px;
+  border-radius: 8px;
+  object-fit: cover;
+}
     .gallery-note {
       font-size: 0.9rem;
       color: #7a525f;
@@ -500,15 +506,115 @@
 
   // If you want the gallery to start with the images already used in cards on the page,
   // grab visible <img.card-img> sources and add them to the library (so initial library isn't empty).
-  (function seedLibraryFromExistingCardImages() {
-    const cardImgs = Array.from(document.querySelectorAll('img.card-img')).map(i => i.src).filter(Boolean);
-    if (cardImgs.length) addImagesToLibrary(cardImgs);
-  })();
+  /* ------------------ Seed from images/image*.jpg (image, image1..image26) ------------------ */
 
-  // render initially (no-op if seeded)
-  renderGallery();
+// Helper: tries to load an image and resolves true/false
+function testImageExists(url) {
+  return new Promise((res) => {
+    const t = new Image();
+    t.onload = () => res(true);
+    t.onerror = () => res(false);
+    t.src = url;
+  });
+}
+
+// Build candidate filenames and test them (you said image, image1..image26)
+async function seedLibraryFromImagesFolder() {
+  const candidates = [];
+  // first try exact name "image.jpg"
+  candidates.push('images/image.jpg');
+
+  // then image1 .. image26 with extension .jpg
+  for (let i = 1; i <= 26; i++) {
+    candidates.push(`images/image${i}.jpg`);
+  }
+
+  // you might also have .png; test both extensions if you want:
+  // if you use pngs, change the list above or add .png variants here.
+
+  const ok = [];
+  for (const c of candidates) {
+    // only test same-origin images (they are on your Vercel domain, so OK)
+    // this avoids showing broken images in the UI
+    // tiny optimization: if file names are many, you can parallelize Promise.all
+    // but here it's fine to do sequential to avoid spamming the server.
+    // we'll check them in parallel but still guard errors:
+    ok.push(testImageExists(c).then(found => found ? c : null));
+  }
+
+  const results = await Promise.all(ok);
+  const valid = results.filter(Boolean); // keep only truthy (existing URLs)
+
+  if (valid.length === 0) {
+    // fallback: if the page already has card images (meeting, anniversary), keep them
+    const cardImgs = Array.from(document.querySelectorAll('img.card-img')).map(i => i.src).filter(Boolean);
+    if (cardImgs.length) {
+      addImagesToLibrary(cardImgs);
+    } else {
+      // nothing found — leave imageLibrary empty
+      console.warn('No images found in images/ folder and no card-img seeds.');
+    }
+  } else {
+    addImagesToLibrary(valid);
+  }
+}
+
+// Renders a single gallery card (instead of many)
+function renderSingleGalleryCard() {
+  galleryEl.innerHTML = '';
+  if (imageLibrary.length === 0) {
+    // placeholder card if no images
+    const placeholder = document.createElement('div');
+    placeholder.className = 'gallery-card';
+    placeholder.innerHTML = `<div style="padding:36px">No gallery images found.<br>Upload images to /images/ and push to GitHub.</div>`;
+    galleryEl.appendChild(placeholder);
+    return;
+  }
+
+  // Always show the first image initially (or random initial image)
+  let currentIndex = Math.floor(Math.random() * imageLibrary.length);
+  const card = document.createElement('div');
+  card.className = 'gallery-card';
+
+  const img = document.createElement('img');
+  img.src = imageLibrary[currentIndex];
+  img.alt = 'Gallery image';
+  card.appendChild(img);
+
+  const note = document.createElement('div');
+  note.className = 'gallery-note';
+  note.textContent = 'Tap to randomize';
+  card.appendChild(note);
+
+  // on click -> replace card image by a random image from library (not same)
+  card.addEventListener('click', () => {
+    if (imageLibrary.length <= 1) return;
+    let tries = 0;
+    let candidateIndex;
+    do {
+      candidateIndex = Math.floor(Math.random() * imageLibrary.length);
+      tries++;
+    } while (candidateIndex === currentIndex && tries < 12);
+    if (candidateIndex === currentIndex) {
+      // pick the next different deterministically
+      candidateIndex = (currentIndex + 1) % imageLibrary.length;
+    }
+    currentIndex = candidateIndex;
+    img.src = imageLibrary[currentIndex];
+  });
+
+  galleryEl.appendChild(card);
+}
+
+// Replace renderGallery() usage with this renderSingleGalleryCard() when seeding
+// start:
+seedLibraryFromImagesFolder().then(() => {
+  // After seeding, render single card
+  renderSingleGalleryCard();
+});
 
   /* ========== Done ========== */
   </script>
 </body>
 </html>
+
