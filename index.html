@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Countdowns ⏳</title>
+  <title>Countdowns + Gallery ⏳📸</title>
   <style>
+    /* ---------- existing styles (kept + slightly extended) ---------- */
     .header-image img {
       width: 100%;
       max-height: 250px;
@@ -40,17 +41,17 @@
     .event { font-size: 1.2rem; color: #ff7da5; font-weight: 600; margin-top: 8px; }
     .days { font-size: 2.2rem; color: #5a4f4f; font-weight: 800; margin: 6px 0; }
     .note { font-size: .92rem; color: #6d6262; margin-top: 4px; }
-    img { width: 80%; border-radius: 12px; margin-top: 10px; }
+    img.card-img {
+      width: 80%;
+      border-radius: 12px;
+      margin-top: 10px;
+    }
     footer { margin: 26px 0 36px; font-size: .82rem; color: #9b8b8b; }
-    .modal {
-      position: fixed; inset: 0; background: rgba(0,0,0,.38); display: none;
-      align-items: center; justify-content: center; padding: 20px; z-index: 999;
-    }
+
+    /* Modal */
+    .modal { position: fixed; inset: 0; background: rgba(0,0,0,.38); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 999; }
     .modal.open { display: flex; }
-    .modal-card {
-      background: #fff; max-width: 520px; width: 100%; border-radius: 20px;
-      box-shadow: 0 12px 28px rgba(0,0,0,.18); padding: 26px 22px;
-    }
+    .modal-card { background: #fff; max-width: 520px; width: 100%; border-radius: 20px; box-shadow: 0 12px 28px rgba(0,0,0,.18); padding: 26px 22px; }
     .modal-title { font-size: 1.2rem; color: #ff74a1; margin: 0 0 6px; }
     .modal-sub { font-size: .95rem; color: #6d6262; margin: 0 0 16px; }
     .bigtime { font-variant-numeric: tabular-nums; letter-spacing: .5px; font-size: 2.4rem; font-weight: 800; color: #3f3a3a; margin: 10px 0 6px; }
@@ -58,15 +59,96 @@
     .modal-close { margin-top: 10px; background: #ffe0eb; border: none; color: #7a5b66; padding: 10px 16px; border-radius: 10px; font-weight: 600; cursor: pointer; }
     .modal-close:hover { background: #ffd3e3; }
     #first-talk p, #first-date p, #first-iloveyou p { font-size: 1.1rem; font-weight: 500; color: #d47fa6; }
+
+    /* ---------- gallery styles ---------- */
+    .gallery-controls {
+      max-width: 980px;
+      margin: 18px auto 6px;
+      padding: 10px 18px;
+      text-align: left;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .file-input-label {
+      background: #ffdfe9;
+      padding: 8px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      color: #6b3b4a;
+      font-weight: 600;
+    }
+    .url-input {
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid #e6c7d4;
+      width: 260px;
+      outline: none;
+    }
+    .add-url-btn {
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: #ffe0eb;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .gallery {
+      max-width: 980px;
+      margin: 14px auto 40px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 14px;
+      padding: 0 14px;
+    }
+    .gallery-card {
+      background: #fff1f7;
+      border-radius: 12px;
+      padding: 8px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .gallery-card img {
+      max-width: 100%;
+      max-height: 140px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+    .gallery-note {
+      font-size: 0.9rem;
+      color: #7a525f;
+      margin-top: 8px;
+      font-weight: 600;
+    }
+
+    .small-muted {
+      font-size: 12px;
+      color: #9b8b8b;
+      margin-left: 6px;
+    }
+
+    /* responsive */
+    @media (max-width: 480px) {
+      .card { width: calc(50% - 30px); }
+    }
   </style>
 </head>
 <body>
   <div class="header-image">
     <img src="i-love-you.jpg" alt="I Love You" />
   </div>
-  <h1>Countdowns ⏳</h1>
+  <h1>Countdowns ⏳ + Gallery 📸</h1>
 
+  <!-- ---------- countdowns (same as before) ---------- -->
   <div class="countdowns">
+    <!-- (kept your same countdown card markup) -->
     <div class="card"
       data-title="Our Anniversary 💞"
       data-date="09-06"
@@ -76,7 +158,7 @@
       <div class="event">Our Anniversary</div>
       <div class="days"></div>
       <div class="note">Celebrating us, every 6th September 💌</div>
-      <img src="your-anniversary-image.jpg" alt="Our Anniversary"/>
+      <img class="card-img" src="your-anniversary-image.jpg" alt="Our Anniversary"/>
     </div>
 
     <div class="card"
@@ -88,7 +170,7 @@
       <div class="event">Kitten’s Birthday</div>
       <div class="days"></div>
       <div class="note">tehe</div>
-      <img src="kitten-birthday.jpg" alt="Kitten Birthday"/>
+      <img class="card-img" src="kitten-birthday.jpg" alt="Kitten Birthday"/>
     </div>
 
     <div class="card"
@@ -100,7 +182,7 @@
       <div class="event">Daddy’s Birthday</div>
       <div class="days"></div>
       <div class="note">your special day, muah!</div>
-      <img src="daddy-birthday.jpg" alt="Daddy Birthday"/>
+      <img class="card-img" src="daddy-birthday.jpg" alt="Daddy Birthday"/>
     </div>
 
     <div class="card"
@@ -112,6 +194,7 @@
       <div class="event">End of Exams</div>
       <div class="days"></div>
       <div class="note">The end of stress🌷</div>
+      <img class="card-img" src="exam-end.jpg" alt="End of Exams"/>
     </div>
 
     <div class="card"
@@ -123,10 +206,10 @@
       <div class="event">We meet!!</div>
       <div class="days"></div>
       <div class="note">Finally together again 💖</div>
-      <img src="meeting.jpg" alt="Our Meeting"/>
+      <img class="card-img" src="meeting.jpg" alt="Our Meeting"/>
     </div>
 
-    <h2 style="margin-top: 40px;">✨ Our Journey So Far ✨</h2>
+    <h2 style="margin-top: 40px; width: 100%;">✨ Our Journey So Far ✨</h2>
 
     <div class="card" id="first-talk" onclick="toggleDetail('talk', '2025-04-22')">
       <h2>💬 Days Since We First Talked</h2>
@@ -144,8 +227,27 @@
     </div>
   </div>
 
+  <!-- ---------- Gallery controls ---------- -->
+  <div class="gallery-controls">
+    <label class="file-input-label">
+      📤 Upload images
+      <input id="fileInput" type="file" multiple accept="image/*" style="display:none">
+    </label>
+
+    <input id="urlInput" class="url-input" type="url" placeholder="Paste image URL and press Add" />
+    <button id="addUrlBtn" class="add-url-btn">Add URL</button>
+
+    <div class="small-muted">Tip: click any gallery card to swap to a random image</div>
+  </div>
+
+  <!-- ---------- Gallery grid ---------- -->
+  <div id="gallery" class="gallery" aria-live="polite">
+    <!-- Gallery cards will be appended here -->
+  </div>
+
   <footer>Made with 💖 by Kitten</footer>
 
+  <!-- Modal -->
   <div class="modal" id="modal">
     <div class="modal-card">
       <h3 class="modal-title" id="modalTitle"></h3>
@@ -157,132 +259,256 @@
   </div>
 
   <script>
-    /* ---------- Shared refs & state ---------- */
-    const modal = document.getElementById("modal");
-    const modalTitle = document.getElementById("modalTitle");
-    const modalNote = document.getElementById("modalNote");
-    const liveTime = document.getElementById("liveTime");
-    const closeBtn = document.getElementById("closeBtn");
-    let timer = null;
+  /* ========== Existing countdown modal & days logic ========== */
+  const modal = document.getElementById("modal");
+  const modalTitle = document.getElementById("modalTitle");
+  const modalNote = document.getElementById("modalNote");
+  const liveTime = document.getElementById("liveTime");
+  const closeBtn = document.getElementById("closeBtn");
+  let timer = null;
 
-    /* ---------- Days-Since toggles (unchanged) ---------- */
-    const intervals = {};
-    function updateDetailedTime(startDate, elementId, mode = "days") {
-      const start = new Date(startDate);
-      const now = new Date();
-      const diff = now - start;
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((diff / (1000 * 60)) % 60);
-      const seconds = Math.floor((diff / 1000) % 60);
-      const element = document.getElementById(elementId);
-      if (!element) return;
-      if (mode === "days") {
-        element.textContent = `${days} days 💫`;
-      } else {
-        element.textContent = `${days} days, ${hours} hrs, ${minutes} mins, ${seconds} secs ✨`;
-      }
+  const intervals = {};
+  function updateDetailedTime(startDate, elementId, mode = "days") {
+    const start = new Date(startDate);
+    const now = new Date();
+    const diff = now - start;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+    const element = document.getElementById(elementId);
+    if (!element) return;
+    if (mode === "days") {
+      element.textContent = `${days} days 💫`;
+    } else {
+      element.textContent = `${days} days, ${hours} hrs, ${minutes} mins, ${seconds} secs ✨`;
     }
-    function toggleDetail(type, startDate) {
-      const elementId = `${type}-days`;
-      if (intervals[type]) {
-        clearInterval(intervals[type]);
-        intervals[type] = null;
-        updateDetailedTime(startDate, elementId, "days");
-      } else {
-        updateDetailedTime(startDate, elementId, "full");
-        intervals[type] = setInterval(() => updateDetailedTime(startDate, elementId, "full"), 1000);
-      }
+  }
+  function toggleDetail(type, startDate) {
+    const elementId = `${type}-days`;
+    if (intervals[type]) {
+      clearInterval(intervals[type]);
+      intervals[type] = null;
+      updateDetailedTime(startDate, elementId, "days");
+    } else {
+      updateDetailedTime(startDate, elementId, "full");
+      intervals[type] = setInterval(() => updateDetailedTime(startDate, elementId, "full"), 1000);
     }
-    // initial load days-only
-    updateDetailedTime("2025-04-22", "talk-days");
-    updateDetailedTime("2025-08-03", "date-days");
-    updateDetailedTime("2025-08-28", "love-days");
+  }
 
-    /* ---------- Countdown helpers ---------- */
-    function parseDateFromCard(card) {
-      const abs = card.dataset.absolute;
-      if (abs) {
-        const d = new Date(abs);
-        return isNaN(d) ? null : d;
-      }
-      const dd = card.dataset.date;
-      if (!dd) return null;
-      const [month, day] = dd.split('-').map(Number);
-      const now = new Date();
-      let target = new Date(now.getFullYear(), month - 1, day, 0, 0, 0, 0);
-      // if today's date and time >= target (target is midnight of that day), then if target < now, go next year
-      if (target < now) target.setFullYear(now.getFullYear() + 1);
-      return target;
+  // initial load
+  updateDetailedTime("2025-04-22", "talk-days");
+  updateDetailedTime("2025-08-03", "date-days");
+  updateDetailedTime("2025-08-28", "love-days");
+
+  /* ---------- Countdown cards (days visible) ---------- */
+  function parseDateFromCard(card) {
+    const abs = card.dataset.absolute;
+    if (abs) {
+      const d = new Date(abs);
+      return isNaN(d) ? null : d;
     }
+    const dd = card.dataset.date;
+    if (!dd) return null;
+    const [month, day] = dd.split('-').map(Number);
+    const now = new Date();
+    let target = new Date(now.getFullYear(), month - 1, day, 0, 0, 0, 0);
+    if (target < now) target.setFullYear(now.getFullYear() + 1);
+    return target;
+  }
 
-    // compute days remaining (integer)
-    function computeDaysRemaining(target) {
-      const now = new Date();
-      const diff = target - now;
-      if (diff <= 0) return 0;
-      const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-      return days;
-    }
+  function computeDaysRemaining(target) {
+    const now = new Date();
+    const diff = target - now;
+    if (diff <= 0) return 0;
+    const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+    return days;
+  }
 
-    // update visible .days text in each countdown card
-    function refreshCardsDays() {
-      document.querySelectorAll('.card[data-date], .card[data-absolute]').forEach(card => {
-        const target = parseDateFromCard(card);
-        const daysEl = card.querySelector('.days');
-        if (!daysEl) return;
-        if (!target) {
-          daysEl.textContent = '—';
-          return;
-        }
-        const days = computeDaysRemaining(target);
-        // show singular/plural nicely
-        daysEl.textContent = (days === 0) ? 'Today!' : `${days} day${days === 1 ? '' : 's'}`;
-      });
-    }
-
-    // initial update and periodic refresh (every 60s)
-    refreshCardsDays();
-    setInterval(refreshCardsDays, 60 * 1000);
-
-    /* ---------- Modal behavior (tap for exact HH:MM:SS) ---------- */
-    function openModal(card) {
-      const target = parseDateFromCard(card);
-      if (!target) return;
-      modalTitle.textContent = card.dataset.title || "";
-      modalNote.textContent = card.dataset.note || "";
-      if (timer) clearInterval(timer);
-
-      const tick = () => {
-        const diff = Math.max(0, target - new Date());
-        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-        const m = Math.floor((diff / (1000 * 60)) % 60);
-        const s = Math.floor((diff / 1000) % 60);
-        liveTime.textContent =
-          `${String(d).padStart(2,'0')} : ${String(h).padStart(2,'0')} : ${String(m).padStart(2,'0')} : ${String(s).padStart(2,'0')}`;
-      };
-
-      tick(); // immediate
-      timer = setInterval(tick, 1000);
-      modal.classList.add("open");
-    }
-
-    function closeModal() {
-      modal.classList.remove("open");
-      if (timer) clearInterval(timer);
-      timer = null;
-    }
-
-    // bind only countdown cards (so days-since cards don't get modal)
+  function refreshCardsDays() {
     document.querySelectorAll('.card[data-date], .card[data-absolute]').forEach(card => {
-      card.addEventListener("click", () => openModal(card));
+      const target = parseDateFromCard(card);
+      const daysEl = card.querySelector('.days');
+      if (!daysEl) return;
+      if (!target) {
+        daysEl.textContent = '—';
+        return;
+      }
+      const days = computeDaysRemaining(target);
+      daysEl.textContent = (days === 0) ? 'Today!' : `${days} day${days === 1 ? '' : 's'}`;
+    });
+  }
+
+  refreshCardsDays();
+  setInterval(refreshCardsDays, 60 * 1000);
+
+  function openModal(card) {
+    const target = parseDateFromCard(card);
+    if (!target) return;
+    modalTitle.textContent = card.dataset.title || "";
+    modalNote.textContent = card.dataset.note || "";
+    if (timer) clearInterval(timer);
+
+    const tick = () => {
+      const diff = Math.max(0, target - new Date());
+      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const m = Math.floor((diff / (1000 * 60)) % 60);
+      const s = Math.floor((diff / 1000) % 60);
+      liveTime.textContent = `${String(d).padStart(2,'0')} : ${String(h).padStart(2,'0')} : ${String(m).padStart(2,'0')} : ${String(s).padStart(2,'0')}`;
+    };
+
+    tick();
+    timer = setInterval(tick, 1000);
+    modal.classList.add("open");
+  }
+
+  document.querySelectorAll('.card[data-date], .card[data-absolute]').forEach(card => {
+    card.addEventListener("click", () => openModal(card));
+  });
+
+  closeBtn.addEventListener("click", () => {
+    modal.classList.remove("open");
+    if (timer) clearInterval(timer);
+    timer = null;
+  });
+  modal.addEventListener("click", e => { if (e.target === modal) { modal.classList.remove("open"); if (timer) clearInterval(timer); timer = null; } });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && modal.classList.contains("open")) { modal.classList.remove("open"); if (timer) clearInterval(timer); timer = null; } });
+
+  /* ========== New: Gallery logic ========== */
+
+  // Shared library of image sources (strings: either data-URL or normal URL)
+  const imageLibrary = [];
+
+  // The gallery container
+  const galleryEl = document.getElementById('gallery');
+
+  // Utility: create a gallery card and attach handlers
+  function createGalleryCard(src) {
+    const card = document.createElement('div');
+    card.className = 'gallery-card';
+
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = 'Gallery image';
+    card.appendChild(img);
+
+    const note = document.createElement('div');
+    note.className = 'gallery-note';
+    note.textContent = 'Tap to randomize';
+    card.appendChild(note);
+
+    // on click -> replace card image by a random image from library (not same)
+    card.addEventListener('click', (e) => {
+      if (imageLibrary.length <= 1) return; // nothing to change with
+      // pick a random index different from the current image src
+      let tries = 0;
+      let candidate;
+      const current = img.src;
+      do {
+        const i = Math.floor(Math.random() * imageLibrary.length);
+        candidate = imageLibrary[i];
+        tries++;
+      } while (candidate === current && tries < 8);
+
+      // If we somehow got same, choose next different one deterministically
+      if (candidate === current) {
+        for (let k = 0; k < imageLibrary.length; k++) {
+          if (imageLibrary[k] !== current) { candidate = imageLibrary[k]; break; }
+        }
+      }
+
+      // swap image on this card
+      img.src = candidate;
     });
 
-    closeBtn.addEventListener("click", closeModal);
-    modal.addEventListener("click", e => { if (e.target === modal) closeModal(); });
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && modal.classList.contains("open")) closeModal(); });
+    return card;
+  }
 
+  // Render all images in library into gallery (clears and re-adds)
+  function renderGallery() {
+    galleryEl.innerHTML = '';
+    imageLibrary.forEach(src => {
+      const card = createGalleryCard(src);
+      galleryEl.appendChild(card);
+    });
+  }
+
+  // Add image(s) to library (array of src strings). Re-renders
+  function addImagesToLibrary(sources) {
+    for (const s of sources) {
+      if (!s) continue;
+      imageLibrary.push(s);
+    }
+    renderGallery();
+  }
+
+  /* ---------- File uploads (multiple) ---------- */
+  const fileInput = document.getElementById('fileInput');
+  // open picker when label clicked (label already wraps the input)
+  fileInput.addEventListener('change', async (e) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    const reads = files.map(file => {
+      return new Promise((res) => {
+        const r = new FileReader();
+        r.onload = () => res(r.result);
+        r.readAsDataURL(file);
+      });
+    });
+    const results = await Promise.all(reads);
+    addImagesToLibrary(results);
+    // clear selection so same files can be re-uploaded if needed
+    fileInput.value = '';
+  });
+
+  /* ---------- Add image by URL ---------- */
+  const urlInput = document.getElementById('urlInput');
+  const addUrlBtn = document.getElementById('addUrlBtn');
+  addUrlBtn.addEventListener('click', () => {
+    const url = urlInput.value.trim();
+    if (!url) return;
+    // Basic validation: has image extension or data: or begins with http
+    if (!/^data:|^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|avif)$/i.test(url) && !/^https?:\/\//i.test(url)) {
+      // still allow generic URLs but warn in console
+      console.warn('Adding URL that may not be an image:', url);
+    }
+    addImagesToLibrary([url]);
+    urlInput.value = '';
+  });
+
+  // Basic UX: allow dropping images onto the gallery container
+  galleryEl.addEventListener('dragover', (e) => { e.preventDefault(); galleryEl.style.opacity = 0.9; });
+  galleryEl.addEventListener('dragleave', () => { galleryEl.style.opacity = 1; });
+  galleryEl.addEventListener('drop', (e) => {
+    e.preventDefault();
+    galleryEl.style.opacity = 1;
+    const dt = e.dataTransfer;
+    const files = Array.from(dt.files || []).filter(f => f.type.startsWith('image/'));
+    if (!files.length) return;
+    const reads = files.map(f => new Promise(res => {
+      const r = new FileReader();
+      r.onload = () => res(r.result);
+      r.readAsDataURL(f);
+    }));
+    Promise.all(reads).then(results => addImagesToLibrary(results));
+  });
+
+  /* ---------- Optional: preload some images if you want ---------- */
+  // Example: if you have images available by path on server, push them here.
+  // addImagesToLibrary(['meeting.jpg','your-anniversary-image.jpg']); // uncomment & edit if desired
+
+  // If you want the gallery to start with the images already used in cards on the page,
+  // grab visible <img.card-img> sources and add them to the library (so initial library isn't empty).
+  (function seedLibraryFromExistingCardImages() {
+    const cardImgs = Array.from(document.querySelectorAll('img.card-img')).map(i => i.src).filter(Boolean);
+    if (cardImgs.length) addImagesToLibrary(cardImgs);
+  })();
+
+  // render initially (no-op if seeded)
+  renderGallery();
+
+  /* ========== Done ========== */
   </script>
 </body>
 </html>
