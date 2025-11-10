@@ -290,62 +290,60 @@
 </div>
 
 <script>
-  function parseDate(card) {
-    const abs = card.dataset.absolute;
-    if (abs) return new Date(abs);
-
-    const [month, day] = card.dataset.date.split('-').map(Number);
-    const now = new Date();
-    let target = new Date(now.getFullYear(), month - 1, day);
-
-    if (target < now) target.setFullYear(now.getFullYear() + 1);
-    return target;
+function parseDate(card) {
+  // if an exact timestamp is provided, use it directly
+  const abs = card.dataset.absolute;
+  if (abs) {
+    const d = new Date(abs);
+    return isNaN(d) ? null : d;
   }
 
-  function updateDays(card) {
-    const target = parseDate(card);
-    const diff = target - new Date();
-    const days = Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
-    card.querySelector(".days").textContent = `${days} days`;
-  }
+  // otherwise, use the month-day combo (e.g., "09-06")
+  const dd = card.dataset.date;
+  if (!dd) return null;
 
-  document.querySelectorAll(".card").forEach(updateDays);
+  const [month, day] = dd.split('-').map(Number);
+  const now = new Date();
+  let target = new Date(now.getFullYear(), month - 1, day, 0, 0, 0, 0);
+  if (target < now) target.setFullYear(now.getFullYear() + 1);
+  return target;
+}
 
-  const modal = document.getElementById("modal");
-  const modalTitle = document.getElementById("modalTitle");
-  const modalNote = document.getElementById("modalNote");
-  const liveTime = document.getElementById("liveTime");
-  const closeBtn = document.getElementById("closeBtn");
-  let timer = null;
+function openModal(card) {
+  // get the target date/time for this card
+  const target = parseDate(card);
+  if (!target) return; // skip cards without a date
 
-  function openModal(card) {
-    const target = parseDate(card);
-    modalTitle.textContent = card.dataset.title;
-    modalNote.textContent = card.dataset.note;
-    clearInterval(timer);
+  // populate modal content
+  modalTitle.textContent = card.dataset.title || '';
+  modalNote.textContent = card.dataset.note || '';
+  clearInterval(timer);
 
-    const tick = () => {
-      const diff = Math.max(0, target - new Date());
-      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const m = Math.floor((diff / (1000 * 60)) % 60);
-      const s = Math.floor((diff / 1000) % 60);
-      liveTime.textContent = `${d.toString().padStart(2, '0')} : ${h.toString().padStart(2, '0')} : ${m.toString().padStart(2, '0')} : ${s.toString().padStart(2, '0')}`;
-    };
+  // live updating countdown every second
+  const tick = () => {
+    const diff = Math.max(0, target - new Date());
+    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const m = Math.floor((diff / (1000 * 60)) % 60);
+    const s = Math.floor((diff / 1000) % 60);
 
-    tick();
-    timer = setInterval(tick, 1000);
-    modal.classList.add("open");
-  }
+    liveTime.textContent = 
+      `${String(d).padStart(2, '0')} : ${String(h).padStart(2, '0')} : ${String(m).padStart(2, '0')} : ${String(s).padStart(2, '0')}`;
+  };
+
+  tick(); // run once immediately
+  timer = setInterval(tick, 1000);
+  modal.classList.add("open");
+}
 
   function closeModal() {
     modal.classList.remove("open");
     clearInterval(timer);
   }
 
-  document.querySelectorAll(".card").forEach(card => {
-    card.addEventListener("click", () => openModal(card));
-  });
+  document.querySelectorAll('.card[data-date], .card[data-absolute]').forEach(card => {
+  card.addEventListener("click", () => openModal(card));
+});
 
   closeBtn.addEventListener("click", closeModal);
   modal.addEventListener("click", e => { if (e.target === modal) closeModal(); });
@@ -353,6 +351,7 @@
 
 </body>
 </html>
+
 
 
 
