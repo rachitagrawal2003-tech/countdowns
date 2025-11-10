@@ -133,6 +133,11 @@
       cursor: pointer;
     }
     .modal-close:hover { background: #ffd3e3; }
+    #first-talk p, #first-date p, #first-iloveyou p {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #d47fa6;
+}
   </style>
 </head>
 <body>
@@ -207,6 +212,39 @@
     <div class="note">Finally together again 💖</div>
     <img src="meeting.jpg" alt="Our Meeting"/>
   </div>
+  
+  <!-- Days Since Section -->
+<h2 style="margin-top: 40px;">✨ Our Journey So Far ✨</h2>
+
+<div class="card" id="first-talk">
+  <h2>💬 Days Since We First Talked</h2>
+  <p id="talk-days">Loading...</p>
+</div>
+
+<div class="card" id="first-date">
+  <h2>🍰 Days Since Our First Date</h2>
+  <p id="date-days">Loading...</p>
+</div>
+
+<div class="card" id="first-iloveyou">
+  <h2>❤️ Days Since We Said "I Love You"</h2>
+  <p id="love-days">Loading...</p>
+</div>
+
+<script>
+  function calculateDaysSince(dateString, elementId) {
+    const startDate = new Date(dateString);
+    const today = new Date();
+    const diffTime = today - startDate;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    document.getElementById(elementId).textContent = `${diffDays} days 💫`;
+  }
+
+  // Dates (replace if needed)
+  calculateDaysSince("2025-04-22", "talk-days");
+  calculateDaysSince("2025-08-03", "date-days");
+  calculateDaysSince("2025-08-28", "love-days");
+</script>
   
 </div>
 
@@ -286,6 +324,7 @@
 
 </body>
 </html>
+
 
 
 
