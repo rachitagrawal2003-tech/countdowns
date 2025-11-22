@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>Kitten & Daddy 💖</title>
   <style>
     /* =========================================
@@ -64,6 +64,7 @@
       text-align: center;
       overflow-x: hidden;
       transition: background-color 0.5s ease, color 0.5s ease;
+      touch-action: manipulation;
     }
     h1 { font-size: 1.8rem; color: var(--heading-color); margin: 20px 0 10px; transition: color 0.5s; }
     h2, h3 { color: var(--heading-color); transition: color 0.5s; }
@@ -150,11 +151,11 @@
       bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
-      width: 90%;
-      max-width: 400px;
+      width: 95%;
+      max-width: 450px;
       background: var(--nav-bg);
       backdrop-filter: blur(10px);
-      padding: 10px 20px;
+      padding: 10px 10px;
       border-radius: 50px;
       box-shadow: 0 10px 30px var(--card-shadow);
       display: flex;
@@ -165,22 +166,23 @@
       transition: background-color 0.5s, border-color 0.5s;
     }
     .nav-item {
-      font-size: 1.5rem;
+      font-size: 1.3rem;
       cursor: pointer;
       opacity: 0.6;
       transition: all 0.3s ease;
       background: none;
       border: none;
       padding: 5px;
+      flex: 1;
       color: var(--nav-icon-inactive);
     }
     .nav-item.active {
       opacity: 1;
-      transform: scale(1.2);
+      transform: scale(1.1);
       color: var(--nav-icon-active);
     }
     .nav-label {
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       display: block;
       font-weight: bold;
       color: var(--heading-color);
@@ -211,38 +213,35 @@
     input:checked + .slider { background-color: var(--btn-bg); }
     input:checked + .slider:before { transform: translateX(24px); }
 
-    /* Shredder */
+    /* Shredder Styles */
+    .shredder-wrapper { position: relative; overflow: hidden; padding-bottom: 20px; }
     .shredder-input {
-      width: 90%; padding: 12px; border: 2px solid var(--card-border); border-radius: 10px; 
-      font-family: inherit; resize: none; background: var(--bg-color); color: var(--text-main);
-      transition: all 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
+      width: 90%; padding: 12px; border: 2px solid var(--card-border); border-radius: 10px; font-family: inherit; resize: none; background: var(--bg-color); color: var(--text-main); transition: transform 1.5s cubic-bezier(0.4, 0.0, 0.2, 1); position: relative; z-index: 2;
     }
-    .shredder-input.shredding { height: 0px; padding: 0; border-color: transparent; opacity: 0; }
-    .paper-strip {
-      position: absolute; top: 180px; width: 4px; height: 20px; background: #fff; z-index: 10;
-      animation: shredFall 1.5s forwards ease-out;
+    .shredder-input.jammed { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both infinite; }
+    .shredder-input.shredding { transform: translateY(150%); opacity: 0; }
+    .shredder-machine-bar { height: 10px; background: var(--text-sub); width: 100%; border-radius: 5px; margin: 5px 0; position: relative; z-index: 5; }
+    .paper-strip { position: absolute; top: 60px; width: 8px; height: 40px; background: var(--bg-color); border: 1px solid #ddd; z-index: 1; opacity: 0; }
+    @keyframes shake {
+      10%, 90% { transform: translate3d(-1px, 0, 0); }
+      20%, 80% { transform: translate3d(2px, 0, 0); }
+      30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+      40%, 60% { transform: translate3d(4px, 0, 0); }
     }
-    @keyframes shredFall { to { transform: translateY(150px) rotate(720deg); opacity: 0; } }
+    @keyframes stripFall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(200px) rotate(var(--rot)); opacity: 0; }
+    }
 
     /* Battery */
-    .battery-container {
-      width: 100%; height: 40px; border: 3px solid var(--text-main); border-radius: 10px; padding: 3px; box-sizing: border-box; margin-bottom: 10px; position: relative;
-    }
-    .battery-fill {
-      height: 100%; width: 0%; background: linear-gradient(90deg, #ff9a9e 0%, #fecfef 99%); border-radius: 5px; transition: width 0.1s;
-    }
-    .battery-cap {
-      position: absolute; right: -8px; top: 10px; width: 5px; height: 14px; background: var(--text-main); border-radius: 0 3px 3px 0;
-    }
+    .battery-container { width: 100%; height: 40px; border: 3px solid var(--text-main); border-radius: 10px; padding: 3px; box-sizing: border-box; margin-bottom: 10px; position: relative; }
+    .battery-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #ff9a9e 0%, #fecfef 99%); border-radius: 5px; transition: width 0.1s; }
+    .battery-cap { position: absolute; right: -8px; top: 10px; width: 5px; height: 14px; background: var(--text-main); border-radius: 0 3px 3px 0; }
 
     /* Modal */
     .modal { position: fixed; inset: 0; background: rgba(0,0,0,.38); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 2000; }
     .modal.open { display: flex; }
-    .modal-card { 
-      background: var(--modal-bg); max-width: 520px; width: 100%; border-radius: 20px; 
-      box-shadow: 0 12px 28px rgba(0,0,0,.3); padding: 26px 22px; 
-      border: 1px solid var(--card-border);
-    }
+    .modal-card { background: var(--modal-bg); max-width: 520px; width: 100%; border-radius: 20px; box-shadow: 0 12px 28px rgba(0,0,0,.3); padding: 26px 22px; border: 1px solid var(--card-border); }
     .bigtime { font-variant-numeric: tabular-nums; font-size: 2rem; font-weight: 800; color: var(--text-main); margin: 10px 0; }
     
     /* Envelope */
@@ -256,19 +255,37 @@
     .gallery-card { background: var(--card-bg); border-radius: 12px; padding: 8px; box-shadow: 0 4px 15px var(--card-shadow); width: 90%; max-width: 400px; }
     .gallery-card img { width: 100%; border-radius: 8px; }
 
+    /* ==========================================
+       NEW STYLES FOR FIDGETS (DISTRACTION ZONE)
+       ========================================== */
+    
+    /* Foggy Window */
+    .fog-wrapper { position: relative; width: 100%; height: 200px; background: #333; border-radius: 15px; overflow: hidden; cursor: crosshair; touch-action: none; }
+    .fog-text { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: bold; color: #fff; z-index: 1; pointer-events: none; }
+    canvas.fog-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; }
+
+    /* Elastic Heart */
+    .elastic-box { height: 250px; position: relative; background: var(--bg-color); border-radius: 15px; overflow: hidden; border: 2px dashed var(--card-border); touch-action: none; }
+    .elastic-heart { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 4rem; cursor: grab; user-select: none; }
+    .elastic-heart:active { cursor: grabbing; }
+
+    /* Neon Scribble */
+    .scribble-board { background: #000; border-radius: 15px; width: 100%; height: 250px; cursor: crosshair; touch-action: none; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+
+    /* Gravity Box */
+    .gravity-box { width: 100%; height: 250px; background: var(--bg-color); border: 2px solid var(--card-border); border-radius: 15px; position: relative; overflow: hidden; touch-action: none; }
+    .gravity-emoji { position: absolute; font-size: 2rem; user-select: none; cursor: grab; }
+
   </style>
 </head>
 <body>
 
-  <!-- RAIN CONTAINER -->
   <div id="rainContainer" class="rain-container"></div>
   
-  <!-- HEADER -->
   <div class="header-image">
     <img src="i-love-you.jpg" alt="I Love You" />
   </div>
 
-  <!-- ======================== HOME SECTION ======================== -->
   <div id="page-home" class="page-section active">
     <h1>Our Countdowns ⏳</h1>
 
@@ -327,7 +344,6 @@
   </div>
 
 
-  <!-- ======================== NOTES SECTION ======================== -->
   <div id="page-notes" class="page-section">
     <h1>Love Notes 💌</h1>
 
@@ -367,11 +383,9 @@
   </div>
 
 
-  <!-- ======================== FUN ZONE ======================== -->
   <div id="page-fun" class="page-section">
     <h1>Fun Zone 🧸</h1>
     
-    <!-- 1. Rain Toggle -->
     <div class="fun-card" style="display: flex; align-items: center; justify-content: space-between; padding: 15px 25px;">
       <h3 style="color: #89c4f4; margin: 0; font-size: 1.1rem;">Soft Rain Mode 🌧️</h3>
       <label class="toggle-switch">
@@ -380,7 +394,6 @@
       </label>
     </div>
 
-    <!-- 2. DARK THEME TOGGLE (NEW) -->
     <div class="fun-card" style="display: flex; align-items: center; justify-content: space-between; padding: 15px 25px;">
       <h3 style="color: #a78bfa; margin: 0; font-size: 1.1rem;">Dark mode 🌙</h3>
       <label class="toggle-switch">
@@ -389,45 +402,38 @@
       </label>
     </div>
 
-    <!-- 3. Plant -->
+    <div class="fun-card">
+      <h3 style="color: #a67fb8; margin-top: 0;">Pet the Kitten 🐱</h3>
+      <p style="font-size: 0.8rem;">Rub the cat to make it happy!</p>
+      <div id="petZone" style="font-size: 5rem; cursor: grab; user-select: none; transition: transform 0.1s;" 
+           onmousemove="petCat(event)" ontouchmove="petCat(event)">🐱</div>
+      <p id="purrStatus" style="font-size: 0.9rem; color: #a67fb8; min-height: 20px;">...</p>
+    </div>
+
     <div class="fun-card" style="border-color: var(--accent-green);">
       <h3 style="color: var(--accent-green); margin-top: 0;">Our Love Plant 🌱</h3>
       <p style="font-size: 0.8rem;">Water it daily to see it bloom!</p>
-      
-      <div id="plantStage" style="font-size: 5rem; min-height: 100px; transition: all 0.5s ease; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));">
-        🫘
-      </div>
+      <div id="plantStage" style="font-size: 5rem; min-height: 100px; transition: all 0.5s ease; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));">🫘</div>
       <p id="plantStatus" style="font-size: 0.9rem; color: var(--accent-green); font-weight: 600;">Stage 1: A tiny seed.</p>
-      
-      <button id="waterBtn" onclick="waterPlant()" style="background: var(--accent-green); color: white; box-shadow: 0 4px 15px rgba(72, 187, 120, 0.4);">
-        💧 Water Plant
-      </button>
+      <button id="waterBtn" onclick="waterPlant()" style="background: var(--accent-green); color: white; box-shadow: 0 4px 15px rgba(72, 187, 120, 0.4);">💧 Water Plant</button>
     </div>
 
-    <!-- 4. Emergency -->
     <div class="fun-card" style="border-color: var(--accent-red);">
       <h3 style="color: var(--accent-red); margin-top: 0;">EMERGENCY 🚨</h3>
       <p style="font-size: 0.8rem;">Only press if you need me ASAP!</p>
-      
-      <a href="https://wa.me/7974776697?text=CODE%20RED!%20🚨%20Baby%20I%20need%20attention%20immediately!%20🥺" 
-         target="_blank"
-         class="emergency-btn">
-        BREAK GLASS 🔨
-      </a>
+      <a href="https://wa.me/7974776697?text=CODE%20RED!%20🚨%20Baby%20I%20need%20attention%20immediately!%20🥺" target="_blank" class="emergency-btn">BREAK GLASS 🔨</a>
     </div>
 
-    <!-- 5. Shredder -->
-    <div class="fun-card" style="position: relative; overflow: visible;">
+    <div class="fun-card">
       <h3 style="margin-top: 0;">Worry Shredder 🗑️</h3>
-      <p style="font-size: 0.8rem;">Type what's stressing you out, then destroy it.</p>
-      <textarea id="worryInput" class="shredder-input" rows="3" placeholder="Exams, distance, overthinking..."></textarea>
-      <br>
-      <button onclick="shredWorry(this)" style="margin-top:10px; position: relative; z-index: 20;">
-        Shred it! 💥
-      </button>
+      <p style="font-size: 0.8rem;">Type the stress, then watch it disappear.</p>
+      <div class="shredder-wrapper" id="shredderContainer">
+        <textarea id="worryInput" class="shredder-input" rows="3" placeholder="Exams, distance, overthinking..."></textarea>
+        <div class="shredder-machine-bar"></div>
+      </div>
+      <button onclick="shredWorry(this)" style="margin-top:10px; position: relative; z-index: 20;">Shred it! 💥</button>
     </div>
 
-    <!-- 6. Battery -->
     <div class="fun-card">
       <h3 style="margin-top: 0;">Love Battery 🔋</h3>
       <p style="font-size: 0.8rem;">Low energy? Hold the button to recharge!</p>
@@ -435,12 +441,9 @@
         <div class="battery-cap"></div>
         <div id="batteryFill" class="battery-fill"></div>
       </div>
-      <button id="chargeBtn" style="user-select: none;">
-        Hold Me! ⚡
-      </button>
+      <button id="chargeBtn" style="user-select: none;">Hold Me! ⚡</button>
     </div>
 
-    <!-- 7. Breathing -->
     <div style="margin: 30px auto; text-align: center; max-width: 300px;">
         <h3 style="color: var(--heading-color);">Breathe with me 🧘‍♀️</h3>
         <div style="margin: 30px auto; height: 120px; display: flex; align-items: center; justify-content: center;">
@@ -454,13 +457,6 @@
         <style>.breathing-heart { width: 100px; height: 100px; animation: breatheHeart 4s ease-in-out infinite; transform-origin: center; } @keyframes breatheHeart { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }</style>
     </div>
 
-    <!-- 8. Bubble Wrap -->
-    <div style="margin: 40px auto; max-width: 300px;">
-        <h3 style="color: var(--heading-color);">Stress Popping 🫧</h3>
-        <div id="bubble-grid" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;"></div>
-    </div>
-
-    <!-- 9. Kisses -->
     <div style="margin: 40px auto; text-align: center;">
         <button id="kissBtn" style="font-size: 1.5rem;">Send a Kiss 💋</button>
         <p style="margin-top: 10px; font-size: 0.9rem;">Total Kisses Sent: <span id="kissCount" style="color: var(--heading-color); font-weight: bold;">0</span></p>
@@ -468,16 +464,68 @@
   </div>
 
 
-  <!-- ======================== GALLERY SECTION ======================== -->
-  <div id="page-gallery" class="page-section">
-    <h1>Photo Gallery 📸</h1>
-    <div id="gallery" class="gallery">
-        <!-- Images load here -->
+  <div id="page-fidgets" class="page-section">
+    <h1>Distraction Zone 🧩</h1>
+    <p style="font-size: 0.9rem; margin-bottom: 20px;">Play with these when you're stressed!</p>
+
+    <div class="fun-card">
+        <h3 style="margin-top: 0;">Foggy Window 🌫️</h3>
+        <p style="font-size: 0.8rem;">Rub the window to reveal the message!</p>
+        <div class="fog-wrapper">
+            <div class="fog-text">hehe </div>
+            <canvas id="fogCanvas"></canvas>
+        </div>
+    </div>
+
+    <div class="fun-card">
+        <h3 style="margin-top: 0;">Elastic Heart 🏹</h3>
+        <p style="font-size: 0.8rem;">Pull the heart and snap it back!</p>
+        <div id="elasticBox" class="elastic-box">
+            <div id="elasticHeart" class="elastic-heart">❤️</div>
+        </div>
+    </div>
+
+    <div class="fun-card">
+        <h3 style="margin-top: 0;">Gravity Box 🍎</h3>
+        <p style="font-size: 0.8rem;">Tap anywhere inside to shake them up!</p>
+        <div id="gravityBox" class="gravity-box"></div>
+    </div>
+
+    <div class="fun-card">
+        <h3 style="margin-top: 0;">Neon Scribble 🖊️</h3>
+        <p style="font-size: 0.8rem;">Draw light that fades away...</p>
+        <canvas id="scribbleCanvas" class="scribble-board"></canvas>
+    </div>
+
+    <div class="fun-card">
+        <h3 style="margin-top: 0;">Confetti Cannon 🎉</h3>
+        <button onclick="fireConfetti()" style="font-size: 1.2rem; padding: 15px 30px;">BOOM! 💥</button>
+    </div>
+
+    <div class="fun-card">
+      <h3 style="margin-top: 0;">Fidget Switches 🎚️</h3>
+      <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 15px;">
+        <label class="toggle-switch"><input type="checkbox"><span class="slider"></span></label>
+        <label class="toggle-switch"><input type="checkbox" checked><span class="slider"></span></label>
+        <label class="toggle-switch"><input type="checkbox"><span class="slider"></span></label>
+        <label class="toggle-switch"><input type="checkbox" checked><span class="slider"></span></label>
+      </div>
+    </div>
+    
+    <div style="margin: 40px auto; max-width: 300px;">
+        <h3 style="color: var(--heading-color);">Stress Popping 🫧</h3>
+        <div id="bubble-grid" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;"></div>
     </div>
   </div>
 
 
-  <!-- ======================== BOTTOM NAVIGATION ======================== -->
+  <div id="page-gallery" class="page-section">
+    <h1>Photo Gallery 📸</h1>
+    <div id="gallery" class="gallery">
+        </div>
+  </div>
+
+
   <nav class="nav-bar">
     <button class="nav-item active" onclick="showPage('page-home', this)">
         <span class="nav-icon">🏠</span>
@@ -491,13 +539,16 @@
         <span class="nav-icon">🧸</span>
         <span class="nav-label">Fun</span>
     </button>
+    <button class="nav-item" onclick="showPage('page-fidgets', this)">
+        <span class="nav-icon">🧩</span>
+        <span class="nav-label">Fidgets</span>
+    </button>
     <button class="nav-item" onclick="showPage('page-gallery', this)">
         <span class="nav-icon">📸</span>
         <span class="nav-label">Photos</span>
     </button>
   </nav>
 
-  <!-- MODAL -->
   <div class="modal" id="modal">
     <div class="modal-card">
       <h3 class="modal-title" id="modalTitle"></h3>
@@ -508,17 +559,13 @@
     </div>
   </div>
 
-  <!-- ======================== JAVASCRIPT ======================== -->
   <script>
     /* --- THEME TOGGLE LOGIC --- */
     const themeToggle = document.getElementById('themeToggle');
     if(themeToggle) {
         themeToggle.addEventListener('change', function() {
-            if(this.checked) {
-                document.body.setAttribute('data-theme', 'dark');
-            } else {
-                document.body.removeAttribute('data-theme');
-            }
+            if(this.checked) { document.body.setAttribute('data-theme', 'dark'); } 
+            else { document.body.removeAttribute('data-theme'); }
         });
     }
 
@@ -529,6 +576,13 @@
         document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
         btn.classList.add('active');
         window.scrollTo(0,0);
+        
+        // Re-init canvases if fidget page is shown
+        if(pageId === 'page-fidgets') {
+            initFog();
+            initScribble();
+            if(!gravityInterval) initGravityBox();
+        }
     }
 
     /* --- RANDOM LOVE NOTES --- */
@@ -679,7 +733,7 @@
     document.querySelectorAll('.card[data-date], .card[data-absolute]').forEach(card => card.addEventListener("click", () => openModal(card)));
     closeBtn.addEventListener("click", () => { modal.classList.remove("open"); if (timer) clearInterval(timer); });
     
-    /* --- GALLERY LOGIC (Seed from images folder) --- */
+    /* --- GALLERY LOGIC --- */
     const galleryEl = document.getElementById('gallery');
     const imageLibrary = [];
     
@@ -694,7 +748,6 @@
         const valid = results.filter(Boolean);
         
         if (valid.length === 0) {
-             // Fallback if no images found (try card images)
              const cardImgs = Array.from(document.querySelectorAll('img.card-img')).map(i => i.src).filter(Boolean);
              if(cardImgs.length) { imageLibrary.push(...cardImgs); renderSingleGalleryCard(); }
              else { galleryEl.innerHTML = '<div style="padding:20px">No images found in images/ folder.</div>'; }
@@ -707,19 +760,15 @@
     function renderSingleGalleryCard() {
         galleryEl.innerHTML = '';
         if (imageLibrary.length === 0) return;
-        
         let currentIndex = Math.floor(Math.random() * imageLibrary.length);
         const card = document.createElement('div');
         card.className = 'gallery-card';
-        
         const img = document.createElement('img');
         img.src = imageLibrary[currentIndex];
         card.appendChild(img);
-        
         const note = document.createElement('div');
         note.style.fontSize = '0.8rem'; note.style.marginTop = '5px'; note.textContent = 'Tap for next pic 📸';
         card.appendChild(note);
-        
         card.onclick = () => {
             let nextIndex;
             do { nextIndex = Math.floor(Math.random() * imageLibrary.length); } 
@@ -731,42 +780,7 @@
     }
     seedGallery();
 
-    /* --- WORRY SHREDDER LOGIC --- */
-    function shredWorry(btn) {
-      const input = document.getElementById('worryInput');
-      const card = btn.closest('.fun-card');
-      if (!input.value.trim()) {alert("Write something first to shred! 😉"); return;}
-      
-      // 1. Animate input shrinking
-      input.classList.add('shredding');
-      btn.disabled = true; btn.innerText = "Shredding...";
-
-      // 2. Create paper strips effect
-      for(let i=0; i<20; i++) {
-        const strip = document.createElement('div');
-        strip.className = 'paper-strip';
-        // Randomize start positions near the button
-        strip.style.left = (20 + Math.random() * 60) + '%';
-        strip.style.backgroundColor = i % 2 === 0 ? '#f0f0f0' : '#ffffff';
-        // Randomize fall animation variations
-        strip.style.animationDelay = Math.random() * 0.3 + 's';
-        strip.style.transform = `rotate(${Math.random()*360}deg)`;
-        card.appendChild(strip);
-        // Clean up strips
-        setTimeout(() => strip.remove(), 1500);
-      }
-
-      // 3. Reset form
-      setTimeout(() => {
-        input.value = '';
-        input.classList.remove('shredding');
-        btn.disabled = false; btn.innerText = "Shred it! 💥";
-        alert("Worry shredded. Deep breath. You got this. ❤️");
-      }, 1200);
-    }
-
-    /* --- VIRTUAL PLANT LOGIC (Persistent) --- */
-    // Plant Stages (Emojis & Text)
+    /* --- VIRTUAL PLANT LOGIC --- */
     const plantStages = [
       { emoji: "🫘", text: "Stage 1: A tiny seed of our love." },
       { emoji: "🌱", text: "Stage 2: It sprout! It likes your attention." },
@@ -774,18 +788,13 @@
       { emoji: "🌿", text: "Stage 4: Look how big it is!" },
       { emoji: "🌸", text: "Stage 5: It bloomed for you! Beautiful! 💖" }
     ];
-
-    // Elements
     const plantStageEl = document.getElementById('plantStage');
     const plantStatusEl = document.getElementById('plantStatus');
     const waterBtn = document.getElementById('waterBtn');
-
-    // Load saved data from browser memory
     let currentStage = parseInt(localStorage.getItem('plantStage')) || 0;
     let lastWateredDate = localStorage.getItem('lastWateredDate');
 
     function updatePlantVisuals() {
-      // Ensure stage doesn't go past the max
       const stageData = plantStages[Math.min(currentStage, plantStages.length - 1)];
       if (plantStageEl) {
         plantStageEl.innerHTML = stageData.emoji;
@@ -793,78 +802,339 @@
         setTimeout(() => { plantStageEl.style.transform = "scale(1)"; }, 300);
       }
       if (plantStatusEl) plantStatusEl.textContent = stageData.text;
-      
-      // Check if already watered today to disable button
-      const today = new Date().toISOString().slice(0, 10); // Format: YYYY-MM-DD
+      const today = new Date().toISOString().slice(0, 10);
       if (lastWateredDate === today && currentStage < plantStages.length) {
-         waterBtn.disabled = true;
-         waterBtn.innerText = "Come back tomorrow! 🕒";
-         waterBtn.style.background = "#ccc";
-         waterBtn.style.boxShadow = "none";
+         waterBtn.disabled = true; waterBtn.innerText = "Come back tomorrow! 🕒"; waterBtn.style.background = "#ccc"; waterBtn.style.boxShadow = "none";
       } else if (currentStage >= plantStages.length) {
-         waterBtn.disabled = true;
-         waterBtn.innerText = "Fully Bloomed! 🌸";
+         waterBtn.disabled = true; waterBtn.innerText = "Fully Bloomed! 🌸";
       }
     }
-
     function waterPlant() {
       const today = new Date().toISOString().slice(0, 10);
-      
-      // Check if already watered today
-      if (lastWateredDate === today) {
-        alert("You already watered it today! Don't overwater our love! 😉");
-        return;
-      }
-
-      // Increment stage (if not fully grown)
+      if (lastWateredDate === today) { alert("You already watered it today! Don't overwater our love! 😉"); return; }
       if (currentStage < plantStages.length) {
         currentStage++;
-        // Celebrate if it just reached final stage
-        if(currentStage === plantStages.length) {
-           alert("OMG! You made it bloom! I love you! 🌸💖🌸");
-        }
+        if(currentStage === plantStages.length) alert("OMG! You made it bloom! I love you! 🌸💖🌸");
       }
-
-      // Save new data to browser memory
       lastWateredDate = today;
       localStorage.setItem('plantStage', currentStage);
       localStorage.setItem('lastWateredDate', lastWateredDate);
-
-      // Update visuals
       updatePlantVisuals();
     }
-
-    // Initialize on load
     if (waterBtn) updatePlantVisuals();
 
-    /* --- RAIN TOGGLE LOGIC --- */
+    /* --- RAIN LOGIC --- */
     const rainToggle = document.getElementById('rainToggle');
     const rainContainer = document.getElementById('rainContainer');
     let rainInterval;
-
     if (rainToggle) {
         rainToggle.addEventListener('change', function() {
           if(this.checked) {
             rainContainer.classList.add('active');
-            // Start creating rain drops
             rainInterval = setInterval(() => {
               const drop = document.createElement('div');
               drop.className = 'rain-drop';
               drop.style.left = Math.random() * 100 + 'vw';
-              drop.style.animationDuration = Math.random() * 1 + 0.5 + 's'; // Random speed
+              drop.style.animationDuration = Math.random() * 1 + 0.5 + 's';
               drop.style.opacity = Math.random();
               rainContainer.appendChild(drop);
-              // Remove drop after animation finishes to stop memory leaks
               setTimeout(() => { drop.remove(); }, 2000);
             }, 50); 
           } else {
             rainContainer.classList.remove('active');
             clearInterval(rainInterval);
-            rainContainer.innerHTML = ''; // Clear existing drops
+            rainContainer.innerHTML = '';
           }
         });
     }
+
+    /* --- PET CAT LOGIC --- */
+    let lastPetTime = 0;
+    function petCat(e) {
+      const now = Date.now();
+      if (now - lastPetTime < 50) return;
+      lastPetTime = now;
+      const cat = document.getElementById('petZone');
+      const status = document.getElementById('purrStatus');
+      cat.style.transform = `rotate(${Math.random() * 20 - 10}deg) scale(1.1)`;
+      setTimeout(() => cat.style.transform = 'rotate(0deg) scale(1)', 100);
+      const purrs = ["Purr...", "Meow!", "Mrrrph~", "❤️"];
+      status.innerText = purrs[Math.floor(Math.random() * purrs.length)];
+      const heart = document.createElement('div');
+      heart.innerText = '❤️';
+      heart.style.position = 'absolute';
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      heart.style.left = (clientX - 10) + 'px'; heart.style.top = (clientY - 20) + 'px'; heart.style.pointerEvents = 'none'; heart.style.fontSize = '1.5rem'; heart.style.transition = 'all 0.8s ease-out';
+      document.body.appendChild(heart);
+      requestAnimationFrame(() => { heart.style.transform = `translateY(-100px) translateX(${Math.random() * 40 - 20}px)`; heart.style.opacity = 0; });
+      setTimeout(() => heart.remove(), 800);
+    }
+
+    /* --- SHREDDER LOGIC --- */
+    function shredWorry(btn) {
+      const input = document.getElementById('worryInput');
+      const container = document.getElementById('shredderContainer');
+      if (!input.value.trim()) { alert("Write something first! 😉"); return; }
+      btn.disabled = true; btn.innerText = "Shredding...";
+      input.classList.add('jammed');
+      setTimeout(() => {
+        input.classList.remove('jammed'); input.classList.add('shredding');
+        for(let i=0; i<30; i++) {
+          const strip = document.createElement('div');
+          strip.className = 'paper-strip';
+          strip.style.left = (i * 3 + Math.random() * 5) + '%';
+          strip.style.setProperty('--rot', (Math.random() * 360) + 'deg');
+          strip.style.animation = `stripFall ${1 + Math.random()}s forwards`;
+          container.appendChild(strip);
+          setTimeout(() => strip.remove(), 2000);
+        }
+      }, 500);
+      setTimeout(() => {
+        input.value = ''; input.classList.remove('shredding'); btn.disabled = false; btn.innerText = "Shred it! 💥";
+      }, 2500);
+    }
+
+    /* =============================================
+       NEW FIDGETS LOGIC
+       ============================================= */
+    
+    /* 1. FOGGY WINDOW */
+    function initFog() {
+        const canvas = document.getElementById('fogCanvas');
+        if(!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const wrapper = canvas.parentElement;
+        canvas.width = wrapper.offsetWidth;
+        canvas.height = wrapper.offsetHeight;
+        
+        // Fill with gray
+        ctx.fillStyle = '#999';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.globalCompositeOperation = 'destination-out';
+
+        function scratch(x, y) {
+            ctx.beginPath();
+            ctx.arc(x, y, 20, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        canvas.onmousemove = (e) => {
+            const rect = canvas.getBoundingClientRect();
+            scratch(e.clientX - rect.left, e.clientY - rect.top);
+        };
+        canvas.ontouchmove = (e) => {
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            scratch(e.touches[0].clientX - rect.left, e.touches[0].clientY - rect.top);
+        };
+    }
+
+    /* 2. ELASTIC HEART */
+    const heart = document.getElementById('elasticHeart');
+    const box = document.getElementById('elasticBox');
+    if(heart && box) {
+        let isDragging = false;
+        const center = { x: box.offsetWidth/2, y: box.offsetHeight/2 };
+        
+        const startDrag = () => { isDragging = true; heart.style.transition = 'none'; };
+        const endDrag = () => { 
+            isDragging = false; 
+            heart.style.transition = 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            heart.style.top = '50%'; 
+            heart.style.left = '50%'; 
+        };
+        const moveDrag = (x, y) => {
+            if(!isDragging) return;
+            const rect = box.getBoundingClientRect();
+            let localX = x - rect.left;
+            let localY = y - rect.top;
+            heart.style.left = localX + 'px';
+            heart.style.top = localY + 'px';
+        };
+
+        heart.addEventListener('mousedown', startDrag);
+        heart.addEventListener('touchstart', startDrag);
+        window.addEventListener('mouseup', endDrag);
+        window.addEventListener('touchend', endDrag);
+        box.addEventListener('mousemove', e => moveDrag(e.clientX, e.clientY));
+        box.addEventListener('touchmove', e => moveDrag(e.touches[0].clientX, e.touches[0].clientY));
+    }
+
+    /* 3. NEON SCRIBBLE */
+    function initScribble() {
+        const canvas = document.getElementById('scribbleCanvas');
+        if(!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+        ctx.lineWidth = 4;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = '#ff00de';
+        ctx.strokeStyle = '#ff00de';
+
+        let painting = false;
+        function startPosition() { painting = true; }
+        function finishedPosition() { painting = false; ctx.beginPath(); }
+        function draw(x, y) {
+            if(!painting) return;
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
+
+        canvas.onmousedown = startPosition;
+        canvas.onmouseup = finishedPosition;
+        canvas.onmousemove = e => {
+            const r = canvas.getBoundingClientRect();
+            draw(e.clientX - r.left, e.clientY - r.top);
+        };
+        canvas.ontouchstart = (e) => { e.preventDefault(); startPosition(); };
+        canvas.ontouchend = finishedPosition;
+        canvas.ontouchmove = e => {
+            e.preventDefault();
+            const r = canvas.getBoundingClientRect();
+            draw(e.touches[0].clientX - r.left, e.touches[0].clientY - r.top);
+        };
+
+        // Fade effect loop
+        setInterval(() => {
+            ctx.save();
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.restore();
+        }, 50);
+    }
+
+    /* 4. GRAVITY BOX (Updated Physics) */
+    let gravityInterval;
+    const emojis = ['❤️', '🍎', '🐱', '🌟', '👻', '🍪', '🧸'];
+    const bodies = [];
+    
+    function initGravityBox() {
+        const box = document.getElementById('gravityBox');
+        if(!box) return;
+        
+        // Clear existing if re-initializing
+        box.innerHTML = ''; 
+        bodies.length = 0;
+        if(gravityInterval) clearInterval(gravityInterval);
+        
+        // Create 12 random emojis
+        for(let i=0; i<12; i++) {
+            const el = document.createElement('div');
+            el.className = 'gravity-emoji';
+            el.innerText = emojis[Math.floor(Math.random()*emojis.length)];
+            // Random initial position
+            const startX = Math.random() * (box.offsetWidth - 40);
+            const startY = Math.random() * (box.offsetHeight / 2);
+            
+            box.appendChild(el);
+            bodies.push({
+                el: el,
+                x: startX,
+                y: startY,
+                vx: (Math.random() - 0.5) * 15, // Horizontal velocity
+                vy: (Math.random() - 0.5) * 15  // Vertical velocity
+            });
+        }
+
+        // Physics Loop
+        gravityInterval = setInterval(() => {
+            bodies.forEach(b => {
+                b.vy += 0.8; // Gravity strength
+                b.x += b.vx;
+                b.y += b.vy;
+
+                // Friction (Air resistance)
+                b.vx *= 0.99;
+                b.vy *= 0.99;
+
+                // Floor Collision
+                if(b.y + 40 > box.offsetHeight) { 
+                    b.y = box.offsetHeight - 40; 
+                    b.vy *= -0.6; // Bounce efficiency (loss of energy)
+                    // Randomize horizontal bounce slightly on floor hit
+                    b.vx += (Math.random() - 0.5) * 2;
+                }
+                
+                // Ceiling Collision
+                if(b.y < 0) { 
+                    b.y = 0; 
+                    b.vy *= -0.6; 
+                }
+                
+                // Right Wall Collision
+                if(b.x + 40 > box.offsetWidth) { 
+                    b.x = box.offsetWidth - 40; 
+                    b.vx *= -0.6; 
+                }
+                
+                // Left Wall Collision
+                if(b.x < 0) { 
+                    b.x = 0; 
+                    b.vx *= -0.6; 
+                }
+
+                b.el.style.transform = `translate(${b.x}px, ${b.y}px)`;
+            });
+        }, 20);
+        
+        // Interaction: Tap to "Explode" / Shake
+        const boost = (e) => {
+            e.preventDefault(); // Stop scrolling on touch
+            bodies.forEach(b => {
+                // Give them a massive random kick upwards and sideways
+                b.vy = -15 - (Math.random() * 10);
+                b.vx = (Math.random() - 0.5) * 30;
+            });
+        };
+
+        box.addEventListener('mousedown', boost);
+        box.addEventListener('touchstart', boost);
+    }
+
+    /* 5. CONFETTI CANNON */
+    function fireConfetti() {
+        const colors = ['#ff7da5', '#48bb78', '#ff4757', '#feca57', '#54a0ff'];
+        for(let i=0; i<50; i++) {
+            const c = document.createElement('div');
+            c.style.position = 'fixed';
+            c.style.width = '10px'; c.style.height = '10px';
+            c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            c.style.left = '50%'; c.style.top = '50%';
+            c.style.zIndex = '9999';
+            document.body.appendChild(c);
+            
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = 10 + Math.random() * 20;
+            const vx = Math.cos(angle) * velocity;
+            const vy = Math.sin(angle) * velocity;
+            
+            let x = window.innerWidth / 2;
+            let y = window.innerHeight / 2;
+            let t = 0;
+            
+            const anim = setInterval(() => {
+                x += vx;
+                y += vy + (0.5 * t); // Gravity
+                c.style.left = x + 'px';
+                c.style.top = y + 'px';
+                c.style.transform = `rotate(${t * 10}deg)`;
+                t++;
+                if(y > window.innerHeight) {
+                    clearInterval(anim);
+                    c.remove();
+                }
+            }, 20);
+        }
+    }
+
   </script>
 </body>
 </html>
-
