@@ -3,155 +3,101 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Countdowns + Gallery ⏳📸</title>
+  <title>Kitten & Daddy 💖</title>
   <style>
-    /* ---------- existing styles (kept + slightly extended) ---------- */
-    .header-image img {
-      width: 100%;
-      max-height: 250px;
-      object-fit: cover;
-      border-radius: 15px;
-      margin-top: 12px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      animation: fadeIn 1.4s ease;
-    }
-    @keyframes fadeIn { from { opacity: 0; transform: scale(1.02); } to { opacity: 1; transform: scale(1); } }
+    /* ---------- GLOBAL STYLES ---------- */
     body {
       font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       background: #fffafc;
       color: #3b3b3b;
       margin: 0;
+      padding-bottom: 80px; /* Space for the nav bar */
       text-align: center;
+      overflow-x: hidden; /* Prevent horizontal scroll */
     }
-    h1 { font-size: 2rem; color: #e08eb4; margin: 28px 0 6px; }
-    .countdowns { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; padding: 20px; }
+    h1 { font-size: 1.8rem; color: #e08eb4; margin: 20px 0 10px; }
+    h2, h3 { color: #d47fa6; }
+
+    /* ---------- NAVIGATION BAR (TABS) ---------- */
+    .nav-bar {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 400px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 10px 20px;
+      border-radius: 50px;
+      box-shadow: 0 10px 30px rgba(224, 142, 180, 0.25);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      border: 1px solid #ffe0eb;
+    }
+    .nav-item {
+      font-size: 1.5rem;
+      cursor: pointer;
+      opacity: 0.5;
+      transition: all 0.3s ease;
+      background: none;
+      border: none;
+      padding: 5px;
+    }
+    .nav-item.active {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+    .nav-label {
+      font-size: 0.7rem;
+      display: block;
+      font-weight: bold;
+      color: #ff7da5;
+    }
+
+    /* ---------- PAGE SECTIONS ---------- */
+    .page-section {
+      display: none; /* Hidden by default */
+      animation: fadeIn 0.5s ease;
+    }
+    .page-section.active {
+      display: block; /* Show when active */
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ---------- HEADER IMAGE ---------- */
+    .header-image img {
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 0 0 20px 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* ---------- COUNTDOWNS ---------- */
+    .countdowns { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; padding: 10px; }
     .card {
       background: #ffeef4;
       border-radius: 18px;
       box-shadow: 0 4px 12px rgba(0,0,0,.1);
-      width: 250px;
-      padding: 20px;
-      position: relative;
+      width: 45%; /* Fits 2 per row on mobile */
+      min-width: 140px;
+      max-width: 200px;
+      padding: 15px;
       transition: transform .25s ease;
       cursor: pointer;
+      margin-bottom: 10px;
     }
     .card:hover { transform: translateY(-4px); }
-    .emoji { font-size: 2rem; }
-    .event { font-size: 1.2rem; color: #ff7da5; font-weight: 600; margin-top: 8px; }
-    .days { font-size: 2.2rem; color: #5a4f4f; font-weight: 800; margin: 6px 0; }
-    .note { font-size: .92rem; color: #6d6262; margin-top: 4px; }
-    img.card-img {
-      width: 80%;
-      border-radius: 12px;
-      margin-top: 10px;
-    }
-    footer { margin: 26px 0 36px; font-size: .82rem; color: #9b8b8b; }
+    .emoji { font-size: 1.5rem; }
+    .event { font-size: 1rem; color: #ff7da5; font-weight: 600; margin-top: 5px; }
+    .days { font-size: 1.5rem; color: #5a4f4f; font-weight: 800; margin: 4px 0; }
+    .note { font-size: .8rem; color: #6d6262; margin-top: 4px; }
+    img.card-img { width: 100%; border-radius: 10px; margin-top: 8px; display: block; }
 
-    /* Modal */
-    .modal { position: fixed; inset: 0; background: rgba(0,0,0,.38); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 999; }
-    .modal.open { display: flex; }
-    .modal-card { background: #fff; max-width: 520px; width: 100%; border-radius: 20px; box-shadow: 0 12px 28px rgba(0,0,0,.18); padding: 26px 22px; }
-    .modal-title { font-size: 1.2rem; color: #ff74a1; margin: 0 0 6px; }
-    .modal-sub { font-size: .95rem; color: #6d6262; margin: 0 0 16px; }
-    .bigtime { font-variant-numeric: tabular-nums; letter-spacing: .5px; font-size: 2.4rem; font-weight: 800; color: #3f3a3a; margin: 10px 0 6px; }
-    .units { font-size: .8rem; color: #8a7f7f; margin-bottom: 14px; }
-    .modal-close { margin-top: 10px; background: #ffe0eb; border: none; color: #7a5b66; padding: 10px 16px; border-radius: 10px; font-weight: 600; cursor: pointer; }
-    .modal-close:hover { background: #ffd3e3; }
-    #first-talk p, #first-date p, #first-iloveyou p { font-size: 1.1rem; font-weight: 500; color: #d47fa6; }
-
-    /* ---------- gallery styles ---------- */
-    .gallery-controls {
-      max-width: 980px;
-      margin: 18px auto 6px;
-      padding: 10px 18px;
-      text-align: left;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .file-input-label {
-      background: #ffdfe9;
-      padding: 8px 12px;
-      border-radius: 10px;
-      cursor: pointer;
-      color: #6b3b4a;
-      font-weight: 600;
-    }
-    .url-input {
-      padding: 8px 10px;
-      border-radius: 10px;
-      border: 1px solid #e6c7d4;
-      width: 260px;
-      outline: none;
-    }
-    .add-url-btn {
-      padding: 8px 12px;
-      border-radius: 10px;
-      background: #ffe0eb;
-      border: none;
-      cursor: pointer;
-      font-weight: 600;
-    }
-
-    .gallery {
-      max-width: 720px;
-      margin: 24px auto 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      padding: 0 14px;
-    }
-
-    .gallery-card {
-      background: #fff1f7;
-      border-radius: 12px;
-      padding: 8px;
-      box-shadow: 0 8px 28px rgba(0,0,0,0.08);
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      max-width: 640px;
-    }
-
-    .gallery-card img {
-      width: 100%;
-      height: auto;
-      max-height: 600px;
-      border-radius: 8px;
-      object-fit: cover;
-    }
-    .gallery-note {
-      font-size: 0.9rem;
-      color: #7a525f;
-      margin-top: 8px;
-      font-weight: 600;
-    }
-
-    .small-muted {
-      font-size: 12px;
-      color: #9b8b8b;
-      margin-left: 6px;
-    }
-
-    /* New Styles for Note Section */
-    .note-display-area {
-        font-size: 1.3rem;
-        color: #5a4f4f;
-        font-weight: 600;
-        margin: 15px 0;
-        min-height: 60px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
+    /* ---------- INTERACTIVE ELEMENTS ---------- */
     .interactive-btn {
         background: #fff;
         border: 2px solid #ff7da5;
@@ -162,188 +108,196 @@
         font-weight: bold;
         cursor: pointer;
     }
-
-    /* responsive */
-    @media (max-width: 480px) {
-      .card { width: calc(50% - 30px); }
+    .note-display-area {
+        font-size: 1.2rem;
+        color: #5a4f4f;
+        font-weight: 600;
+        min-height: 50px;
+        margin-top: 10px;
     }
+
+    /* ---------- MODAL ---------- */
+    .modal { position: fixed; inset: 0; background: rgba(0,0,0,.38); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 2000; }
+    .modal.open { display: flex; }
+    .modal-card { background: #fff; max-width: 520px; width: 100%; border-radius: 20px; box-shadow: 0 12px 28px rgba(0,0,0,.18); padding: 26px 22px; }
+    .bigtime { font-variant-numeric: tabular-nums; font-size: 2rem; font-weight: 800; color: #3f3a3a; margin: 10px 0; }
+    .modal-close { margin-top: 10px; background: #ffe0eb; border: none; color: #7a5b66; padding: 10px 16px; border-radius: 10px; font-weight: 600; cursor: pointer; }
+
+    /* ---------- GALLERY ---------- */
+    .gallery {
+      display: flex; flex-direction: column; align-items: center; gap: 15px; padding: 10px;
+    }
+    .gallery-card {
+      background: #fff; border-radius: 12px; padding: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 400px;
+    }
+    .gallery-card img { width: 100%; border-radius: 8px; }
+    
+    /* ---------- ENVELOPE ---------- */
+    .envelope-container { transition: transform 0.8s; }
+    .open .envelope-container { transform: rotateY(180deg); }
   </style>
 </head>
 <body>
+
   <div class="header-image">
     <img src="i-love-you.jpg" alt="I Love You" />
   </div>
-  <h1>Countdowns ⏳ + Gallery 📸</h1>
 
-  <div style="display: flex; justify-content: center; margin-bottom: 20px;">
-      <div class="card" style="width: 90%; max-width: 500px; cursor: default;" onclick="generateRandomNote()">
-        <div class="emoji">💌</div>
-        <div class="event">Love Note for You</div>
-        
-        <div id="note-content" class="note-display-area">
-            Tap here for a note!
-        </div>
-        
-        <div class="note">Tap the card to see a new message</div>
+  <div id="page-home" class="page-section active">
+    <h1>Our Countdowns ⏳</h1>
+
+    <div style="margin: 10px auto 20px; max-width: 300px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        <iframe style="border-radius:12px" src="open.spotify.com/track/...4" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
+
+    <div class="countdowns">
+      <div class="card" data-title="Our Anniversary 💞" data-date="09-06" data-note="Celebrating us 💌">
+        <div class="emoji">💞</div>
+        <div class="event">Anniversary</div>
+        <div class="days"></div>
       </div>
-  </div>
-<div style="margin: 30px auto; text-align: center;">
-  <button id="kissBtn" style="
-    font-size: 1.5rem; 
-    padding: 10px 20px; 
-    border-radius: 50px; 
-    border: none; 
-    background: #ff7da5; 
-    color: white; 
-    cursor: pointer; 
-    box-shadow: 0 4px 15px rgba(255, 125, 165, 0.4);
-    transition: transform 0.1s;">
-    Send a Kiss 💋
-  </button>
-  <p style="color: #888; margin-top: 10px; font-size: 0.9rem;">
-    Total Kisses Sent: <span id="kissCount" style="color: #ff7da5; font-weight: bold;">0</span>
-  </p>
-</div>
-<div style="margin: 30px auto 50px auto; text-align: center; max-width: 300px;">
-  <h3 style="color: #e08eb4; margin-bottom: 5px;">Anxious? Breathe with me. 🧘‍♀️</h3>
-  <p style="font-size: 0.85rem; color: #888; margin-top: 0;">Inhale as our love grows...</p>
 
-  <div style="margin: 30px auto; height: 120px; display: flex; align-items: center; justify-content: center;">
-    <div class="breathing-heart">
-      <svg viewBox="0 0 32 29.6" style="width: 100%; height: 100%; overflow: visible;">
-        <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2
-        c6.1-9.3,16-11.8,16-21.2C32,3.8,28.2,0,23.6,0z" fill="#ff7da5"/>
-        <text x="16" y="15" fill="white" font-size="7" font-weight="bold" text-anchor="middle" dominant-baseline="middle">R K</text>
-      </svg>
+      <div class="card" data-title="We meet!! 💞" data-absolute="2025-11-27T00:00:00" data-note="Together again 💖">
+        <div class="emoji">✈️</div>
+        <div class="event">We meet!!</div>
+        <div class="days"></div>
+      </div>
+      
+      <div class="card" data-title="End of Exams 📚" data-absolute="2025-12-30T23:59:59" data-note="Freedom! 🌷">
+        <div class="emoji">📚</div>
+        <div class="event">End of Exams</div>
+        <div class="days"></div>
+      </div>
+
+      <div class="card" data-title="Kitten’s Birthday 🎂" data-date="01-02" data-note="Happy Birthday!">
+        <div class="emoji">🎂</div>
+        <div class="event">Kitten Bday</div>
+        <div class="days"></div>
+      </div>
+
+       <div class="card" data-title="Daddy’s Birthday 🎉" data-date="04-14" data-note="Muah!">
+        <div class="emoji">🎉</div>
+        <div class="event">Daddy Bday</div>
+        <div class="days"></div>
+      </div>
+    </div>
+
+    <h2 style="margin-top: 20px;">✨ Milestones ✨</h2>
+    <div class="countdowns">
+        <div class="card" style="width: 90%; max-width: 400px;" onclick="toggleDetail('talk', '2025-04-22')">
+            <h3>💬 First Talked</h3>
+            <p id="talk-days" style="font-size: 1.2rem; font-weight: bold; color: #d47fa6;">Loading...</p>
+        </div>
+        <div class="card" style="width: 90%; max-width: 400px;" onclick="toggleDetail('date', '2025-08-03')">
+            <h3>🍰 First Date</h3>
+            <p id="date-days" style="font-size: 1.2rem; font-weight: bold; color: #d47fa6;">Loading...</p>
+        </div>
+        <div class="card" style="width: 90%; max-width: 400px;" onclick="toggleDetail('love', '2025-08-28')">
+            <h3>❤️ Said "I Love You"</h3>
+            <p id="love-days" style="font-size: 1.2rem; font-weight: bold; color: #d47fa6;">Loading...</p>
+        </div>
     </div>
   </div>
 
-  <style>
-    .breathing-heart {
-      width: 100px;
-      height: 100px;
-      /* This animation makes it pulse */
-      animation: breatheHeart 4s ease-in-out infinite;
-      /* Ensures it grows from the center */
-      transform-origin: center center;
-      /* Fixes flickers on some browsers */
-      backface-visibility: hidden; 
-    }
 
-    @keyframes breatheHeart {
-      0%, 100% { 
-        transform: scale(1); 
-      }
-      50% { 
-        transform: scale(1.3); /* Grows 30% bigger */
-      }
-    }
-  </style>
-</div>
+  <div id="page-notes" class="page-section">
+    <h1>Love Notes 💌</h1>
 
+    <div class="card" style="width: 90%; max-width: 400px; margin: 0 auto 30px; cursor: default;" onclick="generateRandomNote()">
+        <div class="emoji">🎲</div>
+        <div class="event">Tap for a Random Note</div>
+        <div id="note-content" class="note-display-area">Tap me!</div>
+    </div>
 
-<script>
-  /* Kiss Counter Logic */
-  const kissBtn = document.getElementById('kissBtn');
-  const kissCountDisplay = document.getElementById('kissCount');
-  
-  // Load saved count
-  let kisses = localStorage.getItem('kissCount') || 0;
-  kissCountDisplay.textContent = kisses;
+    <div style="margin: 50px auto; perspective: 1000px; cursor: pointer; width: 280px; height: 180px;" onclick="this.classList.toggle('open')">
+        <div class="envelope-container" style="position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d;">
+          <div style="position: absolute; width: 100%; height: 100%; background: #ff7da5; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem; backface-visibility: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.15);">
+            💌 <div style="position: absolute; bottom: 10px; font-size: 0.9rem;">Tap to Open</div>
+          </div>
+          <div style="position: absolute; width: 100%; height: 100%; background: #fff; border: 2px solid #ff7da5; border-radius: 10px; transform: rotateY(180deg); padding: 20px; box-sizing: border-box; overflow-y: auto; text-align: left; display: flex; flex-direction: column;">
+            <h4 style="margin: 0 0 10px; color: #d47fa6;">To my Khushi,</h4>
+            <p style="font-size: 0.85rem; color: #555; line-height: 1.4; margin: 0;">
+              I know exams are tough, but you are tougher. I am so incredibly proud of the person you are becoming. Just remember to drink water and take breaks. I am always right here cheering for you! <br><br> Love, Your Kitten.
+            </p>
+          </div>
+        </div>
+    </div>
 
-  kissBtn.addEventListener('click', () => {
-    kisses++;
-    localStorage.setItem('kissCount', kisses); // Save to phone memory
-    kissCountDisplay.textContent = kisses;
+    <h2 style="margin-top: 40px;">Open When...</h2>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; padding: 0 20px;">
+        <button onclick="alert('Everything will be okay. Take a deep breath. I believe in you! 🌟')" style="background: #fff; border: 2px solid #b8d8e6; color: #6c8ea3; padding: 10px 15px; border-radius: 15px; cursor: pointer;">You're Stressed 😰</button>
+        <button onclick="alert('I am so proud of you. You are working so hard and it shows! Keep going! 💪')" style="background: #fff; border: 2px solid #ffdfba; color: #dba66e; padding: 10px 15px; border-radius: 15px; cursor: pointer;">Need Motivation 😤</button>
+        <button onclick="alert('Go look in the mirror. You are literally the prettiest girl ever. Don\'t argue. 🪞')" style="background: #fff; border: 2px solid #eeccff; color: #a67fb8; padding: 10px 15px; border-radius: 15px; cursor: pointer;">Feeling Insecure 😣</button>
+    </div>
     
-    // Little animation
-    kissBtn.style.transform = 'scale(0.95)';
-    setTimeout(() => kissBtn.style.transform = 'scale(1)', 100);
-  });
-</script>
-  <div class="countdowns">
-    <div class="card"
-      data-title="Our Anniversary 💞"
-      data-date="09-06"
-      data-note="Celebrating us, every 6th September 💌"
-      data-img="your-anniversary-image.jpg">
-      <div class="emoji">💞</div>
-      <div class="event">Our Anniversary</div>
-      <div class="days"></div>
-      <div class="note">Celebrating us, every 6th September 💌</div>
-      <img class="card-img" src="your-anniversary-image.jpg" alt="Our Anniversary"/>
-    </div>
-
-    <div class="card"
-      data-title="Kitten’s Birthday 🎂"
-      data-date="01-02"
-      data-note="tehe"
-      data-img="kitten-birthday.jpg">
-      <div class="emoji">🎂</div>
-      <div class="event">Kitten’s Birthday</div>
-      <div class="days"></div>
-      <div class="note">tehe</div>
-      <img class="card-img" src="kitten-birthday.jpg" alt="Kitten Birthday"/>
-    </div>
-
-    <div class="card"
-      data-title="Daddy’s Birthday 🎉"
-      data-date="04-14"
-      data-note="your special day, muah!"
-      data-img="daddy-birthday.jpg">
-      <div class="emoji">🎉</div>
-      <div class="event">Daddy’s Birthday</div>
-      <div class="days"></div>
-      <div class="note">your special day, muah!</div>
-      <img class="card-img" src="daddy-birthday.jpg" alt="Daddy Birthday"/>
-    </div>
-
-    <div class="card"
-      data-title="End of Exams 📚"
-      data-absolute="2025-12-30T23:59:59"
-      data-note="The end of stress🌷"
-      data-img="exam-end.jpg">
-      <div class="emoji">📚</div>
-      <div class="event">End of Exams</div>
-      <div class="days"></div>
-      <div class="note">The end of stress🌷</div>
-      <img class="card-img" src="exam-end.jpg" alt="End of Exams"/>
-    </div>
-
-    <div class="card"
-      data-title="We meet!! 💞"
-      data-absolute="2025-11-27T00:00:00"
-      data-note="Finally together again 💖"
-      data-img="meeting.jpg">
-      <div class="emoji">💞</div>
-      <div class="event">We meet!!</div>
-      <div class="days"></div>
-      <div class="note">Finally together again 💖</div>
-      <img class="card-img" src="meeting.jpg" alt="Our Meeting"/>
-    </div>
-
-    <h2 style="margin-top: 40px; width: 100%;">✨ Our Journey So Far ✨</h2>
-
-    <div class="card" id="first-talk" onclick="toggleDetail('talk', '2025-04-22')">
-      <h2>💬 Days Since We First Talked</h2>
-      <p id="talk-days">Loading...</p>
-    </div>
-
-    <div class="card" id="first-date" onclick="toggleDetail('date', '2025-08-03')">
-      <h2>🍰 Days Since Our First Date</h2>
-      <p id="date-days">Loading...</p>
-    </div>
-
-    <div class="card" id="first-iloveyou" onclick="toggleDetail('love', '2025-08-28')">
-      <h2>❤️ Days Since We Said "I Love You"</h2>
-      <p id="love-days">Loading...</p>
+    <div style="margin: 40px auto; text-align: left; max-width: 300px; background: #fff; border: 2px dashed #d47fa6; padding: 20px; border-radius: 15px;">
+        <h3 style="text-align: center; margin-top: 0;">Daily To-Do ✅</h3>
+        <label style="display: block; margin: 10px 0;"><input type="checkbox" style="accent-color: #ff7da5; margin-right: 10px;"> Smile at least once 😊</label>
+        <label style="display: block; margin: 10px 0;"><input type="checkbox" style="accent-color: #ff7da5; margin-right: 10px;"> Remember I love you ❤️</label>
+        <label style="display: block; margin: 10px 0;"><input type="checkbox" style="accent-color: #ff7da5; margin-right: 10px;"> Drink water 💧</label>
     </div>
   </div>
 
-  <div id="gallery" class="gallery" aria-live="polite">
+
+  <div id="page-fun" class="page-section">
+    <h1>Fun Zone 🧸</h1>
+
+    <div style="margin: 30px auto; text-align: center; max-width: 300px;">
+        <h3 style="color: #e08eb4;">Breathe with me 🧘‍♀️</h3>
+        <div style="margin: 30px auto; height: 120px; display: flex; align-items: center; justify-content: center;">
+          <div class="breathing-heart">
+            <svg viewBox="0 0 32 29.6" style="width: 100%; height: 100%; overflow: visible;">
+              <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2c6.1-9.3,16-11.8,16-21.2C32,3.8,28.2,0,23.6,0z" fill="#ff7da5"/>
+              <text x="16" y="15" fill="white" font-size="7" font-weight="bold" text-anchor="middle" dominant-baseline="middle">R & K</text>
+            </svg>
+          </div>
+        </div>
+        <style>.breathing-heart { width: 100px; height: 100px; animation: breatheHeart 4s ease-in-out infinite; transform-origin: center; } @keyframes breatheHeart { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }</style>
     </div>
 
-  <footer>Made with 💖 by Kitten</footer>
+    <div style="margin: 40px auto; max-width: 300px;">
+        <h3 style="color: #e08eb4;">Stress Popping 🫧</h3>
+        <div id="bubble-grid" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;"></div>
+    </div>
+
+    <div style="margin: 40px auto; text-align: center;">
+        <button id="kissBtn" style="font-size: 1.5rem; padding: 10px 20px; border-radius: 50px; border: none; background: #ff7da5; color: white; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 125, 165, 0.4);">Send a Kiss 💋</button>
+        <p style="color: #888; margin-top: 10px; font-size: 0.9rem;">Total Kisses Sent: <span id="kissCount" style="color: #ff7da5; font-weight: bold;">0</span></p>
+    </div>
+
+    <div style="margin: 40px auto; max-width: 300px; background: #fff; padding: 20px; border-radius: 20px; border: 2px solid #ffe0eb;">
+        <h3 style="color: #e08eb4; margin-top: 0;">Date Idea? 🎡</h3>
+        <div id="dateDisplay" style="font-size: 1.1rem; font-weight: bold; color: #5a4f4f; margin-bottom: 15px;">???</div>
+        <button onclick="pickDate()" style="background: #e08eb4; color: white; border: none; padding: 8px 16px; border-radius: 15px; cursor: pointer;">Spin!</button>
+    </div>
+  </div>
+
+
+  <div id="page-gallery" class="page-section">
+    <h1>Photo Gallery 📸</h1>
+    <div id="gallery" class="gallery">
+        </div>
+  </div>
+
+
+  <nav class="nav-bar">
+    <button class="nav-item active" onclick="showPage('page-home', this)">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">Home</span>
+    </button>
+    <button class="nav-item" onclick="showPage('page-notes', this)">
+        <span class="nav-icon">💌</span>
+        <span class="nav-label">Notes</span>
+    </button>
+    <button class="nav-item" onclick="showPage('page-fun', this)">
+        <span class="nav-icon">🧸</span>
+        <span class="nav-label">Fun</span>
+    </button>
+    <button class="nav-item" onclick="showPage('page-gallery', this)">
+        <span class="nav-icon">📸</span>
+        <span class="nav-label">Photos</span>
+    </button>
+  </nav>
 
   <div class="modal" id="modal">
     <div class="modal-card">
@@ -354,468 +308,200 @@
       <button class="modal-close" id="closeBtn">Close</button>
     </div>
   </div>
-<div style="max-width: 600px; margin: 40px auto; padding: 0 20px;">
-  <h2 style="color: #e08eb4;">Open When... 💌</h2>
-  <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
-    
-    <button onclick="alert('Everything will be okay. Take a deep breath. I believe in you! 🌟')" 
-      style="background: #fff; border: 2px solid #b8d8e6; color: #6c8ea3; padding: 10px 15px; border-radius: 15px; cursor: pointer;">
-      You're Stressed 😰
-    </button>
-
-    <button onclick="alert('I am so proud of you. You are working so hard and it shows! Keep going! 💪')" 
-      style="background: #fff; border: 2px solid #ffdfba; color: #dba66e; padding: 10px 15px; border-radius: 15px; cursor: pointer;">
-      You need motivation 😤
-    </button>
-
-    <button onclick="alert('I love you more than words can say. You are my favorite person. ❤️')" 
-      style="background: #fff; border: 2px solid #ffb3ba; color: #d66d7a; padding: 10px 15px; border-radius: 15px; cursor: pointer;">
-      You miss me 🥺
-    </button>
-
-    <button onclick="alert('Go look in the mirror. You are literally the prettiest girl ever. Don\'t argue. 🪞')" 
-      style="background: #fff; border: 2px solid #eeccff; color: #a67fb8; padding: 10px 15px; border-radius: 15px; cursor: pointer;">
-      You feel insecure 😣
-    </button>
-
-  </div>
-</div>
-<div style="margin: 20px auto; max-width: 300px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-  <iframe 
-    style="border-radius:12px" 
-    src="https://open.spotify.com/embed/track/6G9YlbU3ByPJQvOFDRdwyM?si=BjKJNoGzSyytyjA_je3iJg" 
-    width="100%" 
-    height="152" 
-    frameBorder="0" 
-    allowfullscreen="" 
-    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-    loading="lazy">
-  </iframe>
-</div>
-<div style="margin: 40px auto; max-width: 300px;">
-  <h3 style="color: #e08eb4;">Stress Popping 🫧</h3>
-  <div id="bubble-grid" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;">
-    </div>
-</div>
-
-<script>
-  const bubbleGrid = document.getElementById('bubble-grid');
-  
-  // Create 15 bubbles
-  for(let i=0; i<15; i++) {
-    const bubble = document.createElement('div');
-    bubble.style.cssText = `
-      width: 40px; height: 40px; 
-      background: #ffe0eb; 
-      border-radius: 50%; 
-      cursor: pointer; 
-      box-shadow: inset -2px -2px 6px rgba(0,0,0,0.1);
-      transition: transform 0.1s;
-    `;
-    
-    bubble.onclick = function() {
-      if (this.style.opacity !== '0') {
-        this.style.transform = 'scale(1.2)';
-        this.style.backgroundColor = '#fff';
-        setTimeout(() => {
-          this.style.transform = 'scale(0)';
-          this.style.opacity = '0';
-          checkAllPopped();
-        }, 100);
-      }
-    };
-    bubbleGrid.appendChild(bubble);
-  }
-
-  function checkAllPopped() {
-    const bubbles = bubbleGrid.children;
-    let allPopped = true;
-    for(let b of bubbles) {
-      if(b.style.opacity !== '0') allPopped = false;
-    }
-    
-    if(allPopped) {
-      setTimeout(() => {
-        // Reset all
-        for(let b of bubbles) {
-          b.style.transform = 'scale(1)';
-          b.style.opacity = '1';
-          b.style.backgroundColor = '#ffe0eb';
-        }
-      }, 1000); // Wait 1 second then reset
-    }
-  }
-</script>
 
   <script>
-  /* ========== Existing countdown modal & days logic (EXACTLY AS BEFORE) ========== */
-  const modal = document.getElementById("modal");
-  const modalTitle = document.getElementById("modalTitle");
-  const modalNote = document.getElementById("modalNote");
-  const liveTime = document.getElementById("liveTime");
-  const closeBtn = document.getElementById("closeBtn");
-  let timer = null;
+    /* --- NAVIGATION LOGIC --- */
+    function showPage(pageId, btn) {
+        // Hide all pages
+        document.querySelectorAll('.page-section').forEach(page => page.classList.remove('active'));
+        // Show selected page
+        document.getElementById(pageId).classList.add('active');
+        
+        // Update nav buttons
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+        btn.classList.add('active');
 
-  const intervals = {};
-  function updateDetailedTime(startDate, elementId, mode = "days") {
-    const start = new Date(startDate);
-    const now = new Date();
-    const diff = now - start;
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const minutes = Math.floor((diff / (1000 * 60)) % 60);
-    const seconds = Math.floor((diff / 1000) % 60);
-    const element = document.getElementById(elementId);
-    if (!element) return;
-    if (mode === "days") {
-      element.textContent = `${days} days 💫`;
-    } else {
-      element.textContent = `${days} days, ${hours} hrs, ${minutes} mins, ${seconds} secs ✨`;
+        // Scroll to top
+        window.scrollTo(0,0);
     }
-  }
-  function toggleDetail(type, startDate) {
-    const elementId = `${type}-days`;
-    if (intervals[type]) {
-      clearInterval(intervals[type]);
-      intervals[type] = null;
-      updateDetailedTime(startDate, elementId, "days");
-    } else {
-      updateDetailedTime(startDate, elementId, "full");
-      intervals[type] = setInterval(() => updateDetailedTime(startDate, elementId, "full"), 1000);
-    }
-  }
 
-  // initial load
-  updateDetailedTime("2025-04-22", "talk-days");
-  updateDetailedTime("2025-08-03", "date-days");
-  updateDetailedTime("2025-08-28", "love-days");
-
-  /* ---------- Countdown cards (days visible) ---------- */
-  function parseDateFromCard(card) {
-    const abs = card.dataset.absolute;
-    if (abs) {
-      const d = new Date(abs);
-      return isNaN(d) ? null : d;
-    }
-    const dd = card.dataset.date;
-    if (!dd) return null;
-    const [month, day] = dd.split('-').map(Number);
-    const now = new Date();
-    let target = new Date(now.getFullYear(), month - 1, day, 0, 0, 0, 0);
-    if (target < now) target.setFullYear(now.getFullYear() + 1);
-    return target;
-  }
-
-  function computeDaysRemaining(target) {
-    const now = new Date();
-    const diff = target - now;
-    if (diff <= 0) return 0;
-    const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-    return days;
-  }
-
-  function refreshCardsDays() {
-    document.querySelectorAll('.card[data-date], .card[data-absolute]').forEach(card => {
-      const target = parseDateFromCard(card);
-      const daysEl = card.querySelector('.days');
-      if (!daysEl) return;
-      if (!target) {
-        daysEl.textContent = '—';
-        return;
-      }
-      const days = computeDaysRemaining(target);
-      daysEl.textContent = (days === 0) ? 'Today!' : `${days} day${days === 1 ? '' : 's'}`;
-    });
-  }
-
-  refreshCardsDays();
-  setInterval(refreshCardsDays, 60 * 1000);
-
-  function openModal(card) {
-    const target = parseDateFromCard(card);
-    if (!target) return;
-    modalTitle.textContent = card.dataset.title || "";
-    modalNote.textContent = card.dataset.note || "";
-    if (timer) clearInterval(timer);
-
-    const tick = () => {
-      const diff = Math.max(0, target - new Date());
-      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const m = Math.floor((diff / (1000 * 60)) % 60);
-      const s = Math.floor((diff / 1000) % 60);
-      liveTime.textContent = `${String(d).padStart(2,'0')} : ${String(h).padStart(2,'0')} : ${String(m).padStart(2,'0')} : ${String(s).padStart(2,'0')}`;
-    };
-
-    tick();
-    timer = setInterval(tick, 1000);
-    modal.classList.add("open");
-  }
-
-  document.querySelectorAll('.card[data-date], .card[data-absolute]').forEach(card => {
-    card.addEventListener("click", () => openModal(card));
-  });
-
-  closeBtn.addEventListener("click", () => {
-    modal.classList.remove("open");
-    if (timer) clearInterval(timer);
-    timer = null;
-  });
-  modal.addEventListener("click", e => { if (e.target === modal) { modal.classList.remove("open"); if (timer) clearInterval(timer); timer = null; } });
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && modal.classList.contains("open")) { modal.classList.remove("open"); if (timer) clearInterval(timer); timer = null; } });
-
-  /* ========== New: Gallery logic ========== */
-
-  // Shared library of image sources (strings: either data-URL or normal URL)
-  const imageLibrary = [];
-
-  // The gallery container
-  const galleryEl = document.getElementById('gallery');
-
-  // Utility: create a gallery card and attach handlers
-  function createGalleryCard(src) {
-    const card = document.createElement('div');
-    card.className = 'gallery-card';
-
-    const img = document.createElement('img');
-    img.src = src;
-    img.alt = 'Gallery image';
-    card.appendChild(img);
-
-    const note = document.createElement('div');
-    note.className = 'gallery-note';
-    note.textContent = 'Tap to randomize';
-    card.appendChild(note);
-
-    // on click -> replace card image by a random image from library (not same)
-    card.addEventListener('click', (e) => {
-      if (imageLibrary.length <= 1) return; // nothing to change with
-      // pick a random index different from the current image src
-      let tries = 0;
-      let candidate;
-      const current = img.src;
-      do {
-        const i = Math.floor(Math.random() * imageLibrary.length);
-        candidate = imageLibrary[i];
-        tries++;
-      } while (candidate === current && tries < 8);
-
-      // If we somehow got same, choose next different one deterministically
-      if (candidate === current) {
-        for (let k = 0; k < imageLibrary.length; k++) {
-          if (imageLibrary[k] !== current) { candidate = imageLibrary[k]; break; }
+    /* --- RANDOM LOVE NOTES --- */
+    const myNotes = [
+        "your doing amazing", "you scored 8.5 cgpa last sem!!!!", 
+        "your lowest marks are literally 80%", "mera smarty bhondu", 
+        "dont procrastinate", "you already have a mental map, just keep going", 
+        "i love you"
+    ];
+    function generateRandomNote() {
+        const container = document.getElementById("note-content");
+        const r = Math.random();
+        if (r < 0.1) { 
+            container.innerHTML = `<div>kaun hai meri pyaari si girlfriend?</div><button class="interactive-btn" onclick="event.stopPropagation(); this.parentElement.innerHTML='haan, meri pyaari khushi hai!! 🥰'">khushi hai!!</button>`;
+        } else if (r < 0.2) {
+            container.innerHTML = `<div>muahhh! 😽</div><button class="interactive-btn" onclick="event.stopPropagation(); this.parentElement.innerHTML='muahhh back! 💕'">muahhh</button>`;
+        } else {
+            const randomIndex = Math.floor(Math.random() * myNotes.length);
+            container.innerText = myNotes[randomIndex];
         }
-      }
+    }
 
-      // swap image on this card
-      img.src = candidate;
+    /* --- BUBBLE WRAP --- */
+    const bubbleGrid = document.getElementById('bubble-grid');
+    for(let i=0; i<15; i++) {
+        const bubble = document.createElement('div');
+        bubble.style.cssText = `width: 40px; height: 40px; background: #ffe0eb; border-radius: 50%; cursor: pointer; box-shadow: inset -2px -2px 6px rgba(0,0,0,0.1); transition: transform 0.1s;`;
+        bubble.onclick = function() {
+            if (this.style.opacity !== '0') {
+                this.style.transform = 'scale(1.2)'; this.style.backgroundColor = '#fff';
+                setTimeout(() => { this.style.transform = 'scale(0)'; this.style.opacity = '0'; }, 100);
+            }
+        };
+        bubbleGrid.appendChild(bubble);
+    }
+
+    /* --- KISS COUNTER --- */
+    const kissBtn = document.getElementById('kissBtn');
+    const kissCountDisplay = document.getElementById('kissCount');
+    let kisses = localStorage.getItem('kissCount') || 0;
+    kissCountDisplay.textContent = kisses;
+    kissBtn.addEventListener('click', () => {
+        kisses++; localStorage.setItem('kissCount', kisses); kissCountDisplay.textContent = kisses;
+        kissBtn.style.transform = 'scale(0.95)'; setTimeout(() => kissBtn.style.transform = 'scale(1)', 100);
     });
 
-    return card;
-  }
-
-  // Render all images in library into gallery (clears and re-adds)
-  function renderGallery() {
-    galleryEl.innerHTML = '';
-    imageLibrary.forEach(src => {
-      const card = createGalleryCard(src);
-      galleryEl.appendChild(card);
-    });
-  }
-
-  // Add image(s) to library (array of src strings). Re-renders
-  function addImagesToLibrary(sources) {
-    for (const s of sources) {
-      if (!s) continue;
-      imageLibrary.push(s);
+    /* --- DATE DECIDER --- */
+    const dateIdeas = ["Movie Night 🍿", "Cook Together 🍳", "Gaming Date 🎮", "Deep Talk 💬", "Sleep Call 😴", "Plan Vacation ✈️"];
+    function pickDate() {
+        const display = document.getElementById('dateDisplay');
+        display.style.opacity = 0;
+        setTimeout(() => {
+            display.innerText = dateIdeas[Math.floor(Math.random() * dateIdeas.length)];
+            display.style.opacity = 1;
+        }, 200);
     }
-    renderGallery();
-  }
 
-  /* ---------- Optional: preload some images if you want ---------- */
-  // Example: if you have images available by path on server, push them here.
-  // addImagesToLibrary(['meeting.jpg','your-anniversary-image.jpg']); // uncomment & edit if desired
-
-  // If you want the gallery to start with the images already used in cards on the page,
-  // grab visible <img.card-img> sources and add them to the library (so initial library isn't empty).
-  /* ------------------ Seed from images/image*.jpg (image, image1..image26) ------------------ */
-
-// Helper: tries to load an image and resolves true/false
-function testImageExists(url) {
-  return new Promise((res) => {
-    const t = new Image();
-    t.onload = () => res(true);
-    t.onerror = () => res(false);
-    t.src = url;
-  });
-}
-
-// Build candidate filenames and test them (you said image, image1..image26)
-async function seedLibraryFromImagesFolder() {
-  const candidates = [];
-  // first try exact name "image.jpg"
-  candidates.push('images/image.jpg');
-
-  // then image1 .. image26 with extension .jpg
-  for (let i = 1; i <= 26; i++) {
-    candidates.push(`images/image${i}.jpg`);
-  }
-
-  // you might also have .png; test both extensions if you want:
-  // if you use pngs, change the list above or add .png variants here.
-
-  const ok = [];
-  for (const c of candidates) {
-    // only test same-origin images (they are on your Vercel domain, so OK)
-    // this avoids showing broken images in the UI
-    // tiny optimization: if file names are many, you can parallelize Promise.all
-    // but here it's fine to do sequential to avoid spamming the server.
-    // we'll check them in parallel but still guard errors:
-    ok.push(testImageExists(c).then(found => found ? c : null));
-  }
-
-  const results = await Promise.all(ok);
-  const valid = results.filter(Boolean); // keep only truthy (existing URLs)
-
-  if (valid.length === 0) {
-    // fallback: if the page already has card images (meeting, anniversary), keep them
-    const cardImgs = Array.from(document.querySelectorAll('img.card-img')).map(i => i.src).filter(Boolean);
-    if (cardImgs.length) {
-      addImagesToLibrary(cardImgs);
-    } else {
-      // nothing found — leave imageLibrary empty
-      console.warn('No images found in images/ folder and no card-img seeds.');
+    /* --- FLOATING HEARTS --- */
+    function createHeart() {
+        const heart = document.createElement('div');
+        heart.innerHTML = '💖'; 
+        heart.style.position = 'fixed'; heart.style.left = Math.random() * 100 + 'vw'; heart.style.bottom = '-20px'; heart.style.fontSize = Math.random() * 20 + 10 + 'px'; heart.style.zIndex = '0'; heart.style.animation = 'floatUp 5s linear'; heart.style.opacity = '0.6';
+        document.body.appendChild(heart);
+        setTimeout(() => { heart.remove(); }, 5000);
     }
-  } else {
-    addImagesToLibrary(valid);
-  }
-}
+    const styleSheet = document.createElement("style");
+    styleSheet.innerText = `@keyframes floatUp { to { transform: translateY(-100vh); opacity: 0; } }`;
+    document.head.appendChild(styleSheet);
+    setInterval(createHeart, 600);
 
-// Renders a single gallery card (instead of many)
-function renderSingleGalleryCard() {
-  galleryEl.innerHTML = '';
-  if (imageLibrary.length === 0) {
-    // placeholder card if no images
-    const placeholder = document.createElement('div');
-    placeholder.className = 'gallery-card';
-    placeholder.innerHTML = `<div style="padding:36px">No gallery images found.<br>Upload images to /images/ and push to GitHub.</div>`;
-    galleryEl.appendChild(placeholder);
-    return;
-  }
+    /* --- COUNTDOWN LOGIC --- */
+    const modal = document.getElementById("modal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalNote = document.getElementById("modalNote");
+    const liveTime = document.getElementById("liveTime");
+    const closeBtn = document.getElementById("closeBtn");
+    let timer = null;
+    const intervals = {};
 
-  // Always show the first image initially (or random initial image)
-  let currentIndex = Math.floor(Math.random() * imageLibrary.length);
-  const card = document.createElement('div');
-  card.className = 'gallery-card';
-
-  const img = document.createElement('img');
-  img.src = imageLibrary[currentIndex];
-  img.alt = 'Gallery image';
-  card.appendChild(img);
-
-  const note = document.createElement('div');
-  note.className = 'gallery-note';
-  note.textContent = 'Tap to randomize';
-  card.appendChild(note);
-
-  // on click -> replace card image by a random image from library (not same)
-  card.addEventListener('click', () => {
-    if (imageLibrary.length <= 1) return;
-    let tries = 0;
-    let candidateIndex;
-    do {
-      candidateIndex = Math.floor(Math.random() * imageLibrary.length);
-      tries++;
-    } while (candidateIndex === currentIndex && tries < 12);
-    if (candidateIndex === currentIndex) {
-      // pick the next different deterministically
-      candidateIndex = (currentIndex + 1) % imageLibrary.length;
+    function updateDetailedTime(startDate, elementId, mode = "days") {
+        const start = new Date(startDate); const now = new Date(); const diff = now - start;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const element = document.getElementById(elementId);
+        if (!element) return;
+        element.textContent = mode === "days" ? `${days} days 💫` : `${days}d ${Math.floor((diff/(1000*60*60))%24)}h ${Math.floor((diff/(1000*60))%60)}m ${Math.floor((diff/1000)%60)}s`;
     }
-    currentIndex = candidateIndex;
-    img.src = imageLibrary[currentIndex];
-  });
+    function toggleDetail(type, startDate) {
+        const elementId = `${type}-days`;
+        if (intervals[type]) { clearInterval(intervals[type]); intervals[type] = null; updateDetailedTime(startDate, elementId, "days"); }
+        else { updateDetailedTime(startDate, elementId, "full"); intervals[type] = setInterval(() => updateDetailedTime(startDate, elementId, "full"), 1000); }
+    }
+    updateDetailedTime("2025-04-22", "talk-days");
+    updateDetailedTime("2025-08-03", "date-days");
+    updateDetailedTime("2025-08-28", "love-days");
 
-  galleryEl.appendChild(card);
-}
+    function parseDateFromCard(card) {
+        const abs = card.dataset.absolute; if (abs) return new Date(abs);
+        const dd = card.dataset.date; if (!dd) return null;
+        const [m, d] = dd.split('-').map(Number); const now = new Date();
+        let target = new Date(now.getFullYear(), m - 1, d);
+        if (target < now) target.setFullYear(now.getFullYear() + 1);
+        return target;
+    }
+    function refreshCardsDays() {
+        document.querySelectorAll('.card[data-date], .card[data-absolute]').forEach(card => {
+            const target = parseDateFromCard(card);
+            const daysEl = card.querySelector('.days');
+            if (daysEl && target) {
+                const diff = target - new Date();
+                const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+                daysEl.textContent = (days <= 0) ? 'Today!' : `${days} day${days===1?'':'s'}`;
+            }
+        });
+    }
+    refreshCardsDays(); setInterval(refreshCardsDays, 60000);
 
-// Replace renderGallery() usage with this renderSingleGalleryCard() when seeding
-// start:
-seedLibraryFromImagesFolder().then(() => {
-  // After seeding, render single card
-  renderSingleGalleryCard();
-});
-
-
-/* ========== NEW SECTION: LOVE NOTE LOGIC ========== 
-   Placed at the very end to avoid disturbing the existing code 
-*/
-
-const myNotes = [
-    "your doing amazing",
-    "you scored 8.5 cgpa last sem!!!!",
-    "your lowest marks are literally 80%",
-    "mera smarty bhondu",
-    "dont procrastinate",
-    "you already have a mental map, just keep going according to it",
-    "i love you"
-];
-
-function generateRandomNote() {
-    const container = document.getElementById("note-content");
-    const r = Math.random();
+    function openModal(card) {
+        const target = parseDateFromCard(card); if (!target) return;
+        modalTitle.textContent = card.dataset.title || ""; modalNote.textContent = card.dataset.note || "";
+        if (timer) clearInterval(timer);
+        const tick = () => {
+            const diff = Math.max(0, target - new Date());
+            liveTime.textContent = `${Math.floor(diff/(1000*60*60*24))} : ${String(Math.floor((diff/(1000*60*60))%24)).padStart(2,'0')} : ${String(Math.floor((diff/(1000*60))%60)).padStart(2,'0')} : ${String(Math.floor((diff/1000)%60)).padStart(2,'0')}`;
+        };
+        tick(); timer = setInterval(tick, 1000); modal.classList.add("open");
+    }
+    document.querySelectorAll('.card[data-date], .card[data-absolute]').forEach(card => card.addEventListener("click", () => openModal(card)));
+    closeBtn.addEventListener("click", () => { modal.classList.remove("open"); if (timer) clearInterval(timer); });
     
-    // small chance for special interaction 1: "kaun hai meri pyaari si girlfriend?"
-    if (r < 0.1) { 
-        container.innerHTML = `
-            <div>kaun hai meri pyaari si girlfriend?</div>
-            <button class="interactive-btn" onclick="event.stopPropagation(); this.parentElement.innerHTML='haan, meri pyaari khushi hai!! 🥰'">khushi hai!!</button>
-        `;
-        return;
-    }
+    /* --- GALLERY LOGIC (Seed from images folder) --- */
+    const galleryEl = document.getElementById('gallery');
+    const imageLibrary = [];
     
-    // small chance for special interaction 2: "muahhh!"
-    if (r < 0.2) {
-        container.innerHTML = `
-            <div>muahhh! 😽</div>
-            <button class="interactive-btn" onclick="event.stopPropagation(); this.parentElement.innerHTML='muahhh back! 💕'">muahhh</button>
-        `;
-        return;
+    function testImageExists(url) { return new Promise((res) => { const t = new Image(); t.onload = () => res(true); t.onerror = () => res(false); t.src = url; }); }
+    
+    async function seedGallery() {
+        const candidates = ['images/image.jpg'];
+        for(let i=1; i<=26; i++) candidates.push(`images/image${i}.jpg`);
+        
+        const promises = candidates.map(c => testImageExists(c).then(exists => exists ? c : null));
+        const results = await Promise.all(promises);
+        const valid = results.filter(Boolean);
+        
+        if (valid.length === 0) {
+             // Fallback if no images found
+             galleryEl.innerHTML = '<div style="padding:20px">No images found in images/ folder.</div>';
+        } else {
+             imageLibrary.push(...valid);
+             renderSingleGalleryCard();
+        }
     }
 
-    // Otherwise, pick a random text from the list
-    const randomIndex = Math.floor(Math.random() * myNotes.length);
-    container.innerText = myNotes[randomIndex];
-}
+    function renderSingleGalleryCard() {
+        galleryEl.innerHTML = '';
+        if (imageLibrary.length === 0) return;
+        
+        let currentIndex = Math.floor(Math.random() * imageLibrary.length);
+        const card = document.createElement('div');
+        card.className = 'gallery-card';
+        
+        const img = document.createElement('img');
+        img.src = imageLibrary[currentIndex];
+        card.appendChild(img);
+        
+        const note = document.createElement('div');
+        note.style.fontSize = '0.8rem'; note.style.marginTop = '5px'; note.textContent = 'Tap for next pic 📸';
+        card.appendChild(note);
+        
+        card.onclick = () => {
+            let nextIndex;
+            do { nextIndex = Math.floor(Math.random() * imageLibrary.length); } 
+            while (nextIndex === currentIndex && imageLibrary.length > 1);
+            currentIndex = nextIndex;
+            img.src = imageLibrary[currentIndex];
+        };
+        galleryEl.appendChild(card);
+    }
+    seedGallery();
 
   </script>
-<script>
-  /* Floating Hearts Effect */
-  function createHeart() {
-    const heart = document.createElement('div');
-    heart.innerHTML = '💖'; // You can change this to 🌸 or 🦋
-    heart.style.position = 'fixed';
-    heart.style.left = Math.random() * 100 + 'vw';
-    heart.style.bottom = '-20px';
-    heart.style.fontSize = Math.random() * 20 + 10 + 'px';
-    heart.style.zIndex = '-1'; // Keeps it behind the text
-    heart.style.animation = 'floatUp 5s linear';
-    heart.style.opacity = '0.6';
-    document.body.appendChild(heart);
-
-    setTimeout(() => { heart.remove(); }, 5000);
-  }
-  
-  // Add the animation style
-  const styleSheet = document.createElement("style");
-  styleSheet.innerText = `
-    @keyframes floatUp {
-      to { transform: translateY(-100vh); opacity: 0; }
-    }
-  `;
-  document.head.appendChild(styleSheet);
-
-  // Create a heart every 300 milliseconds
-  setInterval(createHeart, 300);
-</script>
 </body>
 </html>
