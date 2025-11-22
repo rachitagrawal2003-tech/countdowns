@@ -96,37 +96,37 @@
       font-weight: 600;
     }
 
-.gallery {
-  max-width: 720px;
-  margin: 24px auto 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  padding: 0 14px;
-}
+    .gallery {
+      max-width: 720px;
+      margin: 24px auto 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding: 0 14px;
+    }
 
-.gallery-card {
-  background: #fff1f7;
-  border-radius: 12px;
-  padding: 8px;
-  box-shadow: 0 8px 28px rgba(0,0,0,0.08);
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  max-width: 640px;
-}
+    .gallery-card {
+      background: #fff1f7;
+      border-radius: 12px;
+      padding: 8px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.08);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 640px;
+    }
 
-.gallery-card img {
-  width: 100%;
-  height: auto;
-  max-height: 600px;
-  border-radius: 8px;
-  object-fit: cover;
-}
+    .gallery-card img {
+      width: 100%;
+      height: auto;
+      max-height: 600px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
     .gallery-note {
       font-size: 0.9rem;
       color: #7a525f;
@@ -138,6 +138,29 @@
       font-size: 12px;
       color: #9b8b8b;
       margin-left: 6px;
+    }
+
+    /* New Styles for Note Section */
+    .note-display-area {
+        font-size: 1.3rem;
+        color: #5a4f4f;
+        font-weight: 600;
+        margin: 15px 0;
+        min-height: 60px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .interactive-btn {
+        background: #fff;
+        border: 2px solid #ff7da5;
+        color: #ff7da5;
+        padding: 5px 15px;
+        border-radius: 10px;
+        margin-top: 10px;
+        font-weight: bold;
+        cursor: pointer;
     }
 
     /* responsive */
@@ -152,9 +175,93 @@
   </div>
   <h1>Countdowns ⏳ + Gallery 📸</h1>
 
-  <!-- ---------- countdowns (same as before) ---------- -->
+  <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+      <div class="card" style="width: 90%; max-width: 500px; cursor: default;" onclick="generateRandomNote()">
+        <div class="emoji">💌</div>
+        <div class="event">Love Note for You</div>
+        
+        <div id="note-content" class="note-display-area">
+            Tap here for a note!
+        </div>
+        
+        <div class="note">Tap the card to see a new message</div>
+      </div>
+  </div>
+<div style="margin: 30px auto; text-align: center;">
+  <button id="kissBtn" style="
+    font-size: 1.5rem; 
+    padding: 10px 20px; 
+    border-radius: 50px; 
+    border: none; 
+    background: #ff7da5; 
+    color: white; 
+    cursor: pointer; 
+    box-shadow: 0 4px 15px rgba(255, 125, 165, 0.4);
+    transition: transform 0.1s;">
+    Send a Kiss 💋
+  </button>
+  <p style="color: #888; margin-top: 10px; font-size: 0.9rem;">
+    Total Kisses Sent: <span id="kissCount" style="color: #ff7da5; font-weight: bold;">0</span>
+  </p>
+</div>
+<div style="margin: 30px auto 50px auto; text-align: center; max-width: 300px;">
+  <h3 style="color: #e08eb4; margin-bottom: 5px;">Anxious? Breathe with me. 🧘‍♀️</h3>
+  <p style="font-size: 0.85rem; color: #888; margin-top: 0;">Inhale as our love grows...</p>
+
+  <div style="margin: 30px auto; height: 120px; display: flex; align-items: center; justify-content: center;">
+    <div class="breathing-heart">
+      <svg viewBox="0 0 32 29.6" style="width: 100%; height: 100%; overflow: visible;">
+        <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2
+        c6.1-9.3,16-11.8,16-21.2C32,3.8,28.2,0,23.6,0z" fill="#ff7da5"/>
+        <text x="16" y="15" fill="white" font-size="7" font-weight="bold" text-anchor="middle" dominant-baseline="middle">R K</text>
+      </svg>
+    </div>
+  </div>
+
+  <style>
+    .breathing-heart {
+      width: 100px;
+      height: 100px;
+      /* This animation makes it pulse */
+      animation: breatheHeart 4s ease-in-out infinite;
+      /* Ensures it grows from the center */
+      transform-origin: center center;
+      /* Fixes flickers on some browsers */
+      backface-visibility: hidden; 
+    }
+
+    @keyframes breatheHeart {
+      0%, 100% { 
+        transform: scale(1); 
+      }
+      50% { 
+        transform: scale(1.3); /* Grows 30% bigger */
+      }
+    }
+  </style>
+</div>
+
+
+<script>
+  /* Kiss Counter Logic */
+  const kissBtn = document.getElementById('kissBtn');
+  const kissCountDisplay = document.getElementById('kissCount');
+  
+  // Load saved count
+  let kisses = localStorage.getItem('kissCount') || 0;
+  kissCountDisplay.textContent = kisses;
+
+  kissBtn.addEventListener('click', () => {
+    kisses++;
+    localStorage.setItem('kissCount', kisses); // Save to phone memory
+    kissCountDisplay.textContent = kisses;
+    
+    // Little animation
+    kissBtn.style.transform = 'scale(0.95)';
+    setTimeout(() => kissBtn.style.transform = 'scale(1)', 100);
+  });
+</script>
   <div class="countdowns">
-    <!-- (kept your same countdown card markup) -->
     <div class="card"
       data-title="Our Anniversary 💞"
       data-date="09-06"
@@ -233,14 +340,11 @@
     </div>
   </div>
 
-  <!-- ---------- Gallery grid ---------- -->
   <div id="gallery" class="gallery" aria-live="polite">
-    <!-- Gallery cards will be appended here -->
-  </div>
+    </div>
 
   <footer>Made with 💖 by Kitten</footer>
 
-  <!-- Modal -->
   <div class="modal" id="modal">
     <div class="modal-card">
       <h3 class="modal-title" id="modalTitle"></h3>
@@ -250,9 +354,101 @@
       <button class="modal-close" id="closeBtn">Close</button>
     </div>
   </div>
+<div style="max-width: 600px; margin: 40px auto; padding: 0 20px;">
+  <h2 style="color: #e08eb4;">Open When... 💌</h2>
+  <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+    
+    <button onclick="alert('Everything will be okay. Take a deep breath. I believe in you! 🌟')" 
+      style="background: #fff; border: 2px solid #b8d8e6; color: #6c8ea3; padding: 10px 15px; border-radius: 15px; cursor: pointer;">
+      You're Stressed 😰
+    </button>
+
+    <button onclick="alert('I am so proud of you. You are working so hard and it shows! Keep going! 💪')" 
+      style="background: #fff; border: 2px solid #ffdfba; color: #dba66e; padding: 10px 15px; border-radius: 15px; cursor: pointer;">
+      You need motivation 😤
+    </button>
+
+    <button onclick="alert('I love you more than words can say. You are my favorite person. ❤️')" 
+      style="background: #fff; border: 2px solid #ffb3ba; color: #d66d7a; padding: 10px 15px; border-radius: 15px; cursor: pointer;">
+      You miss me 🥺
+    </button>
+
+    <button onclick="alert('Go look in the mirror. You are literally the prettiest girl ever. Don\'t argue. 🪞')" 
+      style="background: #fff; border: 2px solid #eeccff; color: #a67fb8; padding: 10px 15px; border-radius: 15px; cursor: pointer;">
+      You feel insecure 😣
+    </button>
+
+  </div>
+</div>
+<div style="margin: 20px auto; max-width: 300px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+  <iframe 
+    style="border-radius:12px" 
+    src="https://open.spotify.com/embed/track/6G9YlbU3ByPJQvOFDRdwyM?si=BjKJNoGzSyytyjA_je3iJg" 
+    width="100%" 
+    height="152" 
+    frameBorder="0" 
+    allowfullscreen="" 
+    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+    loading="lazy">
+  </iframe>
+</div>
+<div style="margin: 40px auto; max-width: 300px;">
+  <h3 style="color: #e08eb4;">Stress Popping 🫧</h3>
+  <div id="bubble-grid" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;">
+    </div>
+</div>
+
+<script>
+  const bubbleGrid = document.getElementById('bubble-grid');
+  
+  // Create 15 bubbles
+  for(let i=0; i<15; i++) {
+    const bubble = document.createElement('div');
+    bubble.style.cssText = `
+      width: 40px; height: 40px; 
+      background: #ffe0eb; 
+      border-radius: 50%; 
+      cursor: pointer; 
+      box-shadow: inset -2px -2px 6px rgba(0,0,0,0.1);
+      transition: transform 0.1s;
+    `;
+    
+    bubble.onclick = function() {
+      if (this.style.opacity !== '0') {
+        this.style.transform = 'scale(1.2)';
+        this.style.backgroundColor = '#fff';
+        setTimeout(() => {
+          this.style.transform = 'scale(0)';
+          this.style.opacity = '0';
+          checkAllPopped();
+        }, 100);
+      }
+    };
+    bubbleGrid.appendChild(bubble);
+  }
+
+  function checkAllPopped() {
+    const bubbles = bubbleGrid.children;
+    let allPopped = true;
+    for(let b of bubbles) {
+      if(b.style.opacity !== '0') allPopped = false;
+    }
+    
+    if(allPopped) {
+      setTimeout(() => {
+        // Reset all
+        for(let b of bubbles) {
+          b.style.transform = 'scale(1)';
+          b.style.opacity = '1';
+          b.style.backgroundColor = '#ffe0eb';
+        }
+      }, 1000); // Wait 1 second then reset
+    }
+  }
+</script>
 
   <script>
-  /* ========== Existing countdown modal & days logic ========== */
+  /* ========== Existing countdown modal & days logic (EXACTLY AS BEFORE) ========== */
   const modal = document.getElementById("modal");
   const modalTitle = document.getElementById("modalTitle");
   const modalNote = document.getElementById("modalNote");
@@ -549,9 +745,77 @@ seedLibraryFromImagesFolder().then(() => {
   renderSingleGalleryCard();
 });
 
-  /* ========== Done ========== */
+
+/* ========== NEW SECTION: LOVE NOTE LOGIC ========== 
+   Placed at the very end to avoid disturbing the existing code 
+*/
+
+const myNotes = [
+    "your doing amazing",
+    "you scored 8.5 cgpa last sem!!!!",
+    "your lowest marks are literally 80%",
+    "mera smarty bhondu",
+    "dont procrastinate",
+    "you already have a mental map, just keep going according to it",
+    "i love you"
+];
+
+function generateRandomNote() {
+    const container = document.getElementById("note-content");
+    const r = Math.random();
+    
+    // small chance for special interaction 1: "kaun hai meri pyaari si girlfriend?"
+    if (r < 0.1) { 
+        container.innerHTML = `
+            <div>kaun hai meri pyaari si girlfriend?</div>
+            <button class="interactive-btn" onclick="event.stopPropagation(); this.parentElement.innerHTML='haan, meri pyaari khushi hai!! 🥰'">khushi hai!!</button>
+        `;
+        return;
+    }
+    
+    // small chance for special interaction 2: "muahhh!"
+    if (r < 0.2) {
+        container.innerHTML = `
+            <div>muahhh! 😽</div>
+            <button class="interactive-btn" onclick="event.stopPropagation(); this.parentElement.innerHTML='muahhh back! 💕'">muahhh</button>
+        `;
+        return;
+    }
+
+    // Otherwise, pick a random text from the list
+    const randomIndex = Math.floor(Math.random() * myNotes.length);
+    container.innerText = myNotes[randomIndex];
+}
+
   </script>
+<script>
+  /* Floating Hearts Effect */
+  function createHeart() {
+    const heart = document.createElement('div');
+    heart.innerHTML = '💖'; // You can change this to 🌸 or 🦋
+    heart.style.position = 'fixed';
+    heart.style.left = Math.random() * 100 + 'vw';
+    heart.style.bottom = '-20px';
+    heart.style.fontSize = Math.random() * 20 + 10 + 'px';
+    heart.style.zIndex = '-1'; // Keeps it behind the text
+    heart.style.animation = 'floatUp 5s linear';
+    heart.style.opacity = '0.6';
+    document.body.appendChild(heart);
+
+    setTimeout(() => { heart.remove(); }, 5000);
+  }
+  
+  // Add the animation style
+  const styleSheet = document.createElement("style");
+  styleSheet.innerText = `
+    @keyframes floatUp {
+      to { transform: translateY(-100vh); opacity: 0; }
+    }
+  `;
+  document.head.appendChild(styleSheet);
+
+  // Create a heart every 300 milliseconds
+  setInterval(createHeart, 300);
+</script>
 </body>
 </html>
-
-
