@@ -3,140 +3,104 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>Kitten & Daddy 💖 (Live + AI)</title>
+  <title>Kitten & Daddy 💖</title>
+  <!-- PRELOAD FONTS -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     /* =========================================
-       1. GLOBAL & ATMOSPHERE
+       1. CORE STYLES
        ========================================= */
     :root {
       --bg-gradient: linear-gradient(135deg, #ee9ca7 0%, #ffdde1 100%);
       --text-main: #864e66;
-      --text-sub: #b58399;
       --heading-color: #ff5e89;
       --card-bg: rgba(255, 255, 255, 0.65);
       --card-border: rgba(255, 255, 255, 0.8);
       --card-shadow: 0 8px 32px 0 rgba(255, 94, 137, 0.35);
-      --shimmer-color: rgba(255, 255, 255, 0.95); 
       --nav-bg: rgba(255, 255, 255, 0.8);
-      --nav-border: rgba(255, 255, 255, 0.5);
       --nav-active: #ff5e89;
-      --nav-inactive: #b58399;
       --btn-bg: linear-gradient(45deg, #ff9a9e, #fad0c4);
-      --btn-text: #fff;
-      --accent-red: #ff6b6b;
-      --modal-bg: rgba(255, 255, 255, 0.9);
-      --envelope-front: #ff7da5;
-      --envelope-back: #ffffff;
+      --modal-bg: rgba(255, 255, 255, 0.95);
     }
 
     [data-theme="dark"] {
       --bg-gradient: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
       --text-main: #e0c3fc;
-      --text-sub: #a79db8;
       --heading-color: #d8b4fe;
       --card-bg: rgba(20, 20, 40, 0.6); 
       --card-border: rgba(255, 255, 255, 0.1);
       --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-      --shimmer-color: rgba(255, 255, 255, 0.15);
       --nav-bg: rgba(20, 20, 40, 0.8);
-      --nav-border: rgba(255, 255, 255, 0.1);
       --nav-active: #c084fc;
       --btn-bg: linear-gradient(45deg, #7c3aed, #a78bfa);
-      --btn-text: #ffffff;
       --modal-bg: rgba(30, 30, 50, 0.95);
     }
 
-    body[data-mode="period"] {
-      --bg-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
-      --text-main: #5c3a3a;
-      --heading-color: #ff6b6b;
-      --card-bg: rgba(255, 245, 245, 0.7);
-      --card-border: rgba(255, 200, 200, 0.6);
-      --card-shadow: 0 8px 32px 0 rgba(255, 100, 100, 0.2);
-      --btn-bg: linear-gradient(45deg, #ff758c, #ff7eb3);
-      --nav-bg: rgba(255, 245, 245, 0.9);
-    }
-
     body {
-      font-family: "Poppins", system-ui, -apple-system, sans-serif;
+      font-family: "Poppins", sans-serif;
       background: var(--bg-gradient);
       background-attachment: fixed;
       background-size: 400% 400%; 
       color: var(--text-main);
       margin: 0;
-      padding-bottom: 110px;
+      padding-bottom: 110px; /* Space for nav */
       text-align: center;
       overflow-x: hidden;
-      touch-action: manipulation;
+      animation: aurora 15s ease infinite;
       -webkit-tap-highlight-color: transparent;
-      animation: auroraGradient 15s ease infinite;
     }
 
-    @keyframes auroraGradient {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    /* Bokeh & Atmosphere */
-    #bokeh-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow: hidden; }
-    .bokeh-orb { position: absolute; border-radius: 50%; background: rgba(255, 255, 255, 0.15); box-shadow: 0 0 20px rgba(255, 255, 255, 0.1); bottom: -100px; animation: floatUpBokeh linear infinite; }
-    @keyframes floatUpBokeh { to { transform: translateY(-120vh) rotate(360deg); } }
-
-    .fog-layer { position: fixed; bottom: 0; left: 0; width: 200%; height: 30vh; background: linear-gradient(to top, rgba(255,255,255,0.2) 0%, transparent 100%); animation: fogMove 60s linear infinite alternate; z-index: -2; pointer-events: none; }
-    @keyframes fogMove { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-
-    .heart-bg { position: fixed; bottom: -20px; font-size: 20px; animation: floatUp 5s linear; opacity: 0.6; z-index: -1; pointer-events: none; }
-    @keyframes floatUp { to { transform: translateY(-110vh); opacity: 0; } }
+    @keyframes aurora { 0% {background-position:0% 50%} 50% {background-position:100% 50%} 100% {background-position:0% 50%} }
 
     /* =========================================
-       2. UI COMPONENTS (Cards, Nav, Buttons)
+       2. COMPONENTS
        ========================================= */
+    /* Navigation */
     .nav-bar {
       position: fixed; bottom: 0; left: 0; width: 100%; height: 70px;
       background: var(--nav-bg); backdrop-filter: blur(10px);
-      border-top: 1px solid var(--nav-border);
+      border-top: 1px solid rgba(255,255,255,0.3);
       display: flex; justify-content: space-around; align-items: center;
-      z-index: 5000; box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+      z-index: 5000;
     }
-    .nav-item { background: none; border: none; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--nav-inactive); transition: all 0.3s; cursor: pointer; flex: 1; padding: 5px 0; }
+    .nav-item { background:none; border:none; display:flex; flex-direction:column; align-items:center; color: #888; transition:0.3s; cursor:pointer; }
     .nav-item.active { color: var(--nav-active); transform: translateY(-5px); }
     .nav-icon { font-size: 1.5rem; margin-bottom: 2px; }
     .nav-label { font-size: 0.7rem; font-weight: 600; }
 
-    .tab-section { display: none; padding: 10px; animation: fadeIn 0.4s ease; }
+    /* Cards */
+    .tab-section { display: none; padding: 10px; animation: fadeIn 0.4s; }
     .tab-section.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from {opacity:0; transform:translateY(10px);} to {opacity:1; transform:translateY(0);} }
 
     .card, .fun-card {
-      position: relative; overflow: hidden; 
-      background-color: var(--card-bg); border: 1px solid var(--card-border);
+      background: var(--card-bg); border: 1px solid var(--card-border);
       border-radius: 18px; box-shadow: 0 4px 12px var(--card-shadow);
-      padding: 15px; margin: 10px auto;
-      transition: transform 0.25s ease; cursor: pointer;
+      padding: 15px; margin: 10px auto; cursor: pointer;
+      position: relative; overflow: hidden;
     }
-    .card { width: 45%; min-width: 150px; max-width: 220px; display: inline-block; vertical-align: top; margin: 5px; }
-    .fun-card { max-width: 340px; display: block; }
+    .card { width: 45%; display: inline-block; vertical-align: top; margin: 5px; min-width: 140px; }
+    .fun-card { max-width: 350px; display: block; }
     
+    /* Shimmer Effect */
     .card::after, .fun-card::after {
-        content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
-        background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
-        transform: skewX(-25deg); pointer-events: none; animation: glassShine 6s infinite;
+        content:''; position:absolute; top:0; left:-150%; width:50%; height:100%;
+        background: linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent);
+        transform: skewX(-25deg); pointer-events: none; animation: shine 6s infinite;
     }
-    @keyframes glassShine { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
+    @keyframes shine { 0% {left:-150%} 20% {left:200%} 100% {left:200%} }
 
-    .countdowns { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 10px; }
     img.card-img { width: 100%; border-radius: 10px; margin-top: 8px; display: block; }
     .header-image img { width: 100%; max-height: 200px; object-fit: cover; border-radius: 0 0 20px 20px; }
 
+    /* Buttons */
     button, .interactive-btn {
-      background: var(--btn-bg); color: var(--btn-text);
-      border: none; padding: 12px 24px; border-radius: 50px;
-      font-weight: bold; cursor: pointer; transition: transform 0.2s;
+      background: var(--btn-bg); color: #fff; border: none; padding: 12px 24px; 
+      border-radius: 50px; font-weight: bold; cursor: pointer; transition: transform 0.2s;
     }
     button:active { transform: scale(0.95); }
 
-    /* Toggle Switch */
+    /* Toggles */
     .toggle-switch { position: relative; display: inline-block; width: 50px; height: 26px; }
     .toggle-switch input { opacity: 0; width: 0; height: 0; }
     .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
@@ -145,181 +109,134 @@
     input:checked + .slider:before { transform: translateX(24px); }
 
     /* =========================================
-       3. AUTH & CONNECTION
+       3. GAME SPECIFIC STYLES
        ========================================= */
-    #auth-overlay {
-        position: fixed; inset: 0; z-index: 10000;
-        background: rgba(255,255,255,0.5);
-        backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        transition: opacity 0.5s ease;
-    }
-    .auth-card { background: var(--card-bg); border: 2px solid var(--card-border); padding: 30px; border-radius: 20px; text-align: center; }
-    .auth-btn { width: 100px; height: 100px; border-radius: 50%; border: none; font-size: 3rem; cursor: pointer; background: rgba(255,255,255,0.5); border: 2px solid white; margin: 0 10px; }
-    
-    #connection-status {
-        position: fixed; top: 15px; left: 15px; z-index: 10001;
-        width: 12px; height: 12px; border-radius: 50%;
-        background: red; border: 2px solid white;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        transition: background 0.3s;
-    }
-
-    /* Live Chat */
-    #chat-messages { height: 200px; overflow-y: auto; background: rgba(255,255,255,0.3); border-radius: 15px; padding: 10px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px; }
-    .chat-msg { padding: 8px 12px; border-radius: 15px; max-width: 80%; font-size: 0.9rem; }
-    .msg-self { background: var(--btn-bg); color: white; align-self: flex-end; }
-    .msg-other { background: white; color: var(--text-main); align-self: flex-start; border: 1px solid var(--card-border); }
-    #chatInput { flex: 1; padding: 10px; border-radius: 20px; border: 1px solid var(--card-border); outline: none; }
-
-    /* Vibe Checker */
-    #vibeOutput {
-        min-height: 50px;
-        background: rgba(255, 255, 255, 0.4);
-        padding: 10px;
-        border-radius: 10px;
-        margin-top: 15px;
-        text-align: center;
-        font-style: italic;
-    }
-
-    /* Notebook Gallery (Fixed) */
-    #gallery-container { position: relative; width: 100%; height: 70vh; display: flex; align-items: center; justify-content: center; perspective: 1500px; overflow: visible; }
-    .book-scene { width: 320px; height: 440px; position: relative; }
-    .book { width: 100%; height: 100%; transform-style: preserve-3d; position: relative; }
+    /* Notebook */
+    #gallery-container { width:100%; height:450px; perspective:1500px; display:flex; justify-content:center; align-items:center; }
+    .book-scene { width:300px; height:400px; position:relative; }
+    .book { width:100%; height:100%; transform-style:preserve-3d; }
     .page {
-        width: 100%; height: 100%; position: absolute; top: 0; left: 0;
-        transform-origin: left center; transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
-        transform-style: preserve-3d; cursor: pointer; border-radius: 8px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1); background: #fff;
+        width:100%; height:100%; position:absolute; top:0; left:0;
+        transform-origin:left center; transition:transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+        transform-style:preserve-3d; border-radius:5px; background:#fff;
+        box-shadow:0 5px 15px rgba(0,0,0,0.1);
     }
     .page-face {
-        position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        padding: 20px; box-sizing: border-box; background: #fff; border: 1px solid #eee;
+        position:absolute; width:100%; height:100%; backface-visibility:hidden;
+        display:flex; flex-direction:column; align-items:center; justify-content:center;
+        padding:15px; box-sizing:border-box; border:1px solid #eee; background:#fff;
     }
-    .page-back { transform: rotateY(180deg); background: #f8f8f8; }
-    .page.flipped { transform: rotateY(-180deg); }
-    
-    .photo-frame {
-        background: white; padding: 10px 10px 40px 10px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-        width: 90%; height: 320px; /* Fixed container height */
-        display: flex; align-items: center; justify-content: center;
-        overflow: hidden; /* CRITICAL: Prevents spillover */
+    .page-back { transform:rotateY(180deg); background:#f9f9f9; }
+    .page.flipped { transform:rotateY(-180deg); }
+    .photo-frame { 
+        background:white; padding:10px; box-shadow:0 2px 10px rgba(0,0,0,0.1);
+        width:90%; height:300px; display:flex; align-items:center; justify-content:center;
+        overflow:hidden; /* Prevents spill */
     }
-    .photo-frame img {
-        max-width: 100%; max-height: 100%; 
-        width: auto; height: auto;
-        object-fit: contain; /* Keeps aspect ratio */
-        border: 1px solid #eee;
+    .photo-frame img { max-width:100%; max-height:100%; object-fit:contain; }
+
+    /* Chat */
+    #chat-messages { height:250px; overflow-y:auto; background:rgba(255,255,255,0.3); border-radius:10px; padding:10px; margin-bottom:10px; display:flex; flex-direction:column; gap:5px; }
+    .chat-msg { padding:8px 12px; border-radius:15px; max-width:80%; font-size:0.9rem; word-wrap:break-word; }
+    .msg-self { background:var(--btn-bg); color:white; align-self:flex-end; }
+    .msg-other { background:white; color:var(--text-main); align-self:flex-start; }
+    
+    /* Vibe Checker */
+    #vibeOutput { margin-top:10px; font-style:italic; padding:10px; background:rgba(255,255,255,0.4); border-radius:10px; min-height:40px; }
+
+    /* Heat Pad */
+    .heat-pad-btn {
+        width:150px; height:150px; border-radius:50%;
+        background:radial-gradient(circle, #ff9a9e, #ff6b6b);
+        color:white; font-weight:bold; font-size:1.2rem; border:none;
+        margin:20px auto; display:flex; align-items:center; justify-content:center;
+        box-shadow:0 0 20px rgba(255,107,107,0.4); transition:transform 0.1s;
+        -webkit-user-select: none; user-select: none; /* Prevents text selection on hold */
     }
-    .page-number { position: absolute; bottom: 15px; font-size: 0.8rem; color: #888; }
+    .heat-pad-btn.active { animation: pulse 0.8s infinite; transform:scale(1.05); }
+    @keyframes pulse { 0%{box-shadow:0 0 20px rgba(255,107,107,0.4);} 50%{box-shadow:0 0 50px rgba(255,107,107,0.8);} 100%{box-shadow:0 0 20px rgba(255,107,107,0.4);} }
 
-    /* Game Overlays & Elements */
-    .game-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; z-index: 6000; display: none; }
-    .game-overlay.active { display: block; animation: fadeIn 0.3s; }
-    .overlay-close { position: absolute; top: 20px; right: 20px; z-index: 6001; background: rgba(255,255,255,0.3); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 1.5rem; }
-    canvas.fs-canvas { width: 100%; height: 100%; display: block; }
-
-    .lantern { position: absolute; width: 30px; height: 40px; background: linear-gradient(#ffeb3b, #ff9800); border-radius: 5px; opacity: 0.9; box-shadow: 0 0 20px orange; animation: floatUp 7s linear forwards; pointer-events: none; }
-    @keyframes floatUp { to { transform: translateY(-110vh); opacity: 0; } }
-
-    .rain-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9998; display: none; }
-    .rain-container.active { display: block; }
-    .rain-drop { position: absolute; bottom: 100%; width: 2px; height: 15px; background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(137, 196, 244, 0.8)); animation: fall linear infinite; }
-    @keyframes fall { to { transform: translateY(110vh); } }
-
-    /* Bubble Wrap */
-    .bubble-wrap-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; padding: 10px; background: rgba(255,255,255,0.3); border-radius: 10px; }
-    .pop-btn { width: 45px; height: 45px; border-radius: 50%; border: none; background: radial-gradient(circle at 30% 30%, #89f7fe, #66a6ff); box-shadow: inset -2px -2px 5px rgba(0,0,0,0.2), 2px 2px 5px rgba(0,0,0,0.1); cursor: pointer; }
-    .pop-btn.popped { background: #ccc; transform: scale(0.9); box-shadow: inset 2px 2px 5px rgba(0,0,0,0.2); }
-    
-    /* Battery */
-    .battery-container { width: 100%; height: 40px; border: 3px solid var(--text-main); border-radius: 10px; padding: 3px; position: relative; }
-    .battery-fill { height: 100%; width: 0%; background: #48bb78; border-radius: 5px; transition: width 0.1s; }
-    
     /* Chocolate */
-    .choco-bar { width: 200px; height: 100px; background: #5d4037; margin: 10px auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; cursor: pointer; }
-    .choco-piece { background: #795548; border-radius: 2px; transition: opacity 0.2s; }
+    .choco-bar { width:200px; height:100px; background:#5d4037; margin:10px auto; display:grid; grid-template-columns:repeat(4,1fr); gap:2px; cursor:pointer; }
+    .choco-piece { background:#795548; border-radius:2px; transition:opacity 0.2s; }
 
-    /* Modal */
-    .modal { position: fixed; inset: 0; background: rgba(0,0,0,.6); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 7000; }
-    .modal.open { display: flex; }
-    .modal-card { background: var(--modal-bg); max-width: 520px; width: 100%; border-radius: 20px; padding: 26px 22px; border: 1px solid var(--card-border); color: var(--text-main); }
-    .bigtime { font-size: 2rem; font-weight: 800; margin: 10px 0; color: var(--heading-color); }
-
+    /* Overlays */
+    #auth-overlay { position:fixed; inset:0; background:rgba(255,255,255,0.8); backdrop-filter:blur(10px); z-index:9999; display:flex; align-items:center; justify-content:center; }
+    #connection-status { position:fixed; top:10px; left:10px; width:10px; height:10px; background:red; border-radius:50%; z-index:10000; border:2px solid white; }
+    .game-overlay { position:fixed; inset:0; background:black; z-index:6000; display:none; }
+    .game-overlay.active { display:block; }
+    .lantern { position:absolute; width:30px; height:45px; background:orange; border-radius:5px; animation:floatUp 6s linear forwards; }
+    .rain-container { position:fixed; inset:0; pointer-events:none; z-index:5000; display:none; }
+    .rain-container.active { display:block; }
+    .rain-drop { position:absolute; width:2px; height:15px; background:#66a6ff; animation:fall 1s linear infinite; }
+    @keyframes fall { to { transform:translateY(100vh); } }
+    
   </style>
 </head>
 <body>
-<!-- CONNECTION DOT -->
+
+<!-- Connection Dot -->
 <div id="connection-status" title="Disconnected"></div>
 
-<!-- AUTH OVERLAY -->
+<!-- Auth Overlay -->
 <div id="auth-overlay">
-    <div class="auth-card">
+    <div class="fun-card" style="text-align:center; padding:30px;">
         <h1>Who are you? 🤔</h1>
-        <p>Tap your character to enter!</p>
-        <div class="auth-btn-group">
-            <button class="auth-btn" data-user="Kitten" id="btn-kitten">🐱<div style="font-size:1rem;font-weight:bold;">Kitten</div></button>
-            <button class="auth-btn" data-user="Daddy" id="btn-daddy">🤵<div style="font-size:1rem;font-weight:bold;">Daddy</div></button>
+        <div style="display:flex; gap:20px; justify-content:center; margin-top:20px;">
+            <button onclick="setIdentity('Kitten')" style="width:100px; height:100px; font-size:3rem;">🐱</button>
+            <button onclick="setIdentity('Daddy')" style="width:100px; height:100px; font-size:3rem;">🤵</button>
         </div>
     </div>
 </div>
 
+<!-- Backgrounds -->
 <div id="bokeh-container"></div>
-<canvas id="ribbon-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;"></canvas>
 <div id="rainContainer" class="rain-container"></div>
 
 <!-- TAB 1: HOME -->
 <div id="tab-home" class="tab-section active">
-    <div class="header-image"><img src="i-love-you.jpg" alt="I Love You" /></div>
-    <h1 id="typingTitle">Our Countdowns ⏳</h1>
-
+    <div class="header-image"><img src="i-love-you.jpg" alt="Cover"></div>
+    <h1>Our Countdowns ⏳</h1>
+    
     <div class="countdowns">
-      <div class="card" data-title="Our Anniversary 💞" data-date="09-06" data-note="Celebrating us 💌">
+      <div class="card" onclick="openModal('Our Anniversary 💞', 'Celebrating us 💌', '2024-09-06')">
         <div class="event">Anniversary 💞</div>
-        <div class="days"></div>
+        <div class="days" id="day-anniv">...</div>
         <img class="card-img" src="your-anniversary-image.jpg"/>
       </div>
-      <div class="card" data-title="We meet!! 💞" data-absolute="2025-11-27T00:00:00" data-note="Together again 💖">
+      <div class="card" onclick="openModal('We Meet!! ✈️', 'Together again 💖', '2025-11-27')">
         <div class="event">We meet!! ✈️</div>
-        <div class="days"></div>
+        <div class="days" id="day-meet">...</div>
         <img class="card-img" src="meeting.jpg"/>
       </div>
-      <div class="card" data-title="End of Exams 📚" data-absolute="2025-12-30T23:59:59" data-note="Freedom! 🌷">
-        <div class="event">Exams End 📚</div>
-        <div class="days"></div>
-        <img class="card-img" src="exam-end.jpg"/>
-      </div>
-      <div class="card" data-title="Kitten’s Birthday 🎂" data-date="01-02" data-note="Happy Birthday!">
+      <div class="card" onclick="openModal('Kitten Bday 🎂', 'Happy Birthday!', '2025-01-02')">
         <div class="event">Kitten Bday 🎂</div>
-        <div class="days"></div>
+        <div class="days" id="day-kbday">...</div>
         <img class="card-img" src="kitten-birthday.jpg"/>
       </div>
-      <div class="card" data-title="Daddy’s Birthday 🎉" data-date="04-14" data-note="Muah!">
+      <div class="card" onclick="openModal('Daddy Bday 🎉', 'Muah!', '2025-04-14')">
         <div class="event">Daddy Bday 🎉</div>
-        <div class="days"></div>
+        <div class="days" id="day-dbday">...</div>
         <img class="card-img" src="daddy-birthday.jpg"/>
       </div>
     </div>
 
-    <div class="fun-card" style="border-color: #a18cd1;">
-        <h3 style="color: #a18cd1; margin-top:0;">Live Chat 💬</h3>
-        <div id="chat-messages"><div style="text-align:center; opacity:0.5;">Loading chat...</div></div>
-        <div style="display:flex; gap:5px;">
-            <input type="text" id="chatInput" placeholder="Type a message..." style="flex:1; padding:10px; border-radius:20px; border:1px solid #ddd;">
-            <button id="chatSendBtn" class="interactive-btn">➤</button>
+    <div class="fun-card" style="border: 2px solid #a18cd1;">
+        <h3 style="color:#a18cd1; margin-top:0;">Live Chat 💬</h3>
+        <div id="chat-messages"><div>Loading...</div></div>
+        <div style="display:flex; gap:5px; margin-top:10px;">
+            <input type="text" id="chatInput" placeholder="Message..." style="flex:1; padding:10px; border-radius:20px; border:1px solid #ddd;">
+            <button id="chatSendBtn">➤</button>
         </div>
     </div>
 
     <div class="fun-card">
-        <h3>The Vibe Checker 🔮</h3>
-        <div style="display:flex; gap:5px; justify-content:center;">
-            <input type="text" id="vibeInput" placeholder="Enter feeling..." style="width: 60%; padding: 8px; border-radius: 8px;">
-            <button id="vibeCheckBtn" class="interactive-btn">Analyze</button>
+        <h3>Vibe Checker 🔮</h3>
+        <div style="display:flex; gap:5px;">
+            <input type="text" id="vibeInput" placeholder="How do you feel?" style="width:60%; padding:8px;">
+            <button id="vibeCheckBtn">Analyze</button>
         </div>
-        <div id="vibeOutput" style="margin-top:10px; font-style:italic;">...</div>
+        <div id="vibeOutput">...</div>
     </div>
 </div>
 
@@ -327,23 +244,20 @@
 <div id="tab-notes" class="tab-section">
     <h1>Love Notes 💌</h1>
     <div class="fun-card">
-        <h3>Send a Real Note 📨</h3>
-        <textarea id="newNoteArea" rows="3" placeholder="Type a few words..." style="width:100%; padding:10px; border-radius:10px; border:1px solid #ccc;"></textarea>
-        <div style="display:flex; justify-content:center; gap:10px; margin-top:10px;">
+        <h3>Write a Note</h3>
+        <textarea id="newNoteArea" rows="3" style="width:100%; padding:10px;" placeholder="Type here..."></textarea>
+        <div style="margin-top:10px;">
             <button id="sendNoteBtn">Send 💘</button>
-            <button id="magicDraftBtn" class="magic-btn">✨ Magic Draft</button>
+            <button id="magicDraftBtn" style="background:#a18cd1;">✨ AI Draft</button>
         </div>
-        <div id="notesList"></div>
+        <div id="notesList" style="margin-top:20px; text-align:left;"></div>
     </div>
-    <div class="card" onclick="generateRandomNote()">
-        <div class="event">🎲 Random Note</div>
-        <div id="note-content" style="margin-top:10px;">Tap me!</div>
-    </div>
+    
     <div class="fun-card">
-        <h3>Daily To-Do (Synced) ✅</h3>
-        <label style="display: block; margin: 5px 0;"><input type="checkbox" class="sync-todo" data-id="0"> call me </label>
-        <label style="display: block; margin: 5px 0;"><input type="checkbox" class="sync-todo" data-id="1"> miss me ❤️</label>
-        <label style="display: block; margin: 5px 0;"><input type="checkbox" class="sync-todo" data-id="2"> Drink water 💧</label>
+        <h3>Daily To-Do</h3>
+        <label style="display:block; margin:5px;"><input type="checkbox" class="sync-todo" data-id="0"> Call me</label>
+        <label style="display:block; margin:5px;"><input type="checkbox" class="sync-todo" data-id="1"> Miss me</label>
+        <label style="display:block; margin:5px;"><input type="checkbox" class="sync-todo" data-id="2"> Drink water</label>
     </div>
 </div>
 
@@ -364,24 +278,12 @@
       <div class="play-btn-lg" onclick="openGame('constellation')">🌌 Stars</div>
       <div class="play-btn-lg" onclick="openGame('bloom')">🌸 Bloom</div>
       <div class="play-btn-lg" onclick="openGame('lanterns')">🏮 Lanterns</div>
-      <div class="play-btn-lg" onclick="openGame('rain')">🌧️ Neon Rain</div>
+      <div class="play-btn-lg" onclick="openGame('rain')">🌧️ Rain</div>
     </div>
 
     <div class="fun-card">
-        <h3>Pop-It Bubble Wrap 🫧</h3>
-        <div class="bubble-wrap-grid" id="bubbleWrap"></div>
-    </div>
-
-    <div class="fun-card">
-        <h3>Stress Bubbles 🛁</h3>
-        <p style="font-size:0.8rem;">Pop them before they float away!</p>
-        <div class="bubble-container" id="soapBubbleContainer"></div>
-    </div>
-
-    <div class="fun-card">
-        <h3>Love Battery 🔋</h3>
-        <div class="battery-container"><div class="battery-fill" id="batteryFill"></div></div>
-        <button id="chargeBtn" style="margin-top:10px;">Hold to Charge ⚡</button>
+        <h3>Bubble Wrap</h3>
+        <div id="bubbleWrap" style="display:grid; grid-template-columns:repeat(5,1fr); gap:5px;"></div>
     </div>
 </div>
 
@@ -389,33 +291,33 @@
 <div id="tab-comfort" class="tab-section">
     <h1>Comfort Zone 🌸</h1>
     <div class="comfort-header">
-      <span><b>Period Mode</b><br>Warm vibes</span>
-      <label class="toggle-switch"><input type="checkbox" id="periodModeToggle"><span class="slider"></span></label>
-    </div>
-    <div class="fun-card">
-      <h3>The Heat Pad ♨️</h3>
-      <button class="heat-pad-btn" id="heatPadBtn">HOLD ME</button>
+        <span>Period Mode</span>
+        <label class="toggle-switch"><input type="checkbox" id="periodModeToggle"><span class="slider"></span></label>
     </div>
     
-    <!-- RESTORED CHOCOLATE -->
     <div class="fun-card">
-      <h3>Emergency Chocolate 🍫</h3>
-      <div class="choco-bar" id="chocoBar" onclick="eatChocolate()">
-         <div class="choco-piece"></div><div class="choco-piece"></div><div class="choco-piece"></div><div class="choco-piece"></div>
-         <div class="choco-piece"></div><div class="choco-piece"></div><div class="choco-piece"></div><div class="choco-piece"></div>
-      </div>
-      <p id="chocoMsg" style="color:var(--accent-red); font-weight:bold;">Tap to eat!</p>
+        <h3>Heat Pad ♨️</h3>
+        <button class="heat-pad-btn" id="heatPadBtn">HOLD ME</button>
     </div>
 
-    <div class="fun-card" style="border-color: red;">
-       <h3 style="color: red;">EMERGENCY 🚨</h3>
-       <button id="emergencyBtn" style="background: red; color: white; width:100%;">BREAK GLASS 🔨</button>
+    <div class="fun-card">
+        <h3>Chocolate 🍫</h3>
+        <div class="choco-bar" id="chocoBar" onclick="eatChocolate()">
+            <div class="choco-piece"></div><div class="choco-piece"></div><div class="choco-piece"></div><div class="choco-piece"></div>
+            <div class="choco-piece"></div><div class="choco-piece"></div><div class="choco-piece"></div><div class="choco-piece"></div>
+        </div>
+        <p id="chocoMsg" style="color:var(--heading-color);">Tap to eat!</p>
+    </div>
+
+    <div class="fun-card" style="border:2px solid red;">
+       <h3 style="color:red;">EMERGENCY 🚨</h3>
+       <button id="emergencyBtn" style="background:red; width:100%;">BREAK GLASS</button>
     </div>
 </div>
 
-<!-- TAB 5: GALLERY (NOTEBOOK ONLY) -->
-<div id="tab-gallery" class="tab-section" style="padding:0;">
-    <h1 style="position:absolute; width:100%; top:10px; z-index:10;">Our Memories 📸</h1>
+<!-- TAB 5: GALLERY -->
+<div id="tab-gallery" class="tab-section">
+    <h1 style="position:absolute; width:100%; z-index:10; top:10px;">Our Memories 📸</h1>
     <div id="gallery-container">
         <div class="book-scene">
             <div class="book" id="book"></div>
@@ -423,7 +325,7 @@
     </div>
 </div>
 
-<!-- NAVIGATION -->
+<!-- NAV BAR -->
 <nav class="nav-bar">
     <button class="nav-item active" onclick="switchTab('tab-home', this)"><span>🏠</span><span class="nav-label">Home</span></button>
     <button class="nav-item" onclick="switchTab('tab-notes', this)"><span>💌</span><span class="nav-label">Notes</span></button>
@@ -432,21 +334,29 @@
     <button class="nav-item" onclick="switchTab('tab-gallery', this)"><span>📸</span><span class="nav-label">Gallery</span></button>
 </nav>
 
-<!-- FULL SCREEN GAMES -->
+<!-- FULL SCREEN GAME OVERLAYS -->
 <div id="game-constellation" class="game-overlay"><button class="overlay-close" onclick="closeGame()">×</button><canvas id="constellationCanvas" class="fs-canvas"></canvas></div>
-<div id="game-bloom" class="game-overlay" style="background:#fff;"><button class="overlay-close" onclick="closeGame()" style="color:#000;">×</button><canvas id="bloomCanvas" class="fs-canvas"></canvas></div>
-<div id="game-lanterns" class="game-overlay" style="background: linear-gradient(to top, #0f2027, #203a43, #2c5364);"><button class="overlay-close" onclick="closeGame()">×</button><div id="lanternContainer" style="width:100%;height:100%;" onclick="spawnLantern(event)"></div></div>
-<div id="game-rain" class="game-overlay" style="background:#000;"><button class="overlay-close" onclick="closeGame()">×</button><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:3rem;">I Love You ❤️</div><canvas id="rainCanvas" class="fs-canvas" style="z-index:2;position:relative;"></canvas></div>
+<div id="game-bloom" class="game-overlay" style="background:white;"><button class="overlay-close" style="color:black;" onclick="closeGame()">×</button><canvas id="bloomCanvas" class="fs-canvas"></canvas></div>
+<div id="game-lanterns" class="game-overlay" style="background:linear-gradient(to top, #0f2027, #203a43);"><button class="overlay-close" onclick="closeGame()">×</button><div id="lanternContainer" style="width:100%;height:100%;" onclick="spawnLantern(event)"></div></div>
+<div id="game-rain" class="game-overlay"><button class="overlay-close" onclick="closeGame()">×</button><canvas id="rainCanvas" class="fs-canvas"></canvas></div>
 
-<div class="modal" id="modal"><div class="modal-card"><h3 id="modalTitle"></h3><p id="modalNote"></p><div class="bigtime" id="liveTime"></div><button onclick="document.getElementById('modal').classList.remove('open')">Close</button></div></div>
+<!-- MODAL -->
+<div class="modal" id="modal">
+    <div class="modal-card">
+        <h3 id="modalTitle"></h3>
+        <p id="modalNote"></p>
+        <div class="bigtime" id="liveTime"></div>
+        <button onclick="document.getElementById('modal').classList.remove('open')">Close</button>
+    </div>
+</div>
 
-<!-- FIREBASE -->
+<!-- SCRIPTS -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 
 <script>
-/* --- CONFIG --- */
+/* --- 1. CONFIGURATION --- */
 const firebaseConfig = {
   apiKey: "AIzaSyBI2UJvRrGREZPh_zP85puaXrPc5BJXGXY",
   authDomain: "kittendaddy-94aaf.firebaseapp.com",
@@ -458,9 +368,7 @@ const firebaseConfig = {
 const geminiApiKey = "AIzaSyDVDto9WbxGX8bA0ks8AL209l2xY0US9d0";
 let currentUser = localStorage.getItem('kd_user');
 
-/* --- GLOBAL FUNCTIONS (Accessible to HTML) --- */
-
-// 1. Navigation
+/* --- 2. GLOBAL UI FUNCTIONS (Must be on window) --- */
 window.switchTab = function(id, btn) {
     document.querySelectorAll('.tab-section').forEach(t => t.classList.remove('active'));
     document.getElementById(id).classList.add('active');
@@ -469,7 +377,27 @@ window.switchTab = function(id, btn) {
     if(id === 'tab-gallery') initGallery();
 }
 
-// 2. Chocolate
+window.setIdentity = function(id) {
+    currentUser = id;
+    localStorage.setItem('kd_user', id);
+    document.getElementById('auth-overlay').style.display = 'none';
+    document.title = `${id}'s View 💖`;
+}
+
+window.openModal = function(title, note, dateStr) {
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalNote').textContent = note;
+    document.getElementById('modal').classList.add('open');
+    // Simple timer logic for modal
+    const target = new Date(dateStr);
+    const now = new Date();
+    if(target < now) target.setFullYear(now.getFullYear() + 1);
+    const diff = target - now;
+    const d = Math.floor(diff/(1000*60*60*24));
+    document.getElementById('liveTime').textContent = `${d} Days left!`;
+}
+
+/* --- 3. LOCAL GAME FUNCTIONS --- */
 let bites = 0;
 window.eatChocolate = function() {
     const pieces = document.querySelectorAll('.choco-piece');
@@ -480,444 +408,304 @@ window.eatChocolate = function() {
     } else {
         pieces.forEach(p => p.style.opacity = '1');
         bites = 0;
+        document.getElementById('chocoMsg').innerText = "Refilled! 🍫";
     }
 }
 
-// 3. Random Note
-const myNotes = ["your doing amazing", "you scored 8.5 cgpa last sem!!!!", "your lowest marks are literally 80%", "mera smarty bhondu", "dont procrastinate", "you already have a mental map, just keep going", "i love you"];
-window.generateRandomNote = function() {
-    const container = document.getElementById("note-content");
-    container.innerText = myNotes[Math.floor(Math.random() * myNotes.length)];
-}
-
-// 4. Lanterns
 window.spawnLantern = function(e) {
-    const cont = document.getElementById('lanternContainer');
-    const l = document.createElement('div');
-    l.className = 'lantern';
-    l.style.left = e.clientX + 'px';
-    l.style.bottom = '0px';
-    l.style.animationDuration = (4 + Math.random()*3) + 's';
-    cont.appendChild(l);
-    setTimeout(() => l.remove(), 7000);
+    const el = document.createElement('div');
+    el.className = 'lantern';
+    el.style.left = e.clientX + 'px';
+    el.style.bottom = '0px';
+    document.getElementById('lanternContainer').appendChild(el);
+    setTimeout(()=>el.remove(), 7000);
 }
 
-// 5. Game Management
 let renderLoop;
 window.openGame = function(id) {
     document.getElementById('game-'+id).classList.add('active');
-    if(id === 'constellation') initConstellation();
-    if(id === 'bloom') initBloom();
-    if(id === 'rain') initRain();
+    if(id==='constellation') initConstellation();
+    if(id==='bloom') initBloom();
+    if(id==='rain') initRainGame();
 }
-
 window.closeGame = function() {
-    document.querySelectorAll('.game-overlay').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.game-overlay').forEach(e=>e.classList.remove('active'));
     if(renderLoop) cancelAnimationFrame(renderLoop);
 }
 
-/* --- INITIALIZATION --- */
+/* --- 4. INITIALIZATION --- */
 window.onload = function() {
-    // 1. Init Firebase
+    
+    // Auth Check
+    if(currentUser) {
+        document.getElementById('auth-overlay').style.display = 'none';
+    }
+
+    // Init Local Games
+    setupBubbleWrap();
+    setupHeatPad();
+    updateCountdowns();
+
+    // Init Firebase
     if(firebaseConfig.apiKey) {
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
-        
+        const status = document.getElementById('connection-status');
+
         auth.signInAnonymously().then(() => {
-            document.getElementById('connection-status').style.background = '#48bb78';
-            setupRealtimeListeners(db);
-        }).catch(e => console.error("Auth Failed:", e));
-    }
-
-    // 2. Init User
-    const authOverlay = document.getElementById('auth-overlay');
-    if(currentUser) {
-        authOverlay.style.display = 'none';
-        document.title = `${currentUser}'s View 💖`;
-    } else {
-        authOverlay.style.display = 'flex';
-    }
-    
-    document.querySelectorAll('.auth-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            currentUser = e.currentTarget.dataset.user;
-            localStorage.setItem('kd_user', currentUser);
-            authOverlay.style.opacity = '0';
-            setTimeout(() => authOverlay.style.display = 'none', 300);
+            status.style.background = '#48bb78'; // Green
+            setupMultiplayer(db);
+        }).catch(e => {
+            console.error(e);
+            status.style.background = 'red';
         });
-    });
-
-    // 3. Init Local Features
-    setupLoveCharger();
-    setupBubbleWrap();
-    initSoapBubbles();
-    initCountdowns();
-    initRibbon();
-    setupHeatPad(); 
+    }
     
-    // 4. Theme Logic
+    // Theme Logic
     const themeToggle = document.getElementById('themeToggle');
-    if(localStorage.getItem('theme') === 'dark') {
+    if(localStorage.getItem('theme')==='dark') {
         themeToggle.checked = true;
         document.body.setAttribute('data-theme', 'dark');
     }
     themeToggle.addEventListener('change', (e) => {
         if(e.target.checked) {
             document.body.setAttribute('data-theme', 'dark');
-            localStorage.setItem('theme', 'dark');
+            localStorage.setItem('theme','dark');
         } else {
             document.body.removeAttribute('data-theme');
-            localStorage.setItem('theme', 'light');
+            localStorage.setItem('theme','light');
         }
     });
     
-    // 5. Period Mode Logic
     document.getElementById('periodModeToggle').addEventListener('change', (e) => {
         if(e.target.checked) document.body.setAttribute('data-mode', 'period');
         else document.body.removeAttribute('data-mode');
     });
 };
 
-/* --- FIREBASE LOGIC --- */
-function setupRealtimeListeners(db) {
+/* --- 5. MULTIPLAYER LOGIC --- */
+function setupMultiplayer(db) {
     // Rain Sync
     const rainToggle = document.getElementById('rainToggle');
-    db.collection('app').doc('sharedState').onSnapshot(doc => {
+    db.collection('app').doc('shared').onSnapshot(doc => {
         if(doc.exists) {
-            const data = doc.data();
-            if(data.rainActive !== rainToggle.checked) {
-                rainToggle.checked = data.rainActive;
-                toggleRainEffect(data.rainActive);
+            const d = doc.data();
+            // Rain
+            if(d.rain !== rainToggle.checked) {
+                rainToggle.checked = d.rain;
+                toggleRain(d.rain);
             }
-            if(data.emergency && data.emergency > Date.now() - 10000 && data.sender !== currentUser) {
-                if(sessionStorage.getItem('lastAlert') != data.emergency) {
-                    sessionStorage.setItem('lastAlert', data.emergency);
+            // Vibe
+            if(d.lastVibe && d.vibeSender !== currentUser && d.vibeTime > Date.now() - 60000) {
+                document.getElementById('vibeOutput').innerText = `Latest: ${d.vibeAnalysis}`;
+            }
+            // Emergency
+            if(d.emergency && d.emSender !== currentUser && d.emTime > Date.now() - 10000) {
+                if(sessionStorage.getItem('lastEm') != d.emergency) {
+                    sessionStorage.setItem('lastEm', d.emergency);
                     alert("🚨 EMERGENCY: Partner needs you! 🚨");
+                    if(navigator.vibrate) navigator.vibrate([500,200,500]);
                 }
-            }
-            // Vibe Check Sync
-            if(data.lastVibe && data.lastVibeSender !== currentUser && data.lastVibeTime > Date.now() - 60000) {
-                 document.getElementById('vibeOutput').innerText = `Latest Vibe: ${data.lastVibeAnalysis}`;
             }
         }
     });
+
     rainToggle.addEventListener('change', (e) => {
-        toggleRainEffect(e.target.checked);
-        db.collection('app').doc('sharedState').set({rainActive: e.target.checked}, {merge:true});
+        toggleRain(e.target.checked);
+        db.collection('app').doc('shared').set({rain: e.target.checked}, {merge:true});
     });
 
     // Chat
     const chatBox = document.getElementById('chat-messages');
-    db.collection('liveChat').orderBy('timestamp', 'asc').limit(50).onSnapshot(snapshot => {
+    db.collection('chats').orderBy('time').limit(50).onSnapshot(snap => {
         chatBox.innerHTML = '';
-        snapshot.forEach(doc => {
-            const msg = doc.data();
+        snap.forEach(doc => {
+            const m = doc.data();
             const div = document.createElement('div');
-            div.className = 'chat-msg ' + (msg.sender === currentUser ? 'msg-self' : 'msg-other');
-            div.textContent = msg.text;
+            div.className = `chat-msg ${m.sender===currentUser ? 'msg-self':'msg-other'}`;
+            div.innerText = m.text;
             chatBox.appendChild(div);
         });
         chatBox.scrollTop = chatBox.scrollHeight;
     });
-    
-    document.getElementById('chatSendBtn').addEventListener('click', () => {
-        const input = document.getElementById('chatInput');
-        if(input.value.trim()) {
-            db.collection('liveChat').add({text:input.value, sender:currentUser, timestamp: Date.now()});
-            input.value = '';
+    document.getElementById('chatSendBtn').onclick = () => {
+        const inp = document.getElementById('chatInput');
+        if(inp.value.trim()) {
+            db.collection('chats').add({text:inp.value, sender:currentUser, time:Date.now()});
+            inp.value = '';
         }
-    });
+    };
 
     // Notes
-    const notesList = document.getElementById('notesList');
-    db.collection('loveNotes').orderBy('timestamp', 'desc').limit(10).onSnapshot(snapshot => {
-        notesList.innerHTML = '';
-        snapshot.forEach(doc => {
+    const notesBox = document.getElementById('notesList');
+    db.collection('notes').orderBy('time', 'desc').limit(10).onSnapshot(snap => {
+        notesBox.innerHTML = '';
+        snap.forEach(doc => {
             const n = doc.data();
             const div = document.createElement('div');
-            div.className = 'note-item';
-            div.innerHTML = `<div class="note-meta"><span>${n.sender}</span><span>${new Date(n.timestamp).toLocaleTimeString()}</span></div><div>${n.text}</div>`;
-            notesList.appendChild(div);
+            div.style.background = "rgba(255,255,255,0.5)";
+            div.style.padding = "10px"; div.style.margin = "5px 0"; div.style.borderRadius = "10px";
+            div.innerText = `${n.sender}: ${n.text}`;
+            notesBox.appendChild(div);
         });
     });
-    document.getElementById('sendNoteBtn').addEventListener('click', () => {
-        const txt = document.getElementById('newNoteArea').value;
-        if(txt) db.collection('loveNotes').add({text:txt, sender:currentUser, timestamp: Date.now()});
+    document.getElementById('sendNoteBtn').onclick = () => {
+        const val = document.getElementById('newNoteArea').value;
+        if(val) db.collection('notes').add({text:val, sender:currentUser, time:Date.now()});
         document.getElementById('newNoteArea').value = '';
-    });
+    };
 
-    // Emergency
-    document.getElementById('emergencyBtn').addEventListener('click', () => {
-        db.collection('app').doc('sharedState').set({emergency: Date.now(), sender: currentUser}, {merge:true});
+    // Todos
+    document.querySelectorAll('.sync-todo').forEach(box => {
+        box.addEventListener('change', (e) => {
+            db.collection('app').doc('todos').set({[e.target.dataset.id]: e.target.checked}, {merge:true});
+        });
     });
+    db.collection('app').doc('todos').onSnapshot(doc => {
+        const d = doc.data() || {};
+        document.querySelectorAll('.sync-todo').forEach(box => {
+            if(d[box.dataset.id] !== undefined) box.checked = d[box.dataset.id];
+        });
+    });
+    
+    // Emergency
+    document.getElementById('emergencyBtn').onclick = () => {
+        db.collection('app').doc('shared').set({emergency: Date.now(), emSender: currentUser, emTime: Date.now()}, {merge:true});
+    };
 }
 
-/* --- LOCAL FEATURES --- */
-function toggleRainEffect(active) {
-    const cont = document.getElementById('rainContainer');
+/* --- 6. FEATURE FUNCTIONS --- */
+function toggleRain(active) {
+    const el = document.getElementById('rainContainer');
     if(active) {
-        cont.classList.add('active');
-        if(!window.rainInt) window.rainInt = setInterval(() => {
-            const d = document.createElement('div');
-            d.className = 'rain-drop';
-            d.style.left = Math.random()*100+'vw';
-            d.style.animationDuration = 0.5+Math.random()+'s';
-            cont.appendChild(d);
-            setTimeout(()=>d.remove(), 1000);
-        }, 50);
+        el.classList.add('active');
+        if(!window.rainInt) window.rainInt = setInterval(()=>{
+            const d=document.createElement('div'); d.className='rain-drop'; 
+            d.style.left=Math.random()*100+'vw'; d.style.animationDuration=0.5+Math.random()+'s';
+            el.appendChild(d); setTimeout(()=>d.remove(),1000);
+        },50);
     } else {
-        cont.classList.remove('active');
-        clearInterval(window.rainInt);
-        window.rainInt = null;
-        cont.innerHTML = '';
+        el.classList.remove('active'); clearInterval(window.rainInt); window.rainInt=null; el.innerHTML='';
     }
 }
 
-function setupLoveCharger() {
-    const btn = document.getElementById('chargeBtn');
-    const fill = document.getElementById('batteryFill');
-    let charge = 0, interval;
-    const start = (e) => {
-        e.preventDefault();
-        interval = setInterval(() => {
-            if(charge < 100) { charge+=2; fill.style.width=charge+'%'; if(navigator.vibrate) navigator.vibrate(20); }
-            else { fill.style.background='#ff6b6b'; btn.innerText="FULL LOVE! ❤️"; }
-        }, 50);
-    };
-    const stop = () => clearInterval(interval);
+function setupHeatPad() {
+    const btn = document.getElementById('heatPadBtn');
+    let int;
+    const start = (e) => { e.preventDefault(); btn.classList.add('active'); if(navigator.vibrate) int = setInterval(()=>navigator.vibrate(200),250); };
+    const stop = () => { btn.classList.remove('active'); clearInterval(int); };
     btn.addEventListener('mousedown', start); btn.addEventListener('touchstart', start);
     btn.addEventListener('mouseup', stop); btn.addEventListener('touchend', stop);
 }
 
 function setupBubbleWrap() {
-    const container = document.getElementById('bubbleWrap');
-    for(let i=0; i<15; i++) {
+    const c = document.getElementById('bubbleWrap');
+    for(let i=0; i<10; i++) {
         const b = document.createElement('button');
         b.className = 'pop-btn';
-        b.onclick = () => {
-            b.classList.add('popped');
-            if(navigator.vibrate) navigator.vibrate(50);
-            setTimeout(() => b.classList.remove('popped'), 2000);
-        };
-        container.appendChild(b);
+        b.onclick = () => { b.classList.add('popped'); if(navigator.vibrate) navigator.vibrate(50); setTimeout(()=>b.classList.remove('popped'),2000); };
+        c.appendChild(b);
     }
 }
 
-function initSoapBubbles() {
-    const container = document.getElementById('soapBubbleContainer');
-    setInterval(() => {
-        if(container.children.length > 10) return;
-        const b = document.createElement('div');
-        b.className = 'soap-bubble';
-        const size = 30+Math.random()*40;
-        b.style.width = size+'px'; b.style.height = size+'px';
-        b.style.left = Math.random()*80+'%';
-        b.style.animationDuration = (3+Math.random()*4)+'s';
-        b.onclick = (e) => { e.stopPropagation(); b.remove(); if(navigator.vibrate) navigator.vibrate(10); };
-        container.appendChild(b);
-        setTimeout(() => b.remove(), 7000);
-    }, 800);
+function updateCountdowns() {
+    const days = (d) => {
+        const t = new Date(d); const now = new Date();
+        if(t<now) t.setFullYear(now.getFullYear()+1);
+        return Math.ceil((t-now)/(1000*60*60*24));
+    };
+    document.getElementById('day-anniv').innerText = days('2024-09-06') + " days";
+    document.getElementById('day-meet').innerText = days('2025-11-27') + " days";
+    document.getElementById('day-kbday').innerText = days('2025-01-02') + " days";
+    document.getElementById('day-dbday').innerText = days('2025-04-14') + " days";
 }
 
-function setupHeatPad() {
-    const heatBtn = document.getElementById('heatPadBtn');
-    let vibrateInterval;
-    const startHeat = (e) => {
-        e.preventDefault();
-        heatBtn.classList.add('active');
-        if(navigator.vibrate) vibrateInterval = setInterval(() => navigator.vibrate(200), 250);
-    };
-    const stopHeat = () => {
-        heatBtn.classList.remove('active');
-        if(vibrateInterval) clearInterval(vibrateInterval);
-        if(navigator.vibrate) navigator.vibrate(0);
-    };
-    heatBtn.addEventListener('mousedown', startHeat);
-    heatBtn.addEventListener('touchstart', startHeat);
-    heatBtn.addEventListener('mouseup', stopHeat);
-    heatBtn.addEventListener('touchend', stopHeat);
-}
-
-/* --- NOTEBOOK GALLERY --- */
+/* --- 7. NOTEBOOK & GAMES --- */
 function initGallery() {
+    if(window.galleryInit) return;
+    window.galleryInit = true;
     const book = document.getElementById('book');
-    const images = ['your-anniversary-image.jpg', 'meeting.jpg', 'kitten-birthday.jpg', 'daddy-birthday.jpg', 'exam-end.jpg', 'images/image.jpg'];
-    for(let i=1; i<=10; i++) images.push(`images/image${i}.jpg`);
-
-    // Cover
-    const cover = document.createElement('div');
-    cover.className = 'page';
-    cover.style.zIndex = images.length + 1;
-    cover.innerHTML = `<div class="page-face"><h2>Our Memories</h2><div style="font-size:3rem;">📔</div></div><div class="page-face page-back"></div>`;
-    cover.onclick = function() { this.classList.toggle('flipped'); };
-    book.appendChild(cover);
-
-    // Pages
-    images.forEach((src, i) => {
-        const page = document.createElement('div');
-        page.className = 'page';
-        page.style.zIndex = images.length - i;
-        page.innerHTML = `
-            <div class="page-face">
-                <div class="photo-frame"><img src="${src}" alt="Memory"></div>
-                <div class="page-number">${i+1}</div>
-            </div>
-            <div class="page-face page-back" style="background:#f8f8f8;"></div>
-        `;
-        page.onclick = function() { 
-            if(this.classList.contains('flipped')) {
-                this.classList.remove('flipped');
-                setTimeout(() => this.style.zIndex = images.length - i, 300);
-            } else {
-                this.classList.add('flipped');
-                this.style.zIndex = 100 + i;
-            }
-        };
-        book.appendChild(page);
-    });
-}
-
-function initCountdowns() {
-    document.querySelectorAll('.card[data-date], .card[data-absolute]').forEach(card => {
-        let target;
-        if(card.dataset.absolute) target = new Date(card.dataset.absolute);
-        else {
-             const [m, d] = card.dataset.date.split('-').map(Number);
-             const now = new Date();
-             target = new Date(now.getFullYear(), m - 1, d);
-             if (target < now) target.setFullYear(now.getFullYear() + 1);
-        }
-        const diff = target - new Date();
-        const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-        const daysEl = card.querySelector('.days');
-        if(daysEl) daysEl.innerText = days > 0 ? `${days} days` : 'Today!';
-        card.addEventListener('click', () => {
-             document.getElementById("modalTitle").textContent = card.dataset.title;
-             document.getElementById("modalNote").textContent = card.dataset.note;
-             document.getElementById("modal").classList.add("open");
-        });
-    });
-}
-
-/* --- CANVAS GAMES --- */
-function initRibbon() {
-    const c = document.getElementById('ribbon-canvas');
-    const ctx = c.getContext('2d');
-    let points = [];
+    const imgs = ['your-anniversary-image.jpg', 'meeting.jpg', 'kitten-birthday.jpg', 'daddy-birthday.jpg', 'exam-end.jpg', 'images/image.jpg'];
+    for(let i=1; i<=10; i++) imgs.push(`images/image${i}.jpg`);
     
-    function resize() { c.width = window.innerWidth; c.height = window.innerHeight; }
-    window.addEventListener('resize', resize); resize();
-
-    function draw() {
-        ctx.clearRect(0,0,c.width,c.height);
-        if(points.length < 2) return;
-        ctx.beginPath();
-        ctx.moveTo(points[0].x, points[0].y);
-        for(let i=1; i<points.length-1; i++) {
-            const xc = (points[i].x + points[i+1].x)/2;
-            const yc = (points[i].y + points[i+1].y)/2;
-            ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
-        }
-        ctx.strokeStyle = "rgba(255,182,193,0.6)";
-        ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.stroke();
-        points.shift();
-        if(points.length > 0) requestAnimationFrame(draw);
-    }
-
-    const addPoint = (e) => {
-        const x = e.touches?e.touches[0].clientX:e.clientX;
-        const y = e.touches?e.touches[0].clientY:e.clientY;
-        points.push({x,y});
-        if(points.length > 20) points.shift();
-        if(points.length > 1) requestAnimationFrame(draw);
-    };
-    window.addEventListener('mousemove', addPoint);
-    window.addEventListener('touchmove', addPoint);
+    imgs.forEach((src, i) => {
+        const p = document.createElement('div');
+        p.className = 'page';
+        p.style.zIndex = 100 - i;
+        p.innerHTML = `<div class="page-face"><div class="photo-frame"><img src="${src}"></div><div class="page-number">${i+1}</div></div><div class="page-face page-back"></div>`;
+        p.onclick = function() {
+            if(this.classList.contains('flipped')) { this.classList.remove('flipped'); this.style.zIndex = 100-i; }
+            else { this.classList.add('flipped'); this.style.zIndex = 100+i; }
+        };
+        book.appendChild(p);
+    });
 }
 
 function initConstellation() {
-    const c = document.getElementById('constellationCanvas');
-    c.width = window.innerWidth; c.height = window.innerHeight;
-    const ctx = c.getContext('2d');
-    let stars = [];
+    const c = document.getElementById('constellationCanvas'); c.width=window.innerWidth; c.height=window.innerHeight;
+    const ctx = c.getContext('2d'); let stars=[];
     c.onclick = (e) => {
-        const rect = c.getBoundingClientRect();
-        const x = e.clientX - rect.left, y = e.clientY - rect.top;
-        ctx.fillStyle="white"; ctx.shadowBlur=10; ctx.shadowColor="white";
-        ctx.beginPath(); ctx.arc(x,y,3,0,Math.PI*2); ctx.fill();
-        if(stars.length>0) {
-            const p=stars[stars.length-1];
-            ctx.strokeStyle="rgba(255,255,255,0.4)"; ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(x,y); ctx.stroke();
-        }
+        const x=e.clientX, y=e.clientY;
+        ctx.fillStyle="white"; ctx.beginPath(); ctx.arc(x,y,3,0,Math.PI*2); ctx.fill();
+        if(stars.length>0) { const p=stars[stars.length-1]; ctx.strokeStyle="rgba(255,255,255,0.5)"; ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(x,y); ctx.stroke(); }
         stars.push({x,y});
     }
 }
 
 function initBloom() {
-    const c = document.getElementById('bloomCanvas');
-    c.width = window.innerWidth; c.height = window.innerHeight;
-    const ctx = c.getContext('2d');
-    const flowers = [];
-    function drawF(f) {
-        ctx.save(); ctx.translate(f.x,f.y); ctx.fillStyle=`hsla(${f.hue},70%,70%,0.8)`;
-        for(let i=0; i<6; i++) { ctx.beginPath(); ctx.rotate(Math.PI/3); ctx.ellipse(0,-f.size/2,f.size/4,f.size/2,0,0,Math.PI*2); ctx.fill(); }
-        ctx.beginPath(); ctx.arc(0,0,f.size/4,0,Math.PI*2); ctx.fillStyle="#fff"; ctx.fill(); ctx.restore();
-    }
-    c.onclick = (e) => { flowers.push({x:e.clientX, y:e.clientY, size:0, target:30+Math.random()*40, hue:Math.random()*360, grow:true}); };
-    function loop() {
+    const c=document.getElementById('bloomCanvas'); c.width=window.innerWidth; c.height=window.innerHeight;
+    const ctx=c.getContext('2d'); const fl=[];
+    c.onclick=(e)=>{ fl.push({x:e.clientX, y:e.clientY, s:0, max:50, h:Math.random()*360, g:true}); };
+    function loop(){
         ctx.clearRect(0,0,c.width,c.height);
-        flowers.forEach(f=>{ if(f.grow){f.size+=2; if(f.size>=f.target)f.grow=false;} drawF(f); });
+        fl.forEach(f=>{ if(f.g){f.s+=1; if(f.s>f.max)f.g=false;} 
+        ctx.fillStyle=`hsla(${f.h},70%,70%,0.8)`; ctx.beginPath(); ctx.arc(f.x,f.y,f.s,0,Math.PI*2); ctx.fill(); });
         renderLoop = requestAnimationFrame(loop);
     }
     loop();
 }
 
-function initRain() {
-    const c = document.getElementById('rainCanvas');
-    c.width = window.innerWidth; c.height = window.innerHeight;
-    const ctx = c.getContext('2d');
-    const drops = Array(50).fill().map(()=>({x:Math.random()*c.width, y:Math.random()*c.height, s:2+Math.random()*5}));
-    function loop() {
-        ctx.clearRect(0,0,c.width,c.height);
-        drops.forEach(d=>{ d.y+=d.s; if(d.y>c.height)d.y=-10; ctx.fillStyle='#00f'; ctx.fillRect(d.x,d.y,2,10); });
-        renderLoop = requestAnimationFrame(loop);
+function initRainGame() {
+    const c=document.getElementById('rainCanvas'); c.width=window.innerWidth; c.height=window.innerHeight;
+    const ctx=c.getContext('2d'); 
+    function loop(){
+        ctx.fillStyle='rgba(0,0,0,0.1)'; ctx.fillRect(0,0,c.width,c.height);
+        ctx.fillStyle='#0ff';
+        for(let i=0; i<10; i++) ctx.fillRect(Math.random()*c.width, Math.random()*c.height, 2, 20);
+        renderLoop=requestAnimationFrame(loop);
     }
     loop();
 }
 
 /* --- GEMINI --- */
-document.getElementById('vibeCheckBtn').addEventListener('click', async () => {
+document.getElementById('vibeCheckBtn').onclick = async () => {
     const val = document.getElementById('vibeInput').value;
     if(!val) return;
-    document.getElementById('vibeCheckBtn').innerText = "Analyzing...";
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${geminiApiKey}`, {
-        method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({contents:[{parts:[{text:`Partner feels: ${val}. Short advice.`}]}]})
-    });
-    const data = await res.json();
-    const analysis = data.candidates[0].content.parts[0].text;
-    document.getElementById('vibeOutput').innerText = analysis;
-    document.getElementById('vibeCheckBtn').innerText = "Analyze";
-    
-    // Sync to DB
-    const db = firebase.firestore();
-    db.collection('app').doc('sharedState').set({
-        lastVibe: val,
-        lastVibeAnalysis: analysis,
-        lastVibeSender: currentUser,
-        lastVibeTime: Date.now()
-    }, {merge: true});
-});
+    document.getElementById('vibeOutput').innerText = "Thinking...";
+    try {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${geminiApiKey}`, {
+            method:"POST", headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({contents:[{parts:[{text:`Partner feels ${val}. Short advice.`}]}]})
+        });
+        const d = await res.json();
+        const txt = d.candidates[0].content.parts[0].text;
+        document.getElementById('vibeOutput').innerText = txt;
+        // Sync
+        const db = firebase.firestore();
+        db.collection('app').doc('shared').set({lastVibe:val, vibeAnalysis:txt, vibeSender:currentUser, vibeTime:Date.now()}, {merge:true});
+    } catch(e) { document.getElementById('vibeOutput').innerText = "Error :("; }
+};
 
-document.getElementById('magicDraftBtn').addEventListener('click', async () => {
-    const input = document.getElementById('newNoteArea');
+document.getElementById('magicDraftBtn').onclick = async () => {
+    const area = document.getElementById('newNoteArea');
     const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${geminiApiKey}`, {
-        method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({contents:[{parts:[{text:`Romantic note about: ${input.value||'love'}`}]}]})
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({contents:[{parts:[{text:`Romantic note: ${area.value||'love'}`}]}]})
     });
-    const data = await res.json();
-    input.value = data.candidates[0].content.parts[0].text;
-});
-
+    const d = await res.json();
+    area.value = d.candidates[0].content.parts[0].text;
+};
 </script>
 </body>
 </html>
