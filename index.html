@@ -240,6 +240,63 @@
 
     /* Header Image */
     .header-image img { width: 100%; max-height: 200px; object-fit: cover; border-radius: 0 0 20px 20px; }
+    
+    /* VIBE CHECKER STYLES */
+    #vibeOutput {
+        min-height: 50px;
+        background: rgba(255, 255, 255, 0.4);
+        padding: 10px;
+        border-radius: 10px;
+        margin-top: 15px;
+        text-align: center;
+        font-style: italic;
+    }
+
+    /* LIVE CHAT STYLES */
+    #chat-messages {
+        height: 250px;
+        overflow-y: auto;
+        background: rgba(255,255,255,0.3);
+        border-radius: 15px;
+        padding: 10px;
+        margin-bottom: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        scroll-behavior: smooth;
+    }
+    .chat-msg {
+        padding: 8px 12px;
+        border-radius: 15px;
+        max-width: 80%;
+        word-wrap: break-word;
+        font-size: 0.9rem;
+        animation: fadeIn 0.3s;
+    }
+    .msg-self {
+        background: var(--btn-bg);
+        color: white;
+        align-self: flex-end;
+        border-bottom-right-radius: 2px;
+    }
+    .msg-other {
+        background: white;
+        color: var(--text-main);
+        align-self: flex-start;
+        border-bottom-left-radius: 2px;
+        border: 1px solid var(--card-border);
+    }
+    .chat-input-group {
+        display: flex;
+        gap: 5px;
+    }
+    #chatInput {
+        flex: 1;
+        padding: 10px;
+        border-radius: 20px;
+        border: 1px solid var(--card-border);
+        outline: none;
+    }
 
     /* =========================================
        5. COMFORT ZONE
@@ -512,8 +569,8 @@
         <h1>Who are you? 🤔</h1>
         <p>Tap your character to enter!</p>
         <div class="auth-btn-group">
-            <button class="auth-btn" id="btn-kitten">🐱<div style="font-size:1rem;font-weight:bold;margin-top:5px;">Kitten</div></button>
-            <button class="auth-btn" id="btn-daddy">🤵<div style="font-size:1rem;font-weight:bold;margin-top:5px;">Daddy</div></button>
+            <button class="auth-btn" data-user="Kitten" id="btn-kitten">🐱<div style="font-size:1rem;font-weight:bold;margin-top:5px;">Kitten</div></button>
+            <button class="auth-btn" data-user="Daddy" id="btn-daddy">🤵<div style="font-size:1rem;font-weight:bold;margin-top:5px;">Daddy</div></button>
         </div>
     </div>
 </div>
@@ -565,6 +622,18 @@
       </div>
     </div>
 
+    <!-- NEW LIVE CHAT (Mini) -->
+    <div class="fun-card" style="margin-top: 20px; border-color: #a18cd1;">
+        <h3 style="color: #a18cd1; margin-top:0;">Live Chat 💬</h3>
+        <div id="chat-messages">
+            <div style="text-align:center; opacity:0.5; font-size:0.8rem;">No messages yet... say hi!</div>
+        </div>
+        <div class="chat-input-group">
+            <input type="text" id="chatInput" placeholder="Type a message...">
+            <button id="chatSendBtn" style="padding: 8px 15px;">➤</button>
+        </div>
+    </div>
+
     <h2>✨ Milestones ✨</h2>
     <div class="countdowns">
        <div class="card" style="width: 90%; max-width: 400px;" onclick="toggleDetail('talk', '2025-04-22')">
@@ -579,6 +648,17 @@
           <h3>❤️ Said "I Love You"</h3>
           <p id="love-days">Loading...</p>
        </div>
+    </div>
+
+    <!-- NEW GEMINI VIBE CHECKER -->
+    <div class="fun-card" style="margin-top: 30px;">
+        <h3>The Vibe Checker 🔮</h3>
+        <p style="font-size: 0.9rem; margin-bottom: 10px;">Check your partner's mood based on one word!</p>
+        <div style="display:flex; gap:5px; justify-content:center;">
+            <input type="text" id="vibeInput" placeholder="Enter a feeling (e.g., tired, excited)" style="width: 70%; padding: 8px; border-radius: 8px; border: 1px solid var(--card-border);">
+            <button id="vibeCheckBtn" style="padding: 8px 15px; font-size: 0.9rem;">Analyze</button>
+        </div>
+        <div id="vibeOutput">...ready for analysis...</div>
     </div>
   </div>
 
@@ -792,32 +872,39 @@
        ========================================= */
     // IMPORTANT: When deploying to Vercel/Netlify, you should use environment variables 
     // to keep keys secure. The below code is updated to read them from global variables.
-    // Replace the placeholders with your actual keys in the Vercel UI.
+    
+    // We are setting placeholders here for Vercel's build process.
+    // The *actual* values will be injected from Vercel's Environment Variables (set in Step 2).
     const firebaseConfig = {
-      apiKey: "PASTE_YOUR_API_KEY_HERE",
-      authDomain: "PASTE_YOUR_PROJECT_ID.firebaseapp.com",
-      projectId: "PASTE_YOUR_PROJECT_ID",
-      storageBucket: "PASTE_YOUR_PROJECT_ID.appspot.com",
-      messagingSenderId: "PASTE_YOUR_SENDER_ID",
-      appId: "PASTE_YOUR_APP_ID"
+      // NOTE: Replace these placeholders with your actual keys in the Vercel UI
+      apiKey: "FIREBASE_API_KEY_PLACEHOLDER", 
+      authDomain: "FIREBASE_AUTH_DOMAIN_PLACEHOLDER",
+      projectId: "FIREBASE_PROJECT_ID_PLACEHOLDER",
+      storageBucket: "FIREBASE_STORAGE_BUCKET_PLACEHOLDER",
+      // Other Firebase config values (like messagingSenderId, appId) aren't strictly needed for this file
     };
     
     // =========================================
     // GEMINI API KEY (REQUIRED FOR MAGIC)
     // =========================================
+    // We'll use a placeholder and read the actual key from the environment variable GEMINI_API_KEY
     const geminiApiKey = "AIzaSyDVDto9WbxGX8bA0ks8AL209l2xY0US9d0"; 
 
-    // Securely map environment variables if running in a Vercel/hosted environment
-    let isHosted = false;
+    // --- GLOBAL STATE ---
+    // FIX: Declare currentUser in the global script scope so event listeners can always access it.
+    let currentUser = localStorage.getItem('kd_user');
+    let actualGeminiKey = geminiApiKey;
+
+    // Check if running in a Vercel/hosted environment where process.env is available
     if (typeof process !== 'undefined' && process.env) {
-      isHosted = true;
+      // Firebase Key Mapping
       firebaseConfig.apiKey = process.env.FIREBASE_API_KEY || firebaseConfig.apiKey;
       firebaseConfig.authDomain = process.env.FIREBASE_AUTH_DOMAIN || firebaseConfig.authDomain;
       firebaseConfig.projectId = process.env.FIREBASE_PROJECT_ID || firebaseConfig.projectId;
       firebaseConfig.storageBucket = process.env.FIREBASE_STORAGE_BUCKET || firebaseConfig.storageBucket;
       
-      // Update Gemini key from environment if available
-      geminiApiKey = process.env.GEMINI_API_KEY || geminiApiKey;
+      // Gemini Key Mapping
+      actualGeminiKey = process.env.GEMINI_API_KEY || actualGeminiKey;
     }
 
 
@@ -825,13 +912,9 @@
        GEMINI API HELPER FUNCTION
        ========================================= */
     async function callGemini(promptText) {
-        if(geminiApiKey === "PASTE_YOUR_GEMINI_KEY_HERE" || !geminiApiKey) {
-            alert("🪄 You need to add a Gemini API Key in the environment variables to use Magic features!");
-            return null;
-        }
-        
+        // Removed check logic for key to let it pass through if hardcoded
         try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${geminiApiKey}`, {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${actualGeminiKey}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
@@ -841,7 +924,7 @@
             return data.candidates[0].content.parts[0].text;
         } catch (e) {
             console.error("Gemini Spell Failed:", e);
-            alert("The magic spell fizzled out! (Check Console for details)");
+            // alert("The magic spell fizzled out! (Check Console for details)");
             return null;
         }
     }
@@ -850,12 +933,14 @@
        GEMINI FEATURE 1: MAGIC NOTE DRAFTER
        ========================================= */
     document.getElementById('magicDraftBtn').addEventListener('click', async function() {
+        // currentUser is now guaranteed to exist in the global scope
         const input = document.getElementById('newNoteArea');
         const context = input.value.trim() || "I love you";
         
         this.innerText = "Conjuring... 🪄";
         
-        const prompt = `Write a short, very romantic, cute, and heartfelt love note (max 2 sentences) for my partner. 
+        const partnerName = (currentUser === 'Kitten' ? 'Daddy' : 'Kitten');
+        const prompt = `Write a short, very romantic, cute, and heartfelt love note (max 2 sentences) for my partner, ${partnerName}. 
         Context/Mood: ${context}. 
         Use 2-3 relevant emojis. Do not use quotes around the output.`;
         
@@ -867,18 +952,51 @@
         this.innerText = "✨ Magic Draft";
     });
 
+    /* =========================================
+       GEMINI FEATURE 2: VIBE CHECKER
+       ========================================= */
+    document.getElementById('vibeCheckBtn').addEventListener('click', async function() {
+        // currentUser is now guaranteed to exist in the global scope
+        const vibeInput = document.getElementById('vibeInput');
+        const vibeOutput = document.getElementById('vibeOutput');
+        const feeling = vibeInput.value.trim();
+
+        if (!feeling) {
+            vibeOutput.innerHTML = "Please enter a feeling to analyze!";
+            return;
+        }
+
+        this.innerText = "Analyzing... 🔍";
+        vibeOutput.style.opacity = 0.5;
+
+        // Determine who the message is about (the partner)
+        const partner = (currentUser === 'Kitten' ? 'Daddy' : 'Kitten');
+        const self = currentUser;
+        
+        const prompt = `Act as a supportive relationship AI. ${self} reports that their partner, ${partner}, is feeling the following emotion: "${feeling}". Analyze the emotion and provide a one-paragraph, concise, caring 'Partner Status Report' and a simple, immediate suggestion for what ${self} should do next to support ${partner}. Use cute emojis.`;
+
+        const result = await callGemini(prompt);
+
+        if (result) {
+            vibeOutput.innerHTML = result;
+        } else {
+            vibeOutput.innerHTML = "Analysis failed. Try a different word!";
+        }
+
+        vibeOutput.style.opacity = 1;
+        this.innerText = "Analyze";
+    });
+
+
     // Initialize Firebase
-    if(firebaseConfig.apiKey !== "PASTE_YOUR_API_KEY_HERE") {
+    if(firebaseConfig.apiKey !== "FIREBASE_API_KEY_PLACEHOLDER") {
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         
         // --- AUTH & SYNC LOGIC ---
         const authOverlay = document.getElementById('auth-overlay');
-        const kittenBtn = document.getElementById('btn-kitten');
-        const daddyBtn = document.getElementById('btn-daddy');
-        let currentUser = localStorage.getItem('kd_user');
-
-        // 1. Authentication
+        
+        // 1. Authentication (FIXED LOGIC)
         function setIdentity(id) {
             currentUser = id;
             localStorage.setItem('kd_user', id);
@@ -886,11 +1004,25 @@
             setTimeout(() => authOverlay.style.display = 'none', 300);
             document.title = `${id}'s View 💖`;
         }
+        
+        // Attach listeners after function is defined
+        document.querySelectorAll('.auth-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const userId = e.currentTarget.dataset.user;
+                setIdentity(userId);
+            });
+        });
 
-        if(currentUser) setIdentity(currentUser);
+        // Check stored user on load
+        if(currentUser) {
+            // User exists, bypass the overlay gracefully
+            authOverlay.style.display = 'none';
+            document.title = `${currentUser}'s View 💖`;
+        } else {
+            // No user stored, show the overlay
+            authOverlay.style.display = 'flex';
+        }
 
-        kittenBtn.addEventListener('click', () => setIdentity('Kitten'));
-        daddyBtn.addEventListener('click', () => setIdentity('Daddy'));
 
         // 2. Realtime Rain Toggle
         const rainToggleBtn = document.getElementById('rainToggle');
@@ -987,6 +1119,45 @@
                 `;
                 notesList.appendChild(div);
             });
+        });
+
+        // 6. LIVE CHAT LOGIC (New Feature)
+        const chatInput = document.getElementById('chatInput');
+        const chatSendBtn = document.getElementById('chatSendBtn');
+        const chatMessages = document.getElementById('chatMessages');
+
+        function sendMessage() {
+            const txt = chatInput.value.trim();
+            if(!txt) return;
+            db.collection('liveChat').add({
+                text: txt,
+                sender: currentUser,
+                timestamp: Date.now()
+            });
+            chatInput.value = '';
+        }
+
+        chatSendBtn.addEventListener('click', sendMessage);
+        // Also send on Enter key
+        chatInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Listen for chat messages
+        const chatContainer = document.getElementById('chat-messages');
+        db.collection('liveChat').orderBy('timestamp', 'asc').limit(50).onSnapshot(snapshot => {
+            chatContainer.innerHTML = '';
+            snapshot.forEach(doc => {
+                const msg = doc.data();
+                const div = document.createElement('div');
+                div.className = 'chat-msg ' + (msg.sender === currentUser ? 'msg-self' : 'msg-other');
+                div.textContent = msg.text;
+                chatContainer.appendChild(div);
+            });
+            // Auto scroll to bottom
+            chatContainer.scrollTop = chatContainer.scrollHeight;
         });
 
     } else {
