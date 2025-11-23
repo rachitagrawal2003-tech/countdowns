@@ -6,7 +6,7 @@
   <title>Kitten & Daddy 💖</title>
   <style>
     /* =========================================
-       1. CSS VARIABLES (THEME SYSTEM)
+       1. CSS VARIABLES & THEMES
        ========================================= */
     :root {
       /* --- Default Pink Theme (Day) --- */
@@ -19,8 +19,8 @@
       --card-shadow: rgba(0, 0, 0, 0.1);
       --nav-bg: rgba(255, 255, 255, 0.95);
       --nav-border: #ffe0eb;
-      --nav-icon-active: #ff7da5;
-      --nav-icon-inactive: #ccc;
+      --nav-active: #ff7da5;
+      --nav-inactive: #ccc;
       --btn-bg: #ff7da5;
       --btn-text: #ffffff;
       --accent-green: #48bb78;
@@ -31,171 +31,199 @@
     }
 
     [data-theme="dark"] {
-      /* --- Aesthetic Purple Theme (Night) --- */
-      --bg-color: #130e24;         /* Deep Space Purple */
-      --text-main: #e2d9f3;        /* Lavender White */
-      --text-sub: #a79db8;         /* Muted Purple Gray */
-      --heading-color: #d8b4fe;    /* Glowing Lilac */
-      --card-bg: #231942;          /* Dark Violet Card */
-      --card-border: #4c3b7a;      /* Lighter Purple Border */
-      --card-shadow: rgba(139, 92, 246, 0.25); /* Purple Glow */
-      --nav-bg: rgba(35, 25, 66, 0.9);
+      /* --- Deep Space Purple (Night) --- */
+      --bg-color: #130e24;
+      --text-main: #e2d9f3;
+      --text-sub: #a79db8;
+      --heading-color: #d8b4fe;
+      --card-bg: #231942;
+      --card-border: #4c3b7a;
+      --card-shadow: rgba(139, 92, 246, 0.25);
+      --nav-bg: rgba(35, 25, 66, 0.95);
       --nav-border: #4c3b7a;
-      --nav-icon-active: #c084fc;  /* Bright Violet */
-      --nav-icon-inactive: #5c5470;
-      --btn-bg: #7c3aed;           /* Deep Purple Button */
+      --nav-active: #c084fc;
+      --nav-inactive: #5c5470;
+      --btn-bg: #7c3aed;
       --btn-text: #ffffff;
-      --accent-green: #34d399;     /* Mint for dark mode */
-      --accent-red: #fb7185;       /* Soft Red for dark mode */
+      --accent-green: #34d399;
+      --accent-red: #fb7185;
       --modal-bg: #2d2455;
       --envelope-front: #7c3aed;
       --envelope-back: #1a1625;
+    }
+
+    [data-theme="comfort"] {
+      /* --- Comfort Mode (Warm Peach/Cozy) --- */
+      --bg-color: #fff5ee;
+      --text-main: #5d4037;
+      --text-sub: #8d6e63;
+      --heading-color: #ff8a65;
+      --card-bg: #fffbf7;
+      --card-border: #ffccbc;
+      --card-shadow: rgba(255, 138, 101, 0.2);
+      --nav-bg: rgba(255, 245, 238, 0.95);
+      --nav-border: #ffccbc;
+      --nav-active: #ff7043;
+      --nav-inactive: #d7ccc8;
+      --btn-bg: #ff7043;
+      --btn-text: #ffffff;
+      --accent-green: #81c784;
+      --accent-red: #e57373;
+      --modal-bg: #fffbf7;
+      --envelope-front: #ff8a65;
+      --envelope-back: #ffffff;
     }
 
     /* =========================================
        2. GLOBAL STYLES
        ========================================= */
     body {
-      font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      font-family: "Poppins", system-ui, -apple-system, sans-serif;
       background-color: var(--bg-color);
       color: var(--text-main);
       margin: 0;
-      padding-bottom: 100px;
+      padding-bottom: 90px;
       text-align: center;
       overflow-x: hidden;
       transition: background-color 0.5s ease, color 0.5s ease;
       touch-action: manipulation;
+      user-select: none;
     }
     h1 { font-size: 1.8rem; color: var(--heading-color); margin: 20px 0 10px; transition: color 0.5s; }
     h2, h3 { color: var(--heading-color); transition: color 0.5s; }
     p { color: var(--text-sub); transition: color 0.5s; }
+    button { -webkit-tap-highlight-color: transparent; }
 
     /* =========================================
-       3. COMPONENT STYLES
+       3. NAVIGATION BAR (TAB SYSTEM)
        ========================================= */
-    
-    /* Header Image */
-    .header-image img {
-      width: 100%;
-      max-height: 200px;
-      object-fit: cover;
-      border-radius: 0 0 20px 20px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    .nav-bar {
+      position: fixed; bottom: 0; left: 0; width: 100%; height: 70px;
+      background: var(--nav-bg); backdrop-filter: blur(10px);
+      border-top: 1px solid var(--nav-border);
+      display: flex; justify-content: space-around; align-items: center;
+      z-index: 5000; box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
     }
+    .nav-item {
+      background: none; border: none; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; color: var(--nav-inactive);
+      transition: all 0.3s; cursor: pointer; flex: 1; padding: 5px 0;
+    }
+    .nav-item.active { color: var(--nav-active); transform: translateY(-5px); }
+    .nav-icon { font-size: 1.5rem; margin-bottom: 2px; }
+    .nav-label { font-size: 0.7rem; font-weight: 600; }
 
-    /* Cards (Countdowns & General) */
+    /* =========================================
+       4. SECTIONS & LAYOUT
+       ========================================= */
+    .tab-section { display: none; padding: 10px; animation: fadeIn 0.4s ease; }
+    .tab-section.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Cards */
     .countdowns { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; padding: 10px; }
     .card {
-      background-color: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 18px;
-      box-shadow: 0 4px 12px var(--card-shadow);
-      width: 45%;
-      min-width: 150px;
-      max-width: 220px;
-      padding: 15px;
-      transition: transform 0.25s ease, background-color 0.5s, border-color 0.5s, box-shadow 0.5s;
-      cursor: pointer;
-      margin-bottom: 10px;
+      background-color: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 18px; box-shadow: 0 4px 12px var(--card-shadow);
+      width: 45%; min-width: 150px; max-width: 220px; padding: 15px;
+      transition: transform 0.25s ease, background-color 0.5s; cursor: pointer;
     }
-    .card:hover { transform: translateY(-4px); }
-    .event { font-size: 1rem; color: var(--heading-color); font-weight: 600; margin-top: 5px; }
-    .days { font-size: 1.5rem; color: var(--text-main); font-weight: 800; margin: 4px 0; }
-    .note { font-size: .8rem; color: var(--text-sub); margin-top: 4px; }
+    .card:active { transform: scale(0.98); }
     img.card-img { width: 100%; border-radius: 10px; margin-top: 8px; display: block; }
-
-    /* Fun Cards */
+    
     .fun-card {
-      margin: 30px auto; 
-      max-width: 320px; 
-      background-color: var(--card-bg); 
-      padding: 20px; 
-      border-radius: 20px; 
-      border: 2px solid var(--card-border);
+      margin: 20px auto; max-width: 340px; background: var(--card-bg);
+      padding: 20px; border-radius: 20px; border: 2px solid var(--card-border);
       box-shadow: 0 4px 15px var(--card-shadow);
-      transition: background-color 0.5s, border-color 0.5s;
     }
 
     /* Buttons */
     button, .interactive-btn {
-        background-color: var(--btn-bg);
-        color: var(--btn-text);
-        border: none;
-        padding: 10px 20px;
-        border-radius: 50px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: background-color 0.3s, transform 0.2s;
-        font-family: inherit;
+      background-color: var(--btn-bg); color: var(--btn-text);
+      border: none; padding: 12px 24px; border-radius: 50px;
+      font-weight: bold; cursor: pointer; transition: transform 0.2s;
     }
     button:active { transform: scale(0.95); }
 
-    /* Special Red Button Override */
-    .emergency-btn {
-        background: linear-gradient(135deg, #ff4757, #c0392b);
-        color: white;
-        display: block; 
-        text-decoration: none; 
-        padding: 15px; 
-        border-radius: 12px; 
-        font-weight: 800; 
-        font-size: 1.2rem; 
-        letter-spacing: 1px; 
-        box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4); 
-        text-transform: uppercase;
-    }
+    /* Header Image */
+    .header-image img { width: 100%; max-height: 200px; object-fit: cover; border-radius: 0 0 20px 20px; }
 
-    /* Navigation Bar */
-    .nav-bar {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 95%;
-      max-width: 450px;
-      background: var(--nav-bg);
-      backdrop-filter: blur(10px);
-      padding: 10px 10px;
-      border-radius: 50px;
-      box-shadow: 0 10px 30px var(--card-shadow);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 1000;
-      border: 1px solid var(--nav-border);
-      transition: background-color 0.5s, border-color 0.5s;
+    /* =========================================
+       5. COMFORT ZONE (NEW)
+       ========================================= */
+    .comfort-header {
+      background: #ffe0b2; padding: 15px; border-radius: 15px; margin-bottom: 20px;
+      color: #5d4037; display: flex; align-items: center; justify-content: space-between;
     }
-    .nav-item {
-      font-size: 1.3rem;
-      cursor: pointer;
-      opacity: 0.6;
-      transition: all 0.3s ease;
-      background: none;
-      border: none;
-      padding: 5px;
-      flex: 1;
-      color: var(--nav-icon-inactive);
+    .heat-pad-btn {
+      width: 150px; height: 150px; border-radius: 50%;
+      background: radial-gradient(circle, #ffab91, #ff7043);
+      color: white; font-size: 1.2rem; font-weight: bold;
+      border: none; margin: 20px auto; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 20px rgba(255, 112, 67, 0.4);
+      transition: transform 0.1s; cursor: pointer; touch-action: none;
     }
-    .nav-item.active {
-      opacity: 1;
-      transform: scale(1.1);
-      color: var(--nav-icon-active);
+    .heat-pad-btn.active { animation: pulseHeat 0.8s infinite; }
+    @keyframes pulseHeat { 0% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 112, 67, 0.4); } 50% { transform: scale(1.1); box-shadow: 0 0 40px rgba(255, 112, 67, 0.8); } 100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 112, 67, 0.4); } }
+    
+    .choco-bar {
+      width: 200px; height: 100px; background: #5d4037;
+      margin: 20px auto; border-radius: 5px; position: relative; cursor: pointer;
+      display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 2px;
+      box-shadow: 5px 5px 0px rgba(0,0,0,0.1); transition: opacity 0.3s;
     }
-    .nav-label {
-      font-size: 0.65rem;
-      display: block;
-      font-weight: bold;
-      color: var(--heading-color);
+    .choco-piece { background: #795548; border-radius: 2px; border-top: 2px solid #8d6e63; border-left: 2px solid #8d6e63; }
+    
+    /* =========================================
+       6. GALLERY (POLAROID SCATTER)
+       ========================================= */
+    #gallery-container {
+      position: relative; width: 100%; height: 75vh; overflow: hidden;
+      background-image: radial-gradient(var(--card-border) 1px, transparent 1px);
+      background-size: 20px 20px;
     }
+    .polaroid {
+      position: absolute; background: white; padding: 10px 10px 30px 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2); transform-origin: center;
+      width: 140px; cursor: grab; border-radius: 2px; transition: transform 0.2s;
+    }
+    .polaroid img { width: 100%; height: auto; display: block; pointer-events: none; }
+    .polaroid.dragging { cursor: grabbing; z-index: 1000 !important; transition: none; }
 
-    /* Page Sections */
-    .page-section { display: none; animation: fadeIn 0.5s ease; }
-    .page-section.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    /* =========================================
+       7. FULL SCREEN GAME OVERLAYS
+       ========================================= */
+    .game-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: black; z-index: 6000; display: none; touch-action: none;
+    }
+    .game-overlay.active { display: block; animation: fadeIn 0.3s; }
+    .overlay-close {
+      position: absolute; top: 20px; right: 20px; z-index: 6001;
+      background: rgba(255,255,255,0.3); color: white; border: none;
+      width: 40px; height: 40px; border-radius: 50%; font-size: 1.5rem;
+    }
+    canvas.fs-canvas { width: 100%; height: 100%; display: block; }
+    
+    .lantern {
+      position: absolute; width: 30px; height: 40px; background: linear-gradient(#ffeb3b, #ff9800);
+      border-radius: 5px; opacity: 0.9; box-shadow: 0 0 20px orange;
+      animation: floatUp linear forwards; pointer-events: none;
+    }
+    @keyframes floatUp { to { transform: translateY(-110vh); opacity: 0; } }
 
-    /* Rain Effect */
+    /* =========================================
+       8. FLOATING HEARTS & RAIN CSS
+       ========================================= */
+    .heart-bg {
+        position: fixed; bottom: -20px; font-size: 20px;
+        animation: floatUp 5s linear; opacity: 0.6; z-index: -1; pointer-events: none;
+    }
+    
+    /* Soft Rain Overlay */
     .rain-container {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9998; display: none;
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      pointer-events: none; z-index: 9998; display: none;
     }
     .rain-container.active { display: block; }
     .rain-drop {
@@ -205,1364 +233,699 @@
     }
     @keyframes fall { to { transform: translateY(110vh); } }
 
-    /* Toggle Switch */
-    .toggle-switch { position: relative; display: inline-block; width: 50px; height: 26px; }
-    .toggle-switch input { opacity: 0; width: 0; height: 0; }
-    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
-    .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-    input:checked + .slider { background-color: var(--btn-bg); }
-    input:checked + .slider:before { transform: translateX(24px); }
-/* ---------- 1. JIGGLY SLIME ---------- */
-.slime-blob {
-  width: 120px; height: 120px;
-  background: #ff7da5;
-  border-radius: 50%;
-  margin: 20px auto;
-  cursor: pointer;
-  transition: transform 0.1s;
-  /* The "Organic" Blob shape */
-  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-  animation: morph 3s ease-in-out infinite;
-  box-shadow: inset 10px 10px 20px rgba(255,255,255,0.4), 0 10px 20px rgba(255, 125, 165, 0.4);
-}
-@keyframes morph {
-  0% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
-  25% { border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%; }
-  50% { border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%; }
-  75% { border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%; }
-  100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
-}
-.slime-blob:active { transform: scale(0.9); }
-
-/* ---------- 2. FIDGET SPINNER ---------- */
-.spinner-container { height: 200px; display: flex; align-items: center; justify-content: center; position: relative; }
-.spinner {
-  width: 120px; height: 120px;
-  background: var(--card-border);
-  border-radius: 50%;
-  position: relative;
-  border: 4px solid var(--text-main);
-  cursor: grab;
-}
-.spinner::before, .spinner::after {
-  content: ''; position: absolute; width: 40px; height: 40px; background: var(--btn-bg); border-radius: 50%; left: 50%; transform: translateX(-50%);
-}
-.spinner::before { top: -20px; }
-.spinner::after { bottom: -20px; }
-.spinner-center {
-  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 30px; height: 30px; background: #fff; border-radius: 50%; border: 2px solid var(--text-main); z-index: 2;
-}
-
-/* ---------- 3. RIPPLE TANK ---------- */
-.ripple-box {
-  height: 200px; background: var(--bg-color); border: 1px solid var(--card-border);
-  border-radius: 15px; position: relative; overflow: hidden; cursor: pointer;
-}
-.ripple {
-  position: absolute; border-radius: 50%; border: 2px solid var(--heading-color);
-  transform: scale(0); animation: rippleAnim 1s linear; pointer-events: none;
-}
-@keyframes rippleAnim { to { transform: scale(4); opacity: 0; } }
-
-/* ---------- 4. RAGE BUTTON ---------- */
-.rage-meter { height: 10px; width: 100%; background: #eee; border-radius: 5px; margin-bottom: 10px; overflow: hidden; }
-.rage-fill { height: 100%; width: 0%; background: #ff4757; transition: width 0.1s; }
-.rage-btn {
-  font-size: 1.2rem; padding: 15px 30px; border: none; border-radius: 50px;
-  background: #ff4757; color: white; cursor: pointer; transition: transform 0.05s;
-}
-
-/* ---------- 5. MAGNETIC DUST ---------- */
-.dust-canvas { width: 100%; height: 200px; background: #111; border-radius: 15px; cursor: crosshair; touch-action: none; }
-/* ---------- NEON LAUNCHPAD ---------- */
-.launchpad-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  padding: 10px;
-  background: #222;
-  border-radius: 15px;
-}
-.pad-btn {
-  height: 50px;
-  background: #444;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.5s ease, box-shadow 0.5s ease; /* Slow fade out */
-  touch-action: none;
-}
-.pad-btn.lit {
-  transition: none; /* Instant on */
-  background: #00ffcc;
-  box-shadow: 0 0 15px #00ffcc, 0 0 30px #00ffcc;
-}
-
-/* ---------- RAINBOW POP-IT ---------- */
-.pop-it-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  padding: 10px;
-}
-.pop-bubble {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  cursor: pointer;
-  position: relative;
-  box-shadow: 0 4px 0 rgba(0,0,0,0.2); /* The "unpopped" 3D look */
-  transition: all 0.1s;
-  border: none;
-}
-.pop-bubble:active { transform: scale(0.9); }
-.pop-bubble.popped {
-  box-shadow: inset 0 4px 6px rgba(0,0,0,0.3); /* The "popped" inner shadow */
-  transform: translateY(4px);
-}
-
-    /* Shredder Styles */
-    .shredder-wrapper { position: relative; overflow: hidden; padding-bottom: 20px; }
-    .shredder-input {
-      width: 90%; padding: 12px; border: 2px solid var(--card-border); border-radius: 10px; font-family: inherit; resize: none; background: var(--bg-color); color: var(--text-main); transition: transform 1.5s cubic-bezier(0.4, 0.0, 0.2, 1); position: relative; z-index: 2;
-    }
-    .shredder-input.jammed { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both infinite; }
-    .shredder-input.shredding { transform: translateY(150%); opacity: 0; }
-    .shredder-machine-bar { height: 10px; background: var(--text-sub); width: 100%; border-radius: 5px; margin: 5px 0; position: relative; z-index: 5; }
-    .paper-strip { position: absolute; top: 60px; width: 8px; height: 40px; background: var(--bg-color); border: 1px solid #ddd; z-index: 1; opacity: 0; }
-    @keyframes shake {
-      10%, 90% { transform: translate3d(-1px, 0, 0); }
-      20%, 80% { transform: translate3d(2px, 0, 0); }
-      30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-      40%, 60% { transform: translate3d(4px, 0, 0); }
-    }
-    @keyframes stripFall {
-      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(200px) rotate(var(--rot)); opacity: 0; }
-    }
-
-    /* Battery */
-    .battery-container { width: 100%; height: 40px; border: 3px solid var(--text-main); border-radius: 10px; padding: 3px; box-sizing: border-box; margin-bottom: 10px; position: relative; }
-    .battery-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #ff9a9e 0%, #fecfef 99%); border-radius: 5px; transition: width 0.1s; }
-    .battery-cap { position: absolute; right: -8px; top: 10px; width: 5px; height: 14px; background: var(--text-main); border-radius: 0 3px 3px 0; }
-
-    /* Modal */
-    .modal { position: fixed; inset: 0; background: rgba(0,0,0,.38); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 2000; }
-    .modal.open { display: flex; }
-    .modal-card { background: var(--modal-bg); max-width: 520px; width: 100%; border-radius: 20px; box-shadow: 0 12px 28px rgba(0,0,0,.3); padding: 26px 22px; border: 1px solid var(--card-border); }
-    .bigtime { font-variant-numeric: tabular-nums; font-size: 2rem; font-weight: 800; color: var(--text-main); margin: 10px 0; }
-    
+    /* =========================================
+       9. EXISTING COMPONENT STYLES
+       ========================================= */
     /* Envelope */
     .envelope-container { transition: transform 0.8s; }
     .open .envelope-container { transform: rotateY(180deg); }
     .envelope-front { background: var(--envelope-front); }
     .envelope-back { background: var(--envelope-back); border-color: var(--envelope-front); }
+
+    /* Toggle Switch */
+    .toggle-switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+    .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+    input:checked + .slider { background-color: var(--btn-bg); }
+    input:checked + .slider:before { transform: translateX(24px); }
+
+    /* Shredder */
+    .shredder-wrapper { position: relative; overflow: hidden; padding-bottom: 20px; }
+    .shredder-input { width: 90%; padding: 12px; border: 2px solid var(--card-border); border-radius: 10px; background: var(--bg-color); color: var(--text-main); position: relative; z-index: 2; }
+    .shredder-input.shredding { transform: translateY(150%); opacity: 0; transition: transform 1.5s cubic-bezier(0.4, 0.0, 0.2, 1); }
+    .paper-strip { position: absolute; top: 60px; width: 8px; height: 40px; background: var(--bg-color); border: 1px solid #ddd; z-index: 1; opacity: 0; }
+    @keyframes stripFall { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(200px) rotate(var(--rot)); opacity: 0; } }
+
+    /* Modal */
+    .modal { position: fixed; inset: 0; background: rgba(0,0,0,.6); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 7000; }
+    .modal.open { display: flex; }
+    .modal-card { background: var(--modal-bg); max-width: 520px; width: 100%; border-radius: 20px; padding: 26px 22px; border: 1px solid var(--card-border); color: var(--text-main); }
+    .bigtime { font-size: 2rem; font-weight: 800; margin: 10px 0; color: var(--heading-color); }
     
-    /* Gallery */
-    .gallery { display: flex; flex-direction: column; align-items: center; gap: 15px; padding: 10px; }
-    .gallery-card { background: var(--card-bg); border-radius: 12px; padding: 8px; box-shadow: 0 4px 15px var(--card-shadow); width: 90%; max-width: 400px; }
-    .gallery-card img { width: 100%; border-radius: 8px; }
+    /* Play Grid */
+    .play-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .play-btn-lg { height: 80px; border-radius: 15px; font-size: 1rem; display: flex; align-items: center; justify-content: center; background: var(--card-bg); border: 2px solid var(--card-border); color: var(--text-main); box-shadow: 0 4px 10px var(--card-shadow); flex-direction: column; gap: 5px; }
 
-    /* ==========================================
-       NEW STYLES FOR FIDGETS (DISTRACTION ZONE)
-       ========================================== */
-    
-    /* Foggy Window */
-    .fog-wrapper { position: relative; width: 100%; height: 200px; background: #333; border-radius: 15px; overflow: hidden; cursor: crosshair; touch-action: none; }
-    .fog-text { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: bold; color: #fff; z-index: 1; pointer-events: none; }
-    canvas.fog-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; }
-
-    /* Elastic Heart */
-    .elastic-box { height: 250px; position: relative; background: var(--bg-color); border-radius: 15px; overflow: hidden; border: 2px dashed var(--card-border); touch-action: none; }
-    .elastic-heart { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 4rem; cursor: grab; user-select: none; }
-    .elastic-heart:active { cursor: grabbing; }
-
-    /* Neon Scribble */
-    .scribble-board { background: #000; border-radius: 15px; width: 100%; height: 250px; cursor: crosshair; touch-action: none; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
-
-    /* Gravity Box */
-    .gravity-box { width: 100%; height: 250px; background: var(--bg-color); border: 2px solid var(--card-border); border-radius: 15px; position: relative; overflow: hidden; touch-action: none; }
-    .gravity-emoji { position: absolute; font-size: 2rem; user-select: none; cursor: grab; }
-
+    /* Slime, Launchpad, Pop It, Battery */
+    .slime-blob { width: 100px; height: 100px; background: #ff7da5; border-radius: 50%; margin: 10px auto; animation: morph 3s infinite; cursor: pointer; }
+    @keyframes morph { 0%, 100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; } 50% { border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%; } }
+    .launchpad-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; background: #222; padding: 10px; border-radius: 10px; }
+    .pad-btn { height: 40px; background: #444; border-radius: 5px; transition: background 0.5s; }
+    .pad-btn.lit { background: #00ffcc; box-shadow: 0 0 15px #00ffcc; transition: none; }
+    .pop-it-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+    .pop-bubble { width: 40px; height: 40px; border-radius: 50%; border: none; box-shadow: 0 4px 0 rgba(0,0,0,0.2); cursor: pointer; transition: 0.1s; }
+    .pop-bubble:active, .pop-bubble.popped { transform: translateY(4px); box-shadow: inset 0 3px 5px rgba(0,0,0,0.3); }
+    .battery-container { width: 100%; height: 40px; border: 3px solid var(--text-main); border-radius: 10px; padding: 3px; position: relative; box-sizing: border-box; }
+    .battery-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #ff9a9e 0%, #fecfef 99%); border-radius: 5px; }
   </style>
 </head>
 <body>
 
   <div id="rainContainer" class="rain-container"></div>
-  
-  <div class="header-image">
-    <img src="i-love-you.jpg" alt="I Love You" />
-  </div>
 
-  <div id="page-home" class="page-section active">
+  <div id="tab-home" class="tab-section active">
+    <div class="header-image">
+      <img src="i-love-you.jpg" alt="I Love You" />
+    </div>
     <h1>Our Countdowns ⏳</h1>
 
     <div class="countdowns">
       <div class="card" data-title="Our Anniversary 💞" data-date="09-06" data-note="Celebrating us 💌" data-img="your-anniversary-image.jpg">
-        <div class="emoji">💞</div>
-        <div class="event">Anniversary</div>
+        <div class="event">Anniversary 💞</div>
         <div class="days"></div>
-        <img class="card-img" src="your-anniversary-image.jpg" alt="Our Anniversary"/>
+        <img class="card-img" src="your-anniversary-image.jpg" alt="Anniversary"/>
       </div>
-
       <div class="card" data-title="We meet!! 💞" data-absolute="2025-11-27T00:00:00" data-note="Together again 💖" data-img="meeting.jpg">
-        <div class="emoji">✈️</div>
-        <div class="event">We meet!!</div>
+        <div class="event">We meet!! ✈️</div>
         <div class="days"></div>
-        <img class="card-img" src="meeting.jpg" alt="Our Meeting"/>
+        <img class="card-img" src="meeting.jpg" alt="Meeting"/>
       </div>
-      
       <div class="card" data-title="End of Exams 📚" data-absolute="2025-12-30T23:59:59" data-note="Freedom! 🌷" data-img="exam-end.jpg">
-        <div class="emoji">📚</div>
-        <div class="event">End of Exams</div>
+        <div class="event">Exams End 📚</div>
         <div class="days"></div>
-        <img class="card-img" src="exam-end.jpg" alt="End of Exams"/>
+        <img class="card-img" src="exam-end.jpg" alt="Exams"/>
       </div>
-
       <div class="card" data-title="Kitten’s Birthday 🎂" data-date="01-02" data-note="Happy Birthday!" data-img="kitten-birthday.jpg">
-        <div class="emoji">🎂</div>
-        <div class="event">Kitten Bday</div>
+        <div class="event">Kitten Bday 🎂</div>
         <div class="days"></div>
-        <img class="card-img" src="kitten-birthday.jpg" alt="Kitten Birthday"/>
+        <img class="card-img" src="kitten-birthday.jpg" alt="Kitten Bday"/>
       </div>
-
-       <div class="card" data-title="Daddy’s Birthday 🎉" data-date="04-14" data-note="Muah!" data-img="daddy-birthday.jpg">
-        <div class="emoji">🎉</div>
-        <div class="event">Daddy Bday</div>
+      <div class="card" data-title="Daddy’s Birthday 🎉" data-date="04-14" data-note="Muah!" data-img="daddy-birthday.jpg">
+        <div class="event">Daddy Bday 🎉</div>
         <div class="days"></div>
-        <img class="card-img" src="daddy-birthday.jpg" alt="Daddy Birthday"/>
+        <img class="card-img" src="daddy-birthday.jpg" alt="Daddy Bday"/>
       </div>
     </div>
 
-    <h2 style="margin-top: 20px;">✨ Milestones ✨</h2>
+    <h2>✨ Milestones ✨</h2>
     <div class="countdowns">
-        <div class="card" style="width: 90%; max-width: 400px;" onclick="toggleDetail('talk', '2025-04-22')">
-            <h3>💬 First Talked</h3>
-            <p id="talk-days" style="font-size: 1.2rem; font-weight: bold; color: var(--heading-color);">Loading...</p>
-        </div>
-        <div class="card" style="width: 90%; max-width: 400px;" onclick="toggleDetail('date', '2025-08-03')">
-            <h3>🍰 First Date</h3>
-            <p id="date-days" style="font-size: 1.2rem; font-weight: bold; color: var(--heading-color);">Loading...</p>
-        </div>
-        <div class="card" style="width: 90%; max-width: 400px;" onclick="toggleDetail('love', '2025-08-28')">
-            <h3>❤️ Said "I Love You"</h3>
-            <p id="love-days" style="font-size: 1.2rem; font-weight: bold; color: var(--heading-color);">Loading...</p>
-        </div>
+       <div class="card" style="width: 90%; max-width: 400px;" onclick="toggleDetail('talk', '2025-04-22')">
+          <h3>💬 First Talked</h3>
+          <p id="talk-days">Loading...</p>
+       </div>
+       <div class="card" style="width: 90%; max-width: 400px;" onclick="toggleDetail('date', '2025-08-03')">
+          <h3>🍰 First Date</h3>
+          <p id="date-days">Loading...</p>
+       </div>
+       <div class="card" style="width: 90%; max-width: 400px;" onclick="toggleDetail('love', '2025-08-28')">
+          <h3>❤️ Said "I Love You"</h3>
+          <p id="love-days">Loading...</p>
+       </div>
     </div>
   </div>
 
-
-  <div id="page-notes" class="page-section">
+  <div id="tab-notes" class="tab-section">
     <h1>Love Notes 💌</h1>
-
-    <div class="card" style="width: 90%; max-width: 400px; margin: 0 auto 30px; cursor: default;" onclick="generateRandomNote()">
-        <div class="emoji">🎲</div>
-        <div class="event">Tap for a Random Note</div>
-        <div id="note-content" class="note-display-area">Tap me!</div>
+    
+    <div class="card" style="width: 90%; max-width: 400px; margin: 0 auto 30px;" onclick="generateRandomNote()">
+        <div class="event" style="font-size: 1.2rem;">🎲 Tap for Note</div>
+        <div id="note-content" style="margin-top:10px; font-weight:bold;">Tap me!</div>
     </div>
 
     <div style="margin: 50px auto; perspective: 1000px; cursor: pointer; width: 280px; height: 180px;" onclick="this.classList.toggle('open')">
-        <div class="envelope-container" style="position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d;">
-          <div class="envelope-front" style="position: absolute; width: 100%; height: 100%; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem; backface-visibility: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.15);">
-            💌 <div style="position: absolute; bottom: 10px; font-size: 0.9rem;">Tap to Open</div>
-          </div>
-          <div class="envelope-back" style="position: absolute; width: 100%; height: 100%; border: 2px solid; border-radius: 10px; transform: rotateY(180deg); padding: 20px; box-sizing: border-box; overflow-y: auto; text-align: left; display: flex; flex-direction: column; backface-visibility: hidden;">
-            <h4 style="margin: 0 0 10px;">To my Khushi,</h4>
-            <p style="font-size: 0.85rem; line-height: 1.4; margin: 0;">
-              I know exams are tough, but you are tougher. I am so incredibly proud of you. Just remember to drink water and take breaks. I am always right here! <br><br> Love, Your Kitten.
-            </p>
-          </div>
+      <div class="envelope-container" style="position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d;">
+        <div class="envelope-front" style="position: absolute; width: 100%; height: 100%; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem; backface-visibility: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.15);">
+          💌 <div style="position: absolute; bottom: 10px; font-size: 0.9rem;">Tap to Open</div>
         </div>
+        <div class="envelope-back" style="position: absolute; width: 100%; height: 100%; border: 2px solid; border-radius: 10px; transform: rotateY(180deg); padding: 20px; box-sizing: border-box; overflow-y: auto; text-align: left; display: flex; flex-direction: column; backface-visibility: hidden;">
+          <h4 style="margin: 0 0 10px;">To my Khushi,</h4>
+          <p style="font-size: 0.85rem; line-height: 1.4; margin: 0;">
+            I know exams are tough, but you are tougher. I am so incredibly proud of you. Just remember to drink water and take breaks. I am always right here! <br><br> Love, Your Kitten.
+          </p>
+        </div>
+      </div>
     </div>
 
-    <h2 style="margin-top: 40px;">Open When...</h2>
-    <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; padding: 0 20px;">
-        <button onclick="alert('Everything will be okay. Take a deep breath. I believe in you! 🌟')">You're Stressed 😰</button>
-        <button onclick="alert('I am so proud of you. You are working so hard and it shows! Keep going! 💪')">Need Motivation 😤</button>
-        <button onclick="alert('Go look in the mirror. You are literally the prettiest girl ever. Don\'t argue. 🪞')">Feeling Insecure 😣</button>
+    <h2>Open When...</h2>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; padding: 0 10px;">
+      <button onclick="alert('Everything will be okay. Take a deep breath. I believe in you! 🌟')">You're Stressed 😰</button>
+      <button onclick="alert('I am so proud of you. You are working so hard and it shows! Keep going! 💪')">Need Motivation 😤</button>
+      <button onclick="alert('Go look in the mirror. You are literally the prettiest girl ever. Don\'t argue. 🪞')">Feeling Insecure 😣</button>
     </div>
-    
-    <div class="fun-card">
-        <h3 style="text-align: center; margin-top: 0;">Daily To-Do ✅</h3>
-        <label style="display: block; margin: 10px 0; color: var(--text-main);"><input type="checkbox" style="accent-color: var(--btn-bg); margin-right: 10px;"> call me </label>
-        <label style="display: block; margin: 10px 0; color: var(--text-main);"><input type="checkbox" style="accent-color: var(--btn-bg); margin-right: 10px;"> miss me ❤️</label>
-        <label style="display: block; margin: 10px 0; color: var(--text-main);"><input type="checkbox" style="accent-color: var(--btn-bg); margin-right: 10px;"> Drink water 💧</label>
+
+    <div class="fun-card" style="margin-top: 30px;">
+        <h3>Daily To-Do ✅</h3>
+        <label style="display: block; margin: 5px 0;"><input type="checkbox"> call me </label>
+        <label style="display: block; margin: 5px 0;"><input type="checkbox"> miss me ❤️</label>
+        <label style="display: block; margin: 5px 0;"><input type="checkbox"> Drink water 💧</label>
     </div>
   </div>
 
+  <div id="tab-play" class="tab-section">
+    <h1>Play & Relax 🧸</h1>
 
-  <div id="page-fun" class="page-section">
-    <h1>Fun Zone 🧸</h1>
-    <div class="fun-card" style="display: flex; align-items: center; justify-content: space-between; padding: 15px 25px;">
-      <h3 style="color: #89c4f4; margin: 0; font-size: 1.1rem;">Soft Rain Mode 🌧️</h3>
+    <div class="fun-card" style="display:flex; justify-content:space-between; align-items:center;">
+        <span>🌙 Dark Mode</span>
+        <label class="toggle-switch"><input type="checkbox" id="themeToggle"><span class="slider"></span></label>
+    </div>
+    <div class="fun-card" style="display:flex; justify-content:space-between; align-items:center;">
+        <span>🌧️ Rain Mode</span>
+        <label class="toggle-switch"><input type="checkbox" id="rainToggle"><span class="slider"></span></label>
+    </div>
+    
+    <h3>✨ Aesthetic Modes ✨</h3>
+    <div class="play-grid">
+      <div class="play-btn-lg" onclick="openGame('constellation')">🌌 Stars</div>
+      <div class="play-btn-lg" onclick="openGame('bloom')">🌸 Bloom</div>
+      <div class="play-btn-lg" onclick="openGame('lanterns')">🏮 Lanterns</div>
+      <div class="play-btn-lg" onclick="openGame('rain')">🌧️ Neon Rain</div>
+    </div>
+
+    <h3 style="margin-top: 30px;">Mini Games 🎮</h3>
+    <div class="fun-card">
+      <h3>Jiggly Slime 🦠</h3>
+      <div class="slime-blob" onclick="pokeSlime(this)"></div>
+    </div>
+    <div class="fun-card">
+      <h3>Rainbow Pop-It 🌈</h3>
+      <div class="pop-it-container" id="popItContainer"></div>
+    </div>
+    <div class="fun-card">
+      <h3>Neon Launchpad 🎛️</h3>
+      <div class="launchpad-grid" id="launchpad"></div>
+    </div>
+    <div class="fun-card">
+        <h3>Worry Shredder 🗑️</h3>
+        <div class="shredder-wrapper" id="shredderContainer">
+          <textarea id="worryInput" class="shredder-input" rows="3" placeholder="Type worries here..."></textarea>
+        </div>
+        <button onclick="shredWorry(this)">Shred it! 💥</button>
+    </div>
+    <div class="fun-card">
+      <h3>Love Battery 🔋</h3>
+      <div class="battery-container">
+        <div class="battery-fill" id="batteryFill"></div>
+      </div>
+      <button id="chargeBtn" style="margin-top:10px;">Hold to Charge ⚡</button>
+    </div>
+    <div class="fun-card">
+       <h3>Pet the Kitten 🐱</h3>
+       <div id="petZone" style="font-size: 5rem; cursor: grab;" onmousemove="petCat(event)" ontouchmove="petCat(event)">🐱</div>
+       <p id="purrStatus">...</p>
+    </div>
+  </div>
+
+  <div id="tab-comfort" class="tab-section">
+    <h1>Comfort Zone 🌸</h1>
+    <div class="comfort-header">
+      <span><b>Period Comfort Mode</b><br>Warm colors & cozy vibes</span>
       <label class="toggle-switch">
-        <input type="checkbox" id="rainToggle">
+        <input type="checkbox" id="periodModeToggle">
         <span class="slider"></span>
       </label>
     </div>
-
-    <div class="fun-card" style="display: flex; align-items: center; justify-content: space-between; padding: 15px 25px;">
-      <h3 style="color: #a78bfa; margin: 0; font-size: 1.1rem;">Dark mode 🌙</h3>
-      <label class="toggle-switch">
-        <input type="checkbox" id="themeToggle">
-        <span class="slider" style="background-color: #ddd;"></span>
-      </label>
-    </div>
-
-<div class="fun-card">
-      <h3 style="margin-top: 0;">Jiggly Slime 🦠</h3>
-      <p style="font-size: 0.8rem;">Poke the blob!</p>
-      <div class="slime-blob" onclick="pokeSlime(this)"></div>
-    </div>
-
     <div class="fun-card">
-      <h3 style="margin-top: 0;">Fidget Spinner ⚙️</h3>
-      <p style="font-size: 0.8rem;">Swipe fast to spin!</p>
-      <div class="spinner-container">
-        <div id="spinner" class="spinner">
-          <div class="spinner-center"></div>
-        </div>
+      <h3>The Heat Pad ♨️</h3>
+      <p>Hold the button to feel the warmth (vibration).</p>
+      <button class="heat-pad-btn" id="heatPadBtn">HOLD ME</button>
+    </div>
+    <div class="fun-card">
+      <h3>Emergency Chocolate 🍫</h3>
+      <p>Tap to take a bite!</p>
+      <div class="choco-bar" id="chocoBar" onclick="eatChocolate()">
+         <div class="choco-piece"></div><div class="choco-piece"></div><div class="choco-piece"></div><div class="choco-piece"></div>
+         <div class="choco-piece"></div><div class="choco-piece"></div><div class="choco-piece"></div><div class="choco-piece"></div>
       </div>
+      <p id="chocoMsg" style="min-height:20px; color:var(--accent-red); font-weight:bold;"></p>
     </div>
-
-    <div class="fun-card">
-      <h3 style="margin-top: 0;">Ripple Tank 💧</h3>
-      <p style="font-size: 0.8rem;">Tap to make waves.</p>
-      <div class="ripple-box" onclick="createRipple(event)"></div>
-    </div>
-
-    <div class="fun-card">
-      <h3 style="margin-top: 0;">Rage Button 😡</h3>
-      <p style="font-size: 0.8rem;">Tap fast to release stress!</p>
-      <div class="rage-meter"><div id="rageFill" class="rage-fill"></div></div>
-      <button id="rageBtn" class="rage-btn">VENT!</button>
-    </div>
-
-    <div class="fun-card">
-      <h3 style="margin-top: 0;">Magnetic Dust ✨</h3>
-      <p style="font-size: 0.8rem;">They love your finger!</p>
-      <canvas id="dustCanvas" class="dust-canvas"></canvas>
-    </div>
-    
-    <div class="fun-card">
-      <h3 style="color: #a67fb8; margin-top: 0;">Pet the Kitten 🐱</h3>
-      <p style="font-size: 0.8rem;">Rub the cat to make it happy!</p>
-      <div id="petZone" style="font-size: 5rem; cursor: grab; user-select: none; transition: transform 0.1s;" 
-           onmousemove="petCat(event)" ontouchmove="petCat(event)">🐱</div>
-      <p id="purrStatus" style="font-size: 0.9rem; color: #a67fb8; min-height: 20px;">...</p>
-    </div>
-
-    <div class="fun-card" style="border-color: var(--accent-green);">
-      <h3 style="color: var(--accent-green); margin-top: 0;">Our Love Plant 🌱</h3>
-      <p style="font-size: 0.8rem;">Water it daily to see it bloom!</p>
-      <div id="plantStage" style="font-size: 5rem; min-height: 100px; transition: all 0.5s ease; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));">🫘</div>
-      <p id="plantStatus" style="font-size: 0.9rem; color: var(--accent-green); font-weight: 600;">Stage 1: A tiny seed.</p>
-      <button id="waterBtn" onclick="waterPlant()" style="background: var(--accent-green); color: white; box-shadow: 0 4px 15px rgba(72, 187, 120, 0.4);">💧 Water Plant</button>
-    </div>
-
     <div class="fun-card" style="border-color: var(--accent-red);">
-      <h3 style="color: var(--accent-red); margin-top: 0;">EMERGENCY 🚨</h3>
-      <p style="font-size: 0.8rem;">Only press if you need me ASAP!</p>
-      <a href="https://wa.me/7974776697?text=CODE%20RED!%20🚨%20Baby%20I%20need%20attention%20immediately!%20🥺" target="_blank" class="emergency-btn">BREAK GLASS 🔨</a>
-    </div>
-
-    <div class="fun-card">
-      <h3 style="margin-top: 0;">Worry Shredder 🗑️</h3>
-      <p style="font-size: 0.8rem;">Type the stress, then watch it disappear.</p>
-      <div class="shredder-wrapper" id="shredderContainer">
-        <textarea id="worryInput" class="shredder-input" rows="3" placeholder="Exams, distance, overthinking..."></textarea>
-        <div class="shredder-machine-bar"></div>
-      </div>
-      <button onclick="shredWorry(this)" style="margin-top:10px; position: relative; z-index: 20;">Shred it! 💥</button>
-    </div>
-
-    <div class="fun-card">
-      <h3 style="margin-top: 0;">Love Battery 🔋</h3>
-      <p style="font-size: 0.8rem;">Low energy? Hold the button to recharge!</p>
-      <div class="battery-container">
-        <div class="battery-cap"></div>
-        <div id="batteryFill" class="battery-fill"></div>
-      </div>
-      <button id="chargeBtn" style="user-select: none;">Hold Me! ⚡</button>
-    </div>
-
-    <div style="margin: 30px auto; text-align: center; max-width: 300px;">
-        <h3 style="color: var(--heading-color);">Breathe with me 🧘‍♀️</h3>
-        <div style="margin: 30px auto; height: 120px; display: flex; align-items: center; justify-content: center;">
-          <div class="breathing-heart">
-            <svg viewBox="0 0 32 29.6" style="width: 100%; height: 100%; overflow: visible;">
-              <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2c6.1-9.3,16-11.8,16-21.2C32,3.8,28.2,0,23.6,0z" fill="#ff7da5"/>
-              <text x="16" y="15" fill="white" font-size="7" font-weight="bold" text-anchor="middle" dominant-baseline="middle">R & K</text>
-            </svg>
-          </div>
-        </div>
-        <style>.breathing-heart { width: 100px; height: 100px; animation: breatheHeart 4s ease-in-out infinite; transform-origin: center; } @keyframes breatheHeart { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }</style>
-    </div>
-
-    <div style="margin: 40px auto; text-align: center;">
-        <button id="kissBtn" style="font-size: 1.5rem;">Send a Kiss 💋</button>
-        <p style="margin-top: 10px; font-size: 0.9rem;">Total Kisses Sent: <span id="kissCount" style="color: var(--heading-color); font-weight: bold;">0</span></p>
+       <h3 style="color: var(--accent-red); margin-top: 0;">EMERGENCY 🚨</h3>
+       <a href="https://wa.me/7974776697?text=CODE%20RED!%20🚨%20Baby%20I%20need%20attention%20immediately!%20🥺" target="_blank" class="emergency-btn" style="background: var(--accent-red); color: white; display:block; padding:15px; text-decoration:none; border-radius:10px;">BREAK GLASS 🔨</a>
     </div>
   </div>
 
-
-  <div id="page-fidgets" class="page-section">
-    <h1>Distraction Zone 🧩</h1>
-    <p style="font-size: 0.9rem; margin-bottom: 20px;">Play with these when you're stressed!</p>
-<div class="fun-card">
-        <h3 style="margin-top: 0;">Neon Launchpad 🎛️</h3>
-        <p style="font-size: 0.8rem;">Swipe your finger across!</p>
-        <div class="launchpad-grid" id="launchpad">
-            </div>
-    </div>
-
-    <div class="fun-card">
-        <h3 style="margin-top: 0;">Rainbow Pop-It 🌈</h3>
-        <p style="font-size: 0.8rem;">Pop them all!</p>
-        <div class="pop-it-container" id="popItContainer">
-            </div>
-    </div>
-    <div class="fun-card">
-        <h3 style="margin-top: 0;">Foggy Window 🌫️</h3>
-        <p style="font-size: 0.8rem;">Rub the window to reveal the message!</p>
-        <div class="fog-wrapper">
-            <div class="fog-text">hehe </div>
-            <canvas id="fogCanvas"></canvas>
-        </div>
-    </div>
-
-    <div class="fun-card">
-        <h3 style="margin-top: 0;">Elastic Heart 🏹</h3>
-        <p style="font-size: 0.8rem;">Pull the heart and snap it back!</p>
-        <div id="elasticBox" class="elastic-box">
-            <div id="elasticHeart" class="elastic-heart">❤️</div>
-        </div>
-    </div>
-
-    <div class="fun-card">
-        <h3 style="margin-top: 0;">Gravity Box 🍎</h3>
-        <p style="font-size: 0.8rem;">Tap anywhere inside to shake them up!</p>
-        <div id="gravityBox" class="gravity-box"></div>
-    </div>
-
-    <div class="fun-card">
-        <h3 style="margin-top: 0;">Neon Scribble 🖊️</h3>
-        <p style="font-size: 0.8rem;">Draw light that fades away...</p>
-        <canvas id="scribbleCanvas" class="scribble-board"></canvas>
-    </div>
-
-    <div class="fun-card">
-        <h3 style="margin-top: 0;">Confetti Cannon 🎉</h3>
-        <button onclick="fireConfetti()" style="font-size: 1.2rem; padding: 15px 30px;">BOOM! 💥</button>
-    </div>
-
-    <div class="fun-card">
-      <h3 style="margin-top: 0;">Fidget Switches 🎚️</h3>
-      <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 15px;">
-        <label class="toggle-switch"><input type="checkbox"><span class="slider"></span></label>
-        <label class="toggle-switch"><input type="checkbox" checked><span class="slider"></span></label>
-        <label class="toggle-switch"><input type="checkbox"><span class="slider"></span></label>
-        <label class="toggle-switch"><input type="checkbox" checked><span class="slider"></span></label>
+  <div id="tab-gallery" class="tab-section" style="padding:0;">
+    <h1 style="position:absolute; width:100%; top:10px; pointer-events:none; z-index:10;">Photo Gallery 📸</h1>
+    <p style="text-align:center; font-size:0.8rem;">Drag photos around!</p>
+    <div id="gallery-container">
       </div>
-    </div>
-    
-    <div style="margin: 40px auto; max-width: 300px;">
-        <h3 style="color: var(--heading-color);">Stress Popping 🫧</h3>
-        <div id="bubble-grid" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;"></div>
-    </div>
   </div>
-
-
-  <div id="page-gallery" class="page-section">
-    <h1>Photo Gallery 📸</h1>
-    <div id="gallery" class="gallery">
-        </div>
-  </div>
-
 
   <nav class="nav-bar">
-    <button class="nav-item active" onclick="showPage('page-home', this)">
-        <span class="nav-icon">🏠</span>
-        <span class="nav-label">Home</span>
+    <button class="nav-item active" onclick="switchTab('tab-home', this)">
+      <span class="nav-icon">🏠</span><span class="nav-label">Home</span>
     </button>
-    <button class="nav-item" onclick="showPage('page-notes', this)">
-        <span class="nav-icon">💌</span>
-        <span class="nav-label">Notes</span>
+    <button class="nav-item" onclick="switchTab('tab-notes', this)">
+      <span class="nav-icon">💌</span><span class="nav-label">Notes</span>
     </button>
-    <button class="nav-item" onclick="showPage('page-fun', this)">
-        <span class="nav-icon">🧸</span>
-        <span class="nav-label">Fun</span>
+    <button class="nav-item" onclick="switchTab('tab-play', this)">
+      <span class="nav-icon">🧸</span><span class="nav-label">Play</span>
     </button>
-    <button class="nav-item" onclick="showPage('page-fidgets', this)">
-        <span class="nav-icon">🧩</span>
-        <span class="nav-label">Fidgets</span>
+    <button class="nav-item" onclick="switchTab('tab-comfort', this)">
+      <span class="nav-icon">🌸</span><span class="nav-label">Comfort</span>
     </button>
-    <button class="nav-item" onclick="showPage('page-gallery', this)">
-        <span class="nav-icon">📸</span>
-        <span class="nav-label">Photos</span>
+    <button class="nav-item" onclick="switchTab('tab-gallery', this)">
+      <span class="nav-icon">📸</span><span class="nav-label">Gallery</span>
     </button>
   </nav>
 
+  <div id="game-constellation" class="game-overlay">
+    <button class="overlay-close" onclick="closeGame()">×</button>
+    <canvas id="constellationCanvas" class="fs-canvas"></canvas>
+    <div style="position:absolute; bottom:20px; width:100%; text-align:center; color:rgba(255,255,255,0.5); pointer-events:none;">Tap to place stars</div>
+  </div>
+  
+  <div id="game-bloom" class="game-overlay" style="background:#fff;">
+    <button class="overlay-close" onclick="closeGame()" style="background:rgba(0,0,0,0.1); color:#333;">×</button>
+    <canvas id="bloomCanvas" class="fs-canvas"></canvas>
+    <div style="position:absolute; bottom:20px; width:100%; text-align:center; color:#888; pointer-events:none;">Tap to grow flowers</div>
+  </div>
+
+  <div id="game-lanterns" class="game-overlay" style="background: linear-gradient(to top, #0f2027, #203a43, #2c5364);">
+    <button class="overlay-close" onclick="closeGame()">×</button>
+    <div id="lanternContainer" style="width:100%; height:100%; position:relative;" onclick="spawnLantern(event)"></div>
+    <div style="position:absolute; bottom:20px; width:100%; text-align:center; color:rgba(255,255,255,0.5); pointer-events:none;">Tap bottom to release lanterns</div>
+  </div>
+
+  <div id="game-rain" class="game-overlay" style="background: #000;">
+    <button class="overlay-close" onclick="closeGame()">×</button>
+    <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#fff; font-size:3rem; font-weight:bold; z-index:1; pointer-events:none; text-shadow:0 0 20px #ff00de;">I Love You ❤️</div>
+    <canvas id="rainCanvas" class="fs-canvas" style="z-index:2; position:relative;"></canvas>
+    <div style="position:absolute; bottom:20px; width:100%; text-align:center; color:rgba(255,255,255,0.5); z-index:3; pointer-events:none;">Wipe the window...</div>
+  </div>
+
   <div class="modal" id="modal">
     <div class="modal-card">
-      <h3 class="modal-title" id="modalTitle"></h3>
-      <p class="modal-sub" id="modalNote"></p>
+      <h3 id="modalTitle"></h3>
+      <p id="modalNote"></p>
       <div class="bigtime" id="liveTime"></div>
-      <div class="units">Days : Hours : Minutes : Seconds</div>
-      <button class="modal-close" id="closeBtn">Close</button>
+      <button onclick="document.getElementById('modal').classList.remove('open')">Close</button>
     </div>
   </div>
 
   <script>
-    /* --- THEME TOGGLE LOGIC --- */
-    const themeToggle = document.getElementById('themeToggle');
-    if(themeToggle) {
-        themeToggle.addEventListener('change', function() {
-            if(this.checked) { document.body.setAttribute('data-theme', 'dark'); } 
-            else { document.body.removeAttribute('data-theme'); }
-        });
-    }
-
-    /* --- NAVIGATION LOGIC --- */
-    function showPage(pageId, btn) {
-        document.querySelectorAll('.page-section').forEach(page => page.classList.remove('active'));
-        document.getElementById(pageId).classList.add('active');
-        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+    /* =========================================
+       1. NAVIGATION SYSTEM
+       ========================================= */
+    function switchTab(tabId, btn) {
+        document.querySelectorAll('.tab-section').forEach(t => t.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         window.scrollTo(0,0);
-        
-        // THIS PART IS IMPORTANT:
-        if(pageId === 'page-fidgets') {
-            initFog();
-            initScribble();
-            initDust(); // <--- Make sure this line is here!
-            if(!gravityInterval) initGravityBox();
+        if(tabId === 'tab-gallery') initGallery();
+    }
+
+    /* =========================================
+       2. TOGGLES & RESTORED MODES
+       ========================================= */
+    // Dark Mode
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('change', (e) => {
+        if(e.target.checked) document.body.setAttribute('data-theme', 'dark');
+        else document.body.removeAttribute('data-theme');
+    });
+
+    // Rain Mode
+    const rainToggle = document.getElementById('rainToggle');
+    const rainCont = document.getElementById('rainContainer');
+    let rainInt;
+    rainToggle.addEventListener('change', (e) => {
+        if(e.target.checked) {
+            rainCont.classList.add('active');
+            rainInt = setInterval(() => {
+                const drop = document.createElement('div');
+                drop.className = 'rain-drop';
+                drop.style.left = Math.random() * 100 + 'vw';
+                drop.style.animationDuration = (0.5 + Math.random()) + 's';
+                rainCont.appendChild(drop);
+                setTimeout(() => drop.remove(), 2000);
+            }, 50);
+        } else {
+            rainCont.classList.remove('active');
+            clearInterval(rainInt);
+            rainCont.innerHTML = '';
+        }
+    });
+
+    // Period Comfort Mode
+    const periodToggle = document.getElementById('periodModeToggle');
+    periodToggle.addEventListener('change', (e) => {
+        if(e.target.checked) document.body.setAttribute('data-theme', 'comfort');
+        else {
+             // Reset to either dark or default depending on other toggle
+             if(themeToggle.checked) document.body.setAttribute('data-theme', 'dark');
+             else document.body.removeAttribute('data-theme');
+        }
+    });
+
+    /* =========================================
+       3. FLOATING HEARTS (RESTORED)
+       ========================================= */
+    function createFloatingHeart() {
+        const h = document.createElement('div');
+        h.innerText = '💖';
+        h.className = 'heart-bg';
+        h.style.left = Math.random() * 100 + 'vw';
+        h.style.fontSize = (10 + Math.random() * 20) + 'px';
+        document.body.appendChild(h);
+        setTimeout(() => h.remove(), 5000);
+    }
+    setInterval(createFloatingHeart, 800);
+
+    /* =========================================
+       4. COMFORT & ORIGINAL LOGIC
+       ========================================= */
+    // Heat Pad
+    const heatBtn = document.getElementById('heatPadBtn');
+    let vibrateInterval;
+    const startHeat = (e) => {
+        e.preventDefault();
+        heatBtn.classList.add('active');
+        if(navigator.vibrate) vibrateInterval = setInterval(() => navigator.vibrate(200), 250);
+    };
+    const stopHeat = () => {
+        heatBtn.classList.remove('active');
+        if(vibrateInterval) clearInterval(vibrateInterval);
+        if(navigator.vibrate) navigator.vibrate(0);
+    };
+    heatBtn.addEventListener('mousedown', startHeat);
+    heatBtn.addEventListener('touchstart', startHeat);
+    heatBtn.addEventListener('mouseup', stopHeat);
+    heatBtn.addEventListener('touchend', stopHeat);
+
+    // Chocolate
+    let bites = 0;
+    function eatChocolate() {
+        const pieces = document.querySelectorAll('.choco-piece');
+        if(bites < pieces.length) {
+            pieces[bites].style.opacity = '0';
+            bites++;
+            if(bites === pieces.length) document.getElementById('chocoMsg').textContent = "Yum! All gone! 🍫";
+        } else {
+            pieces.forEach(p => p.style.opacity = '1');
+            bites = 0;
+            document.getElementById('chocoMsg').textContent = "New bar opened! 😋";
         }
     }
 
-    /* --- RANDOM LOVE NOTES --- */
-    const myNotes = [
-        "your doing amazing", "you scored 8.5 cgpa last sem!!!!", 
-        "your lowest marks are literally 80%", "mera smarty bhondu", 
-        "dont procrastinate", "you already have a mental map, just keep going", 
-        "i love you"
-    ];
+    // Random Note
+    const myNotes = ["your doing amazing", "you scored 8.5 cgpa last sem!!!!", "your lowest marks are literally 80%", "mera smarty bhondu", "dont procrastinate", "you already have a mental map, just keep going", "i love you"];
     function generateRandomNote() {
         const container = document.getElementById("note-content");
         const r = Math.random();
-        if (r < 0.1) { 
-            container.innerHTML = `<div>kaun hai meri pyaari si girlfriend?</div><button class="interactive-btn" onclick="event.stopPropagation(); this.parentElement.innerHTML='haan, meri pyaari khushi hai!! 🥰'">khushi hai!!</button>`;
-        } else if (r < 0.2) {
-            container.innerHTML = `<div>muahhh! 😽</div><button class="interactive-btn" onclick="event.stopPropagation(); this.parentElement.innerHTML='muahhh back! 💕'">muahhh</button>`;
-        } else {
-            const randomIndex = Math.floor(Math.random() * myNotes.length);
-            container.innerText = myNotes[randomIndex];
+        if (r < 0.1) container.innerHTML = `<div>kaun hai meri pyaari si girlfriend?</div><button class="interactive-btn" onclick="event.stopPropagation(); this.parentElement.innerHTML='haan, meri pyaari khushi hai!! 🥰'">khushi hai!!</button>`;
+        else if (r < 0.2) container.innerHTML = `<div>muahhh! 😽</div><button class="interactive-btn" onclick="event.stopPropagation(); this.parentElement.innerHTML='muahhh back! 💕'">muahhh</button>`;
+        else container.innerText = myNotes[Math.floor(Math.random() * myNotes.length)];
+    }
+
+    // Countdowns
+    const modal = document.getElementById("modal");
+    let timer = null;
+    function openModal(card) {
+        let target;
+        if(card.dataset.absolute) target = new Date(card.dataset.absolute);
+        else {
+             const [m, d] = card.dataset.date.split('-').map(Number);
+             const now = new Date();
+             target = new Date(now.getFullYear(), m - 1, d);
+             if (target < now) target.setFullYear(now.getFullYear() + 1);
         }
-    }
-
-    /* --- BUBBLE WRAP --- */
-    const bubbleGrid = document.getElementById('bubble-grid');
-    for(let i=0; i<15; i++) {
-        const bubble = document.createElement('div');
-        bubble.style.cssText = `width: 40px; height: 40px; background: #ffe0eb; border-radius: 50%; cursor: pointer; box-shadow: inset -2px -2px 6px rgba(0,0,0,0.1); transition: transform 0.1s;`;
-        bubble.onclick = function() {
-            if (this.style.opacity !== '0') {
-                this.style.transform = 'scale(1.2)'; this.style.backgroundColor = '#fff';
-                setTimeout(() => { this.style.transform = 'scale(0)'; this.style.opacity = '0'; }, 100);
-            }
+        document.getElementById("modalTitle").textContent = card.dataset.title;
+        document.getElementById("modalNote").textContent = card.dataset.note;
+        if(timer) clearInterval(timer);
+        const tick = () => {
+             const diff = Math.max(0, target - new Date());
+             const d = Math.floor(diff/(1000*60*60*24));
+             const h = String(Math.floor((diff/(1000*60*60))%24)).padStart(2,'0');
+             const m = String(Math.floor((diff/(1000*60))%60)).padStart(2,'0');
+             const s = String(Math.floor((diff/1000)%60)).padStart(2,'0');
+             document.getElementById("liveTime").textContent = `${d} : ${h} : ${m} : ${s}`;
         };
-        bubbleGrid.appendChild(bubble);
+        tick(); timer = setInterval(tick, 1000);
+        modal.classList.add("open");
     }
+    document.querySelectorAll('.card[data-date], .card[data-absolute]').forEach(c => c.addEventListener('click', () => openModal(c)));
 
-    /* --- KISS COUNTER --- */
-    const kissBtn = document.getElementById('kissBtn');
-    const kissCountDisplay = document.getElementById('kissCount');
-    let kisses = localStorage.getItem('kissCount') || 0;
-    kissCountDisplay.textContent = kisses;
-    kissBtn.addEventListener('click', () => {
-        kisses++; localStorage.setItem('kissCount', kisses); kissCountDisplay.textContent = kisses;
-        kissBtn.style.transform = 'scale(0.95)'; setTimeout(() => kissBtn.style.transform = 'scale(1)', 100);
+    function toggleDetail(id, dateStr) {
+        const el = document.getElementById(id+'-days');
+        const start = new Date(dateStr);
+        const diff = new Date() - start;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        el.innerText = el.innerText.includes('days') ? `${days}d ${Math.floor((diff/(1000*60*60))%24)}h` : `${days} days 💫`;
+    }
+    toggleDetail('talk', '2025-04-22'); toggleDetail('date', '2025-08-03'); toggleDetail('love', '2025-08-28');
+    
+    document.querySelectorAll('.card[data-date], .card[data-absolute]').forEach(card => {
+        let target;
+        if(card.dataset.absolute) target = new Date(card.dataset.absolute);
+        else {
+             const [m, d] = card.dataset.date.split('-').map(Number);
+             const now = new Date();
+             target = new Date(now.getFullYear(), m - 1, d);
+             if (target < now) target.setFullYear(now.getFullYear() + 1);
+        }
+        const diff = target - new Date();
+        const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+        card.querySelector('.days').innerText = days > 0 ? `${days} days` : 'Today!';
     });
 
-    /* --- LOVE BATTERY --- */
+    /* =========================================
+       5. MINIGAMES
+       ========================================= */
+    function shredWorry(btn) {
+       const input = document.getElementById('worryInput');
+       const container = document.getElementById('shredderContainer');
+       if(!input.value.trim()) return alert("Write something first!");
+       input.classList.add('shredding');
+       for(let i=0; i<20; i++) {
+           const strip = document.createElement('div');
+           strip.className = 'paper-strip';
+           strip.style.left = Math.random()*90+'%';
+           strip.style.setProperty('--rot', Math.random()*360+'deg');
+           strip.style.animation = `stripFall ${1+Math.random()}s forwards`;
+           container.appendChild(strip);
+           setTimeout(()=>strip.remove(), 2000);
+       }
+       setTimeout(() => { input.value=''; input.classList.remove('shredding'); }, 2000);
+    }
+    function petCat(e) {
+       const cat = document.getElementById('petZone');
+       cat.style.transform = `scale(1.1) rotate(${Math.random()*20-10}deg)`;
+       document.getElementById('purrStatus').innerText = ["Purr...", "Meow!", "❤️"][Math.floor(Math.random()*3)];
+       setTimeout(()=>cat.style.transform='scale(1)', 100);
+    }
     const chargeBtn = document.getElementById('chargeBtn');
     const batteryFill = document.getElementById('batteryFill');
-    let charge = 0;
-    let chargeInterval;
-
-    chargeBtn.addEventListener('mousedown', startCharge);
-    chargeBtn.addEventListener('touchstart', startCharge);
-    chargeBtn.addEventListener('mouseup', stopCharge);
-    chargeBtn.addEventListener('touchend', stopCharge);
-
-    function startCharge(e) {
-        e.preventDefault();
-        chargeBtn.style.transform = 'scale(0.95)';
-        if (charge >= 100) { charge = 0; batteryFill.style.width = '0%'; batteryFill.style.background = 'linear-gradient(90deg, #ff9a9e 0%, #fecfef 99%)'; }
-        
-        chargeInterval = setInterval(() => {
-            charge += 2;
-            batteryFill.style.width = charge + '%';
-            if (charge >= 100) {
-                clearInterval(chargeInterval);
-                batteryFill.style.background = '#7dff93'; // Green when full
-                chargeBtn.innerText = "Fully Charged! ⚡";
-            }
+    let charge = 0, chargeInt;
+    chargeBtn.addEventListener('mousedown', () => {
+        chargeInt = setInterval(() => {
+            if(charge < 100) { charge+=2; batteryFill.style.width=charge+'%'; }
+            else { batteryFill.style.background='#48bb78'; chargeBtn.innerText="Fully Charged! ⚡"; }
         }, 50);
-    }
-    function stopCharge() {
-        clearInterval(chargeInterval);
-        chargeBtn.style.transform = 'scale(1)';
-        if (charge < 100) chargeBtn.innerText = "Hold Me! ⚡";
-    }
+    });
+    const stopCharge = () => { clearInterval(chargeInt); };
+    chargeBtn.addEventListener('mouseup', stopCharge); chargeBtn.addEventListener('touchend', stopCharge);
 
-    /* --- FLOATING HEARTS --- */
-    function createHeart() {
-        const heart = document.createElement('div');
-        heart.innerHTML = '💖'; 
-        heart.style.position = 'fixed'; heart.style.left = Math.random() * 100 + 'vw'; heart.style.bottom = '-20px'; heart.style.fontSize = Math.random() * 20 + 10 + 'px'; heart.style.zIndex = '0'; heart.style.animation = 'floatUp 5s linear'; heart.style.opacity = '0.6';
-        document.body.appendChild(heart);
-        setTimeout(() => { heart.remove(); }, 5000);
-    }
-    const styleSheet = document.createElement("style");
-    styleSheet.innerText = `@keyframes floatUp { to { transform: translateY(-100vh); opacity: 0; } }`;
-    document.head.appendChild(styleSheet);
-    setInterval(createHeart, 600);
-
-    /* --- COUNTDOWN LOGIC --- */
-    const modal = document.getElementById("modal");
-    const modalTitle = document.getElementById("modalTitle");
-    const modalNote = document.getElementById("modalNote");
-    const liveTime = document.getElementById("liveTime");
-    const closeBtn = document.getElementById("closeBtn");
-    let timer = null;
-    const intervals = {};
-
-    function updateDetailedTime(startDate, elementId, mode = "days") {
-        const start = new Date(startDate); const now = new Date(); const diff = now - start;
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const element = document.getElementById(elementId);
-        if (!element) return;
-        element.textContent = mode === "days" ? `${days} days 💫` : `${days}d ${Math.floor((diff/(1000*60*60))%24)}h ${Math.floor((diff/(1000*60))%60)}m ${Math.floor((diff/1000)%60)}s`;
-    }
-    function toggleDetail(type, startDate) {
-        const elementId = `${type}-days`;
-        if (intervals[type]) { clearInterval(intervals[type]); intervals[type] = null; updateDetailedTime(startDate, elementId, "days"); }
-        else { updateDetailedTime(startDate, elementId, "full"); intervals[type] = setInterval(() => updateDetailedTime(startDate, elementId, "full"), 1000); }
-    }
-    updateDetailedTime("2025-04-22", "talk-days");
-    updateDetailedTime("2025-08-03", "date-days");
-    updateDetailedTime("2025-08-28", "love-days");
-
-    function parseDateFromCard(card) {
-        const abs = card.dataset.absolute; if (abs) return new Date(abs);
-        const dd = card.dataset.date; if (!dd) return null;
-        const [m, d] = dd.split('-').map(Number); const now = new Date();
-        let target = new Date(now.getFullYear(), m - 1, d);
-        if (target < now) target.setFullYear(now.getFullYear() + 1);
-        return target;
-    }
-    function refreshCardsDays() {
-        document.querySelectorAll('.card[data-date], .card[data-absolute]').forEach(card => {
-            const target = parseDateFromCard(card);
-            const daysEl = card.querySelector('.days');
-            if (daysEl && target) {
-                const diff = target - new Date();
-                const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-                daysEl.textContent = (days <= 0) ? 'Today!' : `${days} day${days===1?'':'s'}`;
-            }
-        });
-    }
-    refreshCardsDays(); setInterval(refreshCardsDays, 60000);
-
-    function openModal(card) {
-        const target = parseDateFromCard(card); if (!target) return;
-        modalTitle.textContent = card.dataset.title || ""; modalNote.textContent = card.dataset.note || "";
-        if (timer) clearInterval(timer);
-        const tick = () => {
-            const diff = Math.max(0, target - new Date());
-            liveTime.textContent = `${Math.floor(diff/(1000*60*60*24))} : ${String(Math.floor((diff/(1000*60*60))%24)).padStart(2,'0')} : ${String(Math.floor((diff/(1000*60))%60)).padStart(2,'0')} : ${String(Math.floor((diff/1000)%60)).padStart(2,'0')}`;
-        };
-        tick(); timer = setInterval(tick, 1000); modal.classList.add("open");
-    }
-    document.querySelectorAll('.card[data-date], .card[data-absolute]').forEach(card => card.addEventListener("click", () => openModal(card)));
-    closeBtn.addEventListener("click", () => { modal.classList.remove("open"); if (timer) clearInterval(timer); });
-    
-    /* --- GALLERY LOGIC --- */
-    const galleryEl = document.getElementById('gallery');
-    const imageLibrary = [];
-    
-    function testImageExists(url) { return new Promise((res) => { const t = new Image(); t.onload = () => res(true); t.onerror = () => res(false); t.src = url; }); }
-    
-    async function seedGallery() {
-        const candidates = ['images/image.jpg'];
-        for(let i=1; i<=26; i++) candidates.push(`images/image${i}.jpg`);
-        
-        const promises = candidates.map(c => testImageExists(c).then(exists => exists ? c : null));
-        const results = await Promise.all(promises);
-        const valid = results.filter(Boolean);
-        
-        if (valid.length === 0) {
-             const cardImgs = Array.from(document.querySelectorAll('img.card-img')).map(i => i.src).filter(Boolean);
-             if(cardImgs.length) { imageLibrary.push(...cardImgs); renderSingleGalleryCard(); }
-             else { galleryEl.innerHTML = '<div style="padding:20px">No images found in images/ folder.</div>'; }
-        } else {
-             imageLibrary.push(...valid);
-             renderSingleGalleryCard();
-        }
-    }
-
-    function renderSingleGalleryCard() {
-        galleryEl.innerHTML = '';
-        if (imageLibrary.length === 0) return;
-        let currentIndex = Math.floor(Math.random() * imageLibrary.length);
-        const card = document.createElement('div');
-        card.className = 'gallery-card';
-        const img = document.createElement('img');
-        img.src = imageLibrary[currentIndex];
-        card.appendChild(img);
-        const note = document.createElement('div');
-        note.style.fontSize = '0.8rem'; note.style.marginTop = '5px'; note.textContent = 'Tap for next pic 📸';
-        card.appendChild(note);
-        card.onclick = () => {
-            let nextIndex;
-            do { nextIndex = Math.floor(Math.random() * imageLibrary.length); } 
-            while (nextIndex === currentIndex && imageLibrary.length > 1);
-            currentIndex = nextIndex;
-            img.src = imageLibrary[currentIndex];
-        };
-        galleryEl.appendChild(card);
-    }
-    seedGallery();
-
-    /* --- VIRTUAL PLANT LOGIC --- */
-    const plantStages = [
-      { emoji: "🫘", text: "Stage 1: A tiny seed of our love." },
-      { emoji: "🌱", text: "Stage 2: It sprout! It likes your attention." },
-      { emoji: "🪴", text: "Stage 3: Growing strong, just like us." },
-      { emoji: "🌿", text: "Stage 4: Look how big it is!" },
-      { emoji: "🌸", text: "Stage 5: It bloomed for you! Beautiful! 💖" }
-    ];
-    const plantStageEl = document.getElementById('plantStage');
-    const plantStatusEl = document.getElementById('plantStatus');
-    const waterBtn = document.getElementById('waterBtn');
-    let currentStage = parseInt(localStorage.getItem('plantStage')) || 0;
-    let lastWateredDate = localStorage.getItem('lastWateredDate');
-
-    function updatePlantVisuals() {
-      const stageData = plantStages[Math.min(currentStage, plantStages.length - 1)];
-      if (plantStageEl) {
-        plantStageEl.innerHTML = stageData.emoji;
-        plantStageEl.style.transform = "scale(1.2)";
-        setTimeout(() => { plantStageEl.style.transform = "scale(1)"; }, 300);
-      }
-      if (plantStatusEl) plantStatusEl.textContent = stageData.text;
-      const today = new Date().toISOString().slice(0, 10);
-      if (lastWateredDate === today && currentStage < plantStages.length) {
-         waterBtn.disabled = true; waterBtn.innerText = "Come back tomorrow! 🕒"; waterBtn.style.background = "#ccc"; waterBtn.style.boxShadow = "none";
-      } else if (currentStage >= plantStages.length) {
-         waterBtn.disabled = true; waterBtn.innerText = "Fully Bloomed! 🌸";
-      }
-    }
-    function waterPlant() {
-      const today = new Date().toISOString().slice(0, 10);
-      if (lastWateredDate === today) { alert("You already watered it today! Don't overwater our love! 😉"); return; }
-      if (currentStage < plantStages.length) {
-        currentStage++;
-        if(currentStage === plantStages.length) alert("OMG! You made it bloom! I love you! 🌸💖🌸");
-      }
-      lastWateredDate = today;
-      localStorage.setItem('plantStage', currentStage);
-      localStorage.setItem('lastWateredDate', lastWateredDate);
-      updatePlantVisuals();
-    }
-    if (waterBtn) updatePlantVisuals();
-
-    /* --- RAIN LOGIC --- */
-    const rainToggle = document.getElementById('rainToggle');
-    const rainContainer = document.getElementById('rainContainer');
-    let rainInterval;
-    if (rainToggle) {
-        rainToggle.addEventListener('change', function() {
-          if(this.checked) {
-            rainContainer.classList.add('active');
-            rainInterval = setInterval(() => {
-              const drop = document.createElement('div');
-              drop.className = 'rain-drop';
-              drop.style.left = Math.random() * 100 + 'vw';
-              drop.style.animationDuration = Math.random() * 1 + 0.5 + 's';
-              drop.style.opacity = Math.random();
-              rainContainer.appendChild(drop);
-              setTimeout(() => { drop.remove(); }, 2000);
-            }, 50); 
-          } else {
-            rainContainer.classList.remove('active');
-            clearInterval(rainInterval);
-            rainContainer.innerHTML = '';
-          }
-        });
-    }
-
-    /* --- PET CAT LOGIC --- */
-    let lastPetTime = 0;
-    function petCat(e) {
-      const now = Date.now();
-      if (now - lastPetTime < 50) return;
-      lastPetTime = now;
-      const cat = document.getElementById('petZone');
-      const status = document.getElementById('purrStatus');
-      cat.style.transform = `rotate(${Math.random() * 20 - 10}deg) scale(1.1)`;
-      setTimeout(() => cat.style.transform = 'rotate(0deg) scale(1)', 100);
-      const purrs = ["Purr...", "Meow!", "Mrrrph~", "❤️"];
-      status.innerText = purrs[Math.floor(Math.random() * purrs.length)];
-      const heart = document.createElement('div');
-      heart.innerText = '❤️';
-      heart.style.position = 'absolute';
-      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-      heart.style.left = (clientX - 10) + 'px'; heart.style.top = (clientY - 20) + 'px'; heart.style.pointerEvents = 'none'; heart.style.fontSize = '1.5rem'; heart.style.transition = 'all 0.8s ease-out';
-      document.body.appendChild(heart);
-      requestAnimationFrame(() => { heart.style.transform = `translateY(-100px) translateX(${Math.random() * 40 - 20}px)`; heart.style.opacity = 0; });
-      setTimeout(() => heart.remove(), 800);
-    }
-
-    /* --- SHREDDER LOGIC --- */
-    function shredWorry(btn) {
-      const input = document.getElementById('worryInput');
-      const container = document.getElementById('shredderContainer');
-      if (!input.value.trim()) { alert("Write something first! 😉"); return; }
-      btn.disabled = true; btn.innerText = "Shredding...";
-      input.classList.add('jammed');
-      setTimeout(() => {
-        input.classList.remove('jammed'); input.classList.add('shredding');
-        for(let i=0; i<30; i++) {
-          const strip = document.createElement('div');
-          strip.className = 'paper-strip';
-          strip.style.left = (i * 3 + Math.random() * 5) + '%';
-          strip.style.setProperty('--rot', (Math.random() * 360) + 'deg');
-          strip.style.animation = `stripFall ${1 + Math.random()}s forwards`;
-          container.appendChild(strip);
-          setTimeout(() => strip.remove(), 2000);
-        }
-      }, 500);
-      setTimeout(() => {
-        input.value = ''; input.classList.remove('shredding'); btn.disabled = false; btn.innerText = "Shred it! 💥";
-      }, 2500);
-    }
-
-    /* =============================================
-       NEW FIDGETS LOGIC
-       ============================================= */
-    
-    /* 1. FOGGY WINDOW */
-    function initFog() {
-        const canvas = document.getElementById('fogCanvas');
-        if(!canvas) return;
-        const ctx = canvas.getContext('2d');
-        const wrapper = canvas.parentElement;
-        canvas.width = wrapper.offsetWidth;
-        canvas.height = wrapper.offsetHeight;
-        
-        // Fill with gray
-        ctx.fillStyle = '#999';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.globalCompositeOperation = 'destination-out';
-
-        function scratch(x, y) {
-            ctx.beginPath();
-            ctx.arc(x, y, 20, 0, Math.PI * 2);
-            ctx.fill();
-        }
-
-        canvas.onmousemove = (e) => {
-            const rect = canvas.getBoundingClientRect();
-            scratch(e.clientX - rect.left, e.clientY - rect.top);
-        };
-        canvas.ontouchmove = (e) => {
-            e.preventDefault();
-            const rect = canvas.getBoundingClientRect();
-            scratch(e.touches[0].clientX - rect.left, e.touches[0].clientY - rect.top);
-        };
-    }
-
-    /* 2. ELASTIC HEART */
-    const heart = document.getElementById('elasticHeart');
-    const box = document.getElementById('elasticBox');
-    if(heart && box) {
-        let isDragging = false;
-        const center = { x: box.offsetWidth/2, y: box.offsetHeight/2 };
-        
-        const startDrag = () => { isDragging = true; heart.style.transition = 'none'; };
-        const endDrag = () => { 
-            isDragging = false; 
-            heart.style.transition = 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-            heart.style.top = '50%'; 
-            heart.style.left = '50%'; 
-        };
-        const moveDrag = (x, y) => {
-            if(!isDragging) return;
-            const rect = box.getBoundingClientRect();
-            let localX = x - rect.left;
-            let localY = y - rect.top;
-            heart.style.left = localX + 'px';
-            heart.style.top = localY + 'px';
-        };
-
-        heart.addEventListener('mousedown', startDrag);
-        heart.addEventListener('touchstart', startDrag);
-        window.addEventListener('mouseup', endDrag);
-        window.addEventListener('touchend', endDrag);
-        box.addEventListener('mousemove', e => moveDrag(e.clientX, e.clientY));
-        box.addEventListener('touchmove', e => moveDrag(e.touches[0].clientX, e.touches[0].clientY));
-    }
-
-    /* 3. NEON SCRIBBLE */
-    function initScribble() {
-        const canvas = document.getElementById('scribbleCanvas');
-        if(!canvas) return;
-        const ctx = canvas.getContext('2d');
-        const rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width;
-        canvas.height = rect.height;
-        ctx.lineJoin = 'round';
-        ctx.lineCap = 'round';
-        ctx.lineWidth = 4;
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = '#ff00de';
-        ctx.strokeStyle = '#ff00de';
-
-        let painting = false;
-        function startPosition() { painting = true; }
-        function finishedPosition() { painting = false; ctx.beginPath(); }
-        function draw(x, y) {
-            if(!painting) return;
-            ctx.lineTo(x, y);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(x, y);
-        }
-
-        canvas.onmousedown = startPosition;
-        canvas.onmouseup = finishedPosition;
-        canvas.onmousemove = e => {
-            const r = canvas.getBoundingClientRect();
-            draw(e.clientX - r.left, e.clientY - r.top);
-        };
-        canvas.ontouchstart = (e) => { e.preventDefault(); startPosition(); };
-        canvas.ontouchend = finishedPosition;
-        canvas.ontouchmove = e => {
-            e.preventDefault();
-            const r = canvas.getBoundingClientRect();
-            draw(e.touches[0].clientX - r.left, e.touches[0].clientY - r.top);
-        };
-
-        // Fade effect loop
-        setInterval(() => {
-            ctx.save();
-            ctx.globalCompositeOperation = 'destination-out';
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.restore();
-        }, 50);
-    }
-
-    /* 4. GRAVITY BOX (Updated Physics) */
-    let gravityInterval;
-    const emojis = ['❤️', '🍎', '🐱', '🌟', '👻', '🍪', '🧸'];
-    const bodies = [];
-    
-    function initGravityBox() {
-        const box = document.getElementById('gravityBox');
-        if(!box) return;
-        
-        // Clear existing if re-initializing
-        box.innerHTML = ''; 
-        bodies.length = 0;
-        if(gravityInterval) clearInterval(gravityInterval);
-        
-        // Create 12 random emojis
-        for(let i=0; i<12; i++) {
-            const el = document.createElement('div');
-            el.className = 'gravity-emoji';
-            el.innerText = emojis[Math.floor(Math.random()*emojis.length)];
-            // Random initial position
-            const startX = Math.random() * (box.offsetWidth - 40);
-            const startY = Math.random() * (box.offsetHeight / 2);
-            
-            box.appendChild(el);
-            bodies.push({
-                el: el,
-                x: startX,
-                y: startY,
-                vx: (Math.random() - 0.5) * 15, // Horizontal velocity
-                vy: (Math.random() - 0.5) * 15  // Vertical velocity
-            });
-        }
-
-        // Physics Loop
-        gravityInterval = setInterval(() => {
-            bodies.forEach(b => {
-                b.vy += 0.8; // Gravity strength
-                b.x += b.vx;
-                b.y += b.vy;
-
-                // Friction (Air resistance)
-                b.vx *= 0.99;
-                b.vy *= 0.99;
-
-                // Floor Collision
-                if(b.y + 40 > box.offsetHeight) { 
-                    b.y = box.offsetHeight - 40; 
-                    b.vy *= -0.6; // Bounce efficiency (loss of energy)
-                    // Randomize horizontal bounce slightly on floor hit
-                    b.vx += (Math.random() - 0.5) * 2;
-                }
-                
-                // Ceiling Collision
-                if(b.y < 0) { 
-                    b.y = 0; 
-                    b.vy *= -0.6; 
-                }
-                
-                // Right Wall Collision
-                if(b.x + 40 > box.offsetWidth) { 
-                    b.x = box.offsetWidth - 40; 
-                    b.vx *= -0.6; 
-                }
-                
-                // Left Wall Collision
-                if(b.x < 0) { 
-                    b.x = 0; 
-                    b.vx *= -0.6; 
-                }
-
-                b.el.style.transform = `translate(${b.x}px, ${b.y}px)`;
-            });
-        }, 20);
-        
-        // Interaction: Tap to "Explode" / Shake
-        const boost = (e) => {
-            e.preventDefault(); // Stop scrolling on touch
-            bodies.forEach(b => {
-                // Give them a massive random kick upwards and sideways
-                b.vy = -15 - (Math.random() * 10);
-                b.vx = (Math.random() - 0.5) * 30;
-            });
-        };
-
-        box.addEventListener('mousedown', boost);
-        box.addEventListener('touchstart', boost);
-    }
-
-    /* 5. CONFETTI CANNON */
-    function fireConfetti() {
-        const colors = ['#ff7da5', '#48bb78', '#ff4757', '#feca57', '#54a0ff'];
-        for(let i=0; i<50; i++) {
-            const c = document.createElement('div');
-            c.style.position = 'fixed';
-            c.style.width = '10px'; c.style.height = '10px';
-            c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-            c.style.left = '50%'; c.style.top = '50%';
-            c.style.zIndex = '9999';
-            document.body.appendChild(c);
-            
-            const angle = Math.random() * Math.PI * 2;
-            const velocity = 10 + Math.random() * 20;
-            const vx = Math.cos(angle) * velocity;
-            const vy = Math.sin(angle) * velocity;
-            
-            let x = window.innerWidth / 2;
-            let y = window.innerHeight / 2;
-            let t = 0;
-            
-            const anim = setInterval(() => {
-                x += vx;
-                y += vy + (0.5 * t); // Gravity
-                c.style.left = x + 'px';
-                c.style.top = y + 'px';
-                c.style.transform = `rotate(${t * 10}deg)`;
-                t++;
-                if(y > window.innerHeight) {
-                    clearInterval(anim);
-                    c.remove();
-                }
-            }, 20);
-        }
-    }
-/* --- NEON LAUNCHPAD LOGIC --- */
-    const launchpad = document.getElementById('launchpad');
-    if(launchpad) {
-        // Create 16 buttons
-        for(let i=0; i<16; i++) {
-            const pad = document.createElement('div');
-            pad.className = 'pad-btn';
-            launchpad.appendChild(pad);
-            
-            // Logic to light up
-            const lightUp = () => {
-                // Random Neon Colors
-                const colors = ['#ff00ff', '#00ffff', '#ffff00', '#ff0000', '#7dff93'];
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                
-                pad.style.background = color;
-                pad.style.boxShadow = `0 0 15px ${color}, 0 0 30px ${color}`;
-                pad.classList.add('lit');
-                
-                // Remove class after small delay to trigger the slow CSS fade out
-                setTimeout(() => {
-                    pad.style.background = '';
-                    pad.style.boxShadow = '';
-                    pad.classList.remove('lit');
-                }, 100);
-            };
-
-            // Mouse over (PC)
-            pad.addEventListener('mouseover', lightUp);
-            pad.addEventListener('mousedown', lightUp);
-            
-            // Touch drag (Mobile)
-            pad.addEventListener('touchstart', (e) => { e.preventDefault(); lightUp(); });
-        }
-        
-        // Enable "swiping" logic for mobile
-        launchpad.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            const touch = e.touches[0];
-            const target = document.elementFromPoint(touch.clientX, touch.clientY);
-            if(target && target.classList.contains('pad-btn') && !target.classList.contains('lit')) {
-                // Manually trigger the event listener logic
-                const colors = ['#ff00ff', '#00ffff', '#ffff00', '#ff0000', '#7dff93'];
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                target.style.background = color;
-                target.style.boxShadow = `0 0 15px ${color}`;
-                target.classList.add('lit');
-                setTimeout(() => {
-                    target.style.background = '';
-                    target.style.boxShadow = '';
-                    target.classList.remove('lit');
-                }, 100);
-            }
-        });
-    }
-
-    /* --- RAINBOW POP-IT LOGIC --- */
     const popContainer = document.getElementById('popItContainer');
-    const popColors = ['#ff7da5', '#ffca85', '#fbfb96', '#baffc9', '#bae1ff']; // Pastel Rainbow
-    
-    if(popContainer) {
-        for(let i=0; i<15; i++) {
-            const btn = document.createElement('button');
-            btn.className = 'pop-bubble';
-            btn.style.backgroundColor = popColors[i % popColors.length];
-            
-            btn.onclick = () => {
-                btn.classList.toggle('popped');
-                // Optional: Add vibration if supported
-                if(navigator.vibrate) navigator.vibrate(5);
-            };
-            popContainer.appendChild(btn);
-        }
+    const popColors = ['#ff7da5', '#ffca85', '#fbfb96', '#baffc9', '#bae1ff'];
+    for(let i=0; i<12; i++) {
+        const b = document.createElement('button');
+        b.className = 'pop-bubble';
+        b.style.background = popColors[i%5];
+        b.onclick = () => { b.classList.toggle('popped'); if(navigator.vibrate) navigator.vibrate(5); };
+        popContainer.appendChild(b);
     }
-/* --- 1. SLIME LOGIC --- */
+    const lp = document.getElementById('launchpad');
+    for(let i=0; i<12; i++) {
+        const d = document.createElement('div');
+        d.className = 'pad-btn';
+        d.onmouseover = d.ontouchstart = () => { d.classList.add('lit'); setTimeout(()=>d.classList.remove('lit'), 200); };
+        lp.appendChild(d);
+    }
     function pokeSlime(el) {
-        el.style.animation = 'none';
-        el.offsetHeight; /* trigger reflow */
-        el.style.animation = 'morph 0.5s ease-in-out infinite'; 
-        // Quick shake
-        el.style.transform = `scale(0.9) rotate(${Math.random() * 20 - 10}deg)`;
-        setTimeout(() => {
-            el.style.transform = 'scale(1) rotate(0deg)';
-            el.style.animation = 'morph 3s ease-in-out infinite';
-        }, 200);
+        el.style.transform = `scale(0.9) rotate(${Math.random()*20-10}deg)`;
+        setTimeout(() => el.style.transform = 'scale(1)', 200);
     }
 
-    /* --- 2. SPINNER LOGIC --- */
-    const spinner = document.getElementById('spinner');
-    let currentRotation = 0;
-    let velocity = 0;
-    let isSpinning = false;
-    let lastY = 0;
-
-    if(spinner) {
-        function spinLoop() {
-            currentRotation += velocity;
-            spinner.style.transform = `rotate(${currentRotation}deg)`;
-            velocity *= 0.98; // Friction
-            if(Math.abs(velocity) > 0.1) requestAnimationFrame(spinLoop);
-        }
-
-        spinner.addEventListener('touchstart', e => { lastY = e.touches[0].clientY; });
-        spinner.addEventListener('touchmove', e => {
-            e.preventDefault();
-            const delta = e.touches[0].clientY - lastY;
-            velocity += delta * 0.5;
-            lastY = e.touches[0].clientY;
-            spinLoop();
-        });
-        // Mouse support
-        spinner.addEventListener('mousedown', e => { lastY = e.clientY; isSpinning=true;});
-        window.addEventListener('mouseup', () => isSpinning=false);
-        window.addEventListener('mousemove', e => {
-            if(!isSpinning) return;
-            const delta = e.clientY - lastY;
-            velocity += delta * 0.5;
-            lastY = e.clientY;
-            spinLoop();
-        });
+    /* =========================================
+       6. FULL SCREEN GAMES (FIXED)
+       ========================================= */
+    let renderLoop;
+    function openGame(id) {
+        document.getElementById('game-'+id).classList.add('active');
+        if(id === 'constellation') initConstellation();
+        if(id === 'bloom') initBloom();
+        if(id === 'rain') initRain();
+    }
+    function closeGame() {
+        document.querySelectorAll('.game-overlay').forEach(el => el.classList.remove('active'));
+        if(renderLoop) cancelAnimationFrame(renderLoop);
     }
 
-    /* --- 3. RIPPLE LOGIC --- */
-    function createRipple(e) {
-        const box = e.currentTarget;
-        const circle = document.createElement('div');
-        const rect = box.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        
-        circle.style.width = circle.style.height = '20px';
-        circle.style.left = (x - 10) + 'px';
-        circle.style.top = (y - 10) + 'px';
-        circle.classList.add('ripple');
-        
-        box.appendChild(circle);
-        setTimeout(() => circle.remove(), 1000);
-    }
-
-    /* --- 4. RAGE BUTTON LOGIC --- */
-    const rageBtn = document.getElementById('rageBtn');
-    const rageFill = document.getElementById('rageFill');
-    let rageLevel = 0;
-
-    if(rageBtn) {
-        rageBtn.addEventListener('click', () => {
-            rageLevel = Math.min(100, rageLevel + 15);
-            updateRage();
-            
-            // Shake button
-            rageBtn.style.transform = `translate(${Math.random()*10-5}px, ${Math.random()*10-5}px)`;
-            setTimeout(() => rageBtn.style.transform = 'translate(0,0)', 50);
-        });
-
-        // Cool down loop
-        setInterval(() => {
-            if(rageLevel > 0) {
-                rageLevel -= 2;
-                updateRage();
+    /* 1. Constellation */
+    function initConstellation() {
+        const c = document.getElementById('constellationCanvas');
+        c.width = window.innerWidth; c.height = window.innerHeight;
+        const ctx = c.getContext('2d');
+        let stars = [];
+        c.onclick = (e) => {
+            const rect = c.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            ctx.fillStyle = "white"; ctx.shadowBlur = 10; ctx.shadowColor = "white";
+            ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI*2); ctx.fill();
+            if(stars.length > 0) {
+                const prev = stars[stars.length-1];
+                ctx.strokeStyle = "rgba(255,255,255,0.4)"; ctx.lineWidth = 1;
+                ctx.beginPath(); ctx.moveTo(prev.x, prev.y); ctx.lineTo(x, y); ctx.stroke();
             }
-        }, 100);
-
-        function updateRage() {
-            rageFill.style.width = rageLevel + '%';
-            // Change color based on rage
-            if(rageLevel > 80) rageFill.style.backgroundColor = '#ff0000'; // Pure red
-            else rageFill.style.backgroundColor = '#ff4757'; 
+            stars.push({x, y});
         }
     }
 
-    /* --- 5. MAGNETIC DUST LOGIC (FIXED) --- */
-    let dustAnim; // Variable to stop duplicate animations
-    
-    function initDust() {
-        const canvas = document.getElementById('dustCanvas');
-        if(!canvas) return;
-        
-        // Stop any previous animation to prevent crashing
-        if (dustAnim) cancelAnimationFrame(dustAnim);
+    /* 2. Bloom (FIXED: Watercolor Animation) */
+    function initBloom() {
+        const c = document.getElementById('bloomCanvas');
+        c.width = window.innerWidth; c.height = window.innerHeight;
+        const ctx = c.getContext('2d');
+        const flowers = [];
 
-        const ctx = canvas.getContext('2d');
-        
-        // Ensure canvas size matches visual size
-        const rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width || 300; 
-        canvas.height = 200;
-
-        let particles = [];
-        // Set mouse to undefined so particles don't rush to corner
-        const mouse = { x: undefined, y: undefined };
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 1;
-                this.baseX = this.x;
-                this.baseY = this.y;
-                this.density = (Math.random() * 30) + 1;
-                // Bright colors for visibility on black background
-                this.color = `hsl(${Math.random()*60 + 250}, 100%, 70%)`; 
-            }
-            draw() {
-                ctx.fillStyle = this.color;
+        function drawFlower(x, y, size, hue, alpha) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.fillStyle = `hsla(${hue}, 70%, 70%, ${alpha})`;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = `hsla(${hue}, 70%, 50%, 0.5)`;
+            for(let i=0; i<6; i++) {
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.closePath();
+                ctx.rotate(Math.PI / 3);
+                ctx.ellipse(0, -size/2, size/4, size/2, 0, 0, Math.PI*2);
                 ctx.fill();
             }
-            update() {
-                // Only react if mouse is actually active (not undefined)
-                if (mouse.x !== undefined && mouse.y !== undefined) {
-                    let dx = mouse.x - this.x;
-                    let dy = mouse.y - this.y;
-                    let distance = Math.sqrt(dx*dx + dy*dy);
-                    
-                    // Magnet interaction radius
-                    if (distance < 100) {
-                        const forceDirectionX = dx / distance;
-                        const forceDirectionY = dy / distance;
-                        const force = (100 - distance) / 100;
-                        const directionX = forceDirectionX * force * this.density;
-                        const directionY = forceDirectionY * force * this.density;
-                        
-                        // Move AWAY from finger (creates a trail effect)
-                        this.x -= directionX; 
-                        this.y -= directionY;
-                    } else {
-                        // Return to original spot slowly
-                        if (this.x !== this.baseX) { let dx = this.x - this.baseX; this.x -= dx/10; }
-                        if (this.y !== this.baseY) { let dy = this.y - this.baseY; this.y -= dy/10; }
-                    }
-                } else {
-                    // If no mouse, just return home
-                    if (this.x !== this.baseX) { let dx = this.x - this.baseX; this.x -= dx/10; }
-                    if (this.y !== this.baseY) { let dy = this.y - this.baseY; this.y -= dy/10; }
+            ctx.beginPath();
+            ctx.arc(0, 0, size/4, 0, Math.PI*2);
+            ctx.fillStyle = "#fff";
+            ctx.fill();
+            ctx.restore();
+        }
+
+        c.onclick = (e) => {
+            const rect = c.getBoundingClientRect();
+            const f = {
+                x: e.clientX - rect.left,
+                y: e.clientY - rect.top,
+                size: 0,
+                targetSize: 30 + Math.random() * 40,
+                hue: Math.random() * 360,
+                growing: true
+            };
+            flowers.push(f);
+        };
+
+        function loop() {
+            ctx.clearRect(0,0,c.width,c.height);
+            flowers.forEach(f => {
+                if(f.growing) {
+                    f.size += 2;
+                    if(f.size >= f.targetSize) f.growing = false;
                 }
-            }
+                drawFlower(f.x, f.y, f.size, f.hue, 0.8);
+            });
+            renderLoop = requestAnimationFrame(loop);
         }
-
-        // Create 300 particles
-        particles = [];
-        for(let i=0; i<300; i++) particles.push(new Particle());
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for(let i=0; i<particles.length; i++) {
-                particles[i].draw();
-                particles[i].update();
-            }
-            dustAnim = requestAnimationFrame(animate);
-        }
-        
-        // Track Mouse/Touch
-        const setMouse = (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            mouse.x = clientX - rect.left;
-            mouse.y = clientY - rect.top;
-        }
-
-        canvas.onmousemove = setMouse;
-        canvas.ontouchmove = (e) => { e.preventDefault(); setMouse(e); };
-        
-        // Reset when letting go
-        canvas.onmouseleave = () => { mouse.x = undefined; mouse.y = undefined; };
-        canvas.ontouchend = () => { mouse.x = undefined; mouse.y = undefined; };
-
-        animate();
+        loop();
     }
-    // Call this inside showPage if pageId === 'page-fidgets'
-    // Add initDust() to the existing showPage logic!
+
+    /* 3. Lanterns */
+    function spawnLantern(e) {
+        const cont = document.getElementById('lanternContainer');
+        const l = document.createElement('div');
+        l.className = 'lantern';
+        l.style.left = e.clientX + 'px';
+        l.style.bottom = '0px';
+        l.style.animationDuration = (4 + Math.random()*3) + 's';
+        cont.appendChild(l);
+        setTimeout(() => l.remove(), 7000);
+    }
+
+    /* 4. Neon Rain Window (FIXED: Fog Wipe) */
+    function initRain() {
+        const c = document.getElementById('rainCanvas');
+        c.width = window.innerWidth; c.height = window.innerHeight;
+        const ctx = c.getContext('2d');
+        
+        const drops = [];
+        for(let i=0; i<50; i++) drops.push({x:Math.random()*c.width, y:Math.random()*c.height, s:2+Math.random()*5, c:`hsl(${Math.random()*60+180},100%,70%)`});
+
+        // Initial Fog Fill
+        ctx.fillStyle = "rgba(0,0,0,0.85)";
+        ctx.fillRect(0,0,c.width,c.height);
+
+        function wipe(x, y) {
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.beginPath(); ctx.arc(x, y, 40, 0, Math.PI*2); ctx.fill();
+            ctx.globalCompositeOperation = 'source-over';
+        }
+
+        c.onmousemove = (e) => { const r = c.getBoundingClientRect(); wipe(e.clientX-r.left, e.clientY-r.top); }
+        c.ontouchmove = (e) => { e.preventDefault(); const r = c.getBoundingClientRect(); wipe(e.touches[0].clientX-r.left, e.touches[0].clientY-r.top); }
+
+        function loop() {
+            // Re-fog slowly
+            ctx.fillStyle = "rgba(0,0,0,0.02)";
+            ctx.fillRect(0,0,c.width,c.height);
+            
+            // Draw drops
+            drops.forEach(d => {
+                d.y += d.s;
+                if(d.y > c.height) { d.y = -10; d.x = Math.random()*c.width; }
+                ctx.fillStyle = d.c;
+                ctx.shadowBlur = 5; ctx.shadowColor = d.c;
+                ctx.fillRect(d.x, d.y, 2, 10);
+                ctx.shadowBlur = 0;
+            });
+            renderLoop = requestAnimationFrame(loop);
+        }
+        loop();
+    }
+
+    /* =========================================
+       7. GALLERY
+       ========================================= */
+    const imageFiles = ['your-anniversary-image.jpg', 'meeting.jpg', 'kitten-birthday.jpg', 'daddy-birthday.jpg', 'exam-end.jpg', 'images/image.jpg'];
+    for(let i=1; i<=10; i++) imageFiles.push(`images/image${i}.jpg`);
+    let galleryInit = false;
+    function initGallery() {
+        if(galleryInit) return;
+        galleryInit = true;
+        const container = document.getElementById('gallery-container');
+        imageFiles.forEach((src) => {
+            const imgCheck = new Image();
+            imgCheck.src = src;
+            imgCheck.onload = () => {
+                const pol = document.createElement('div');
+                pol.className = 'polaroid';
+                pol.style.transform = `rotate(${Math.random()*30-15}deg)`;
+                pol.style.top = Math.random()*(container.offsetHeight-200)+'px';
+                pol.style.left = Math.random()*(container.offsetWidth-150)+'px';
+                const img = document.createElement('img');
+                img.src = src; img.draggable = false;
+                pol.appendChild(img);
+                
+                let isDragging = false, startX, startY, initLeft, initTop;
+                const startDrag = (e) => {
+                    isDragging = true; pol.classList.add('dragging');
+                    startX = e.touches?e.touches[0].clientX:e.clientX;
+                    startY = e.touches?e.touches[0].clientY:e.clientY;
+                    initLeft = parseInt(pol.style.left||0); initTop = parseInt(pol.style.top||0);
+                };
+                const onDrag = (e) => {
+                    if(!isDragging) return; e.preventDefault();
+                    const cx = e.touches?e.touches[0].clientX:e.clientX;
+                    const cy = e.touches?e.touches[0].clientY:e.clientY;
+                    pol.style.left = (initLeft + cx - startX) + 'px';
+                    pol.style.top = (initTop + cy - startY) + 'px';
+                };
+                pol.addEventListener('mousedown', startDrag); pol.addEventListener('touchstart', startDrag);
+                window.addEventListener('mousemove', onDrag); window.addEventListener('touchmove', onDrag, {passive:false});
+                window.addEventListener('mouseup', ()=>{isDragging=false; pol.classList.remove('dragging');});
+                window.addEventListener('touchend', ()=>{isDragging=false; pol.classList.remove('dragging');});
+                container.appendChild(pol);
+            };
+        });
+    }
   </script>
 </body>
 </html>
