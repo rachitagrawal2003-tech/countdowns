@@ -5,73 +5,153 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>Kitten & Daddy 💖</title>
   <style>
+/* Bokeh Background Lights */
+    #bokeh-container {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        z-index: -1; pointer-events: none; overflow: hidden;
+    }
+    .bokeh-orb {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        bottom: -100px;
+        animation: floatUpBokeh linear infinite;
+    }
+    @keyframes floatUpBokeh {
+        to { transform: translateY(-120vh) rotate(360deg); }
+    }
+/* Diamond Shimmer Effect */
+    .card, .fun-card, .nav-bar {
+        position: relative;
+        overflow: hidden; /* Keeps the shine inside the card */
+    }
+    
+    .card::after, .fun-card::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 50%;
+        height: 100%;
+        /* The Shine Beam */
+        background: linear-gradient(
+            to right, 
+            rgba(255,255,255,0) 0%, 
+            rgba(255,255,255,0.4) 50%, 
+            rgba(255,255,255,0) 100%
+        );
+        transform: skewX(-25deg);
+        pointer-events: none;
+        /* Run every 6 seconds */
+        animation: glassShine 6s infinite;
+    }
+
+    @keyframes glassShine {
+        0% { left: -100%; }
+        20% { left: 200%; } /* Fast swipe */
+        100% { left: 200%; } /* Wait */
+    }
     /* =========================================
-       1. CSS VARIABLES & THEMES
+       1. THEME SYSTEM (UPDATED FOR VISIBILITY)
        ========================================= */
     :root {
-      /* --- Default Pink Theme (Day) --- */
-      --bg-color: #fffafc;
-      --text-main: #3b3b3b;
-      --text-sub: #6d6262;
-      --heading-color: #e08eb4;
-      --card-bg: #ffeef4;
-      --card-border: #ffe0eb;
-      --card-shadow: rgba(0, 0, 0, 0.1);
-      --nav-bg: rgba(255, 255, 255, 0.95);
-      --nav-border: #ffe0eb;
-      --nav-active: #ff7da5;
-      --nav-inactive: #ccc;
-      --btn-bg: #ff7da5;
-      --btn-text: #ffffff;
-      --accent-green: #48bb78;
-      --accent-red: #ff4757;
-      --modal-bg: #ffffff;
+      /* --- DEFAULT: Romantic Glow (Day) --- */
+      --bg-gradient: linear-gradient(135deg, #ee9ca7 0%, #ffdde1 100%);
+      --text-main: #864e66;
+      --text-sub: #b58399;
+      --heading-color: #ff5e89;
+      
+      /* Glassy Cards */
+      --card-bg: rgba(255, 255, 255, 0.65);
+      --card-border: rgba(255, 255, 255, 0.8);
+      --card-shadow: 0 8px 32px 0 rgba(255, 94, 137, 0.35);
+      
+      /* NEW: High Contrast Shimmer for Light Mode (Rose Gold) */
+      --shimmer-color: rgba(255, 255, 255, 0.95); 
+      
+      --nav-bg: rgba(255, 255, 255, 0.8);
+      --nav-border: rgba(255, 255, 255, 0.5);
+      --nav-active: #ff5e89;
+      --nav-inactive: #b58399;
+      
+      --btn-bg: linear-gradient(45deg, #ff9a9e, #fad0c4);
+      --btn-text: #fff;
+      
+      --accent-green: #88d8b0;
+      --accent-red: #ff6b6b;
+      --modal-bg: rgba(255, 255, 255, 0.9);
       --envelope-front: #ff7da5;
       --envelope-back: #ffffff;
     }
 
     [data-theme="dark"] {
-      /* --- Deep Space Purple (Night) --- */
-      --bg-color: #130e24;
-      --text-main: #e2d9f3;
+      /* --- DARK ROMANTIC: Midnight Dream --- */
+      --bg-gradient: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+      --text-main: #e0c3fc;
       --text-sub: #a79db8;
       --heading-color: #d8b4fe;
-      --card-bg: #231942;
-      --card-border: #4c3b7a;
-      --card-shadow: rgba(139, 92, 246, 0.25);
-      --nav-bg: rgba(35, 25, 66, 0.95);
-      --nav-border: #4c3b7a;
+      
+      /* Dark Glass */
+      --card-bg: rgba(20, 20, 40, 0.6); 
+      --card-border: rgba(255, 255, 255, 0.1);
+      --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+      
+      /* NEW: Subtle Shimmer for Dark Mode */
+      --shimmer-color: rgba(255, 255, 255, 0.15);
+      
+      --nav-bg: rgba(20, 20, 40, 0.8);
+      --nav-border: rgba(255, 255, 255, 0.1);
       --nav-active: #c084fc;
-      --nav-inactive: #5c5470;
-      --btn-bg: #7c3aed;
+      
+      --btn-bg: linear-gradient(45deg, #7c3aed, #a78bfa);
       --btn-text: #ffffff;
-      --accent-green: #34d399;
-      --accent-red: #fb7185;
-      --modal-bg: #2d2455;
-      --envelope-front: #7c3aed;
-      --envelope-back: #1a1625;
+      --modal-bg: rgba(30, 30, 50, 0.95);
     }
 
-    [data-theme="comfort"] {
-      /* --- Comfort Mode (Warm Peach/Cozy) --- */
-      --bg-color: #fff5ee;
-      --text-main: #5d4037;
-      --text-sub: #8d6e63;
-      --heading-color: #ff8a65;
-      --card-bg: #fffbf7;
-      --card-border: #ffccbc;
-      --card-shadow: rgba(255, 138, 101, 0.2);
-      --nav-bg: rgba(255, 245, 238, 0.95);
-      --nav-border: #ffccbc;
-      --nav-active: #ff7043;
-      --nav-inactive: #d7ccc8;
-      --btn-bg: #ff7043;
-      --btn-text: #ffffff;
-      --accent-green: #81c784;
-      --accent-red: #e57373;
-      --modal-bg: #fffbf7;
-      --envelope-front: #ff8a65;
-      --envelope-back: #ffffff;
+    /* UPDATED ANIMATIONS (The "Lively" Effect) */
+    @keyframes floatCard {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); } /* Gentle float up */
+      100% { transform: translateY(0px); }
+    }
+
+    /* Apply Float to Cards */
+    .card, .fun-card {
+      /* Existing styles... */
+      animation: floatCard 6s ease-in-out infinite; /* Everything breathes */
+    }
+    
+    /* Offset animations so they don't all move at once */
+    .card:nth-child(odd) { animation-delay: 1s; }
+    .fun-card:nth-child(even) { animation-delay: 2s; }
+
+    /* UPDATED SHIMMER (Uses the new variable) */
+    .card::after, .fun-card::after {
+        content: ''; position: absolute; top: 0; left: -150%; width: 100%; height: 100%;
+        background: linear-gradient(
+            to right, 
+            transparent 0%, 
+            var(--shimmer-color) 50%, 
+            transparent 100%
+        );
+        transform: skewX(-25deg); pointer-events: none;
+        animation: glassShine 5s infinite; /* Faster shine */
+    }
+
+    body[data-mode="period"] {
+      /* --- COMFORT: Warm Embrace --- */
+      --bg-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+      --text-main: #5c3a3a;
+      --heading-color: #ff6b6b;
+      
+      /* Warm Glass */
+      --card-bg: rgba(255, 245, 245, 0.7);
+      --card-border: rgba(255, 200, 200, 0.6);
+      --card-shadow: 0 8px 32px 0 rgba(255, 100, 100, 0.2);
+      
+      --btn-bg: linear-gradient(45deg, #ff758c, #ff7eb3);
+      --nav-bg: rgba(255, 245, 245, 0.9);
     }
 
     /* =========================================
@@ -79,21 +159,31 @@
        ========================================= */
     body {
       font-family: "Poppins", system-ui, -apple-system, sans-serif;
-      background-color: var(--bg-color);
+      background: var(--bg-gradient);
+      background-attachment: fixed;
+      /* key change: Zoom in so we can pan around */
+      background-size: 400% 400%; 
       color: var(--text-main);
       margin: 0;
-      padding-bottom: 90px;
+      padding-bottom: 110px;
       text-align: center;
       overflow-x: hidden;
-      transition: background-color 0.5s ease, color 0.5s ease;
       touch-action: manipulation;
-      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      /* The Magic Animation */
+      animation: auroraGradient 15s ease infinite;
     }
-    h1 { font-size: 1.8rem; color: var(--heading-color); margin: 20px 0 10px; transition: color 0.5s; }
-    h2, h3 { color: var(--heading-color); transition: color 0.5s; }
-    p { color: var(--text-sub); transition: color 0.5s; }
-    button { -webkit-tap-highlight-color: transparent; }
 
+    @keyframes auroraGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    /* Add Text Glow */
+    h1, h2, h3, .emoji {
+        text-shadow: 0 0 20px rgba(255,255,255,0.5);
+    }
     /* =========================================
        3. NAVIGATION BAR (TAB SYSTEM)
        ========================================= */
@@ -278,17 +368,104 @@
     .pop-bubble:active, .pop-bubble.popped { transform: translateY(4px); box-shadow: inset 0 3px 5px rgba(0,0,0,0.3); }
     .battery-container { width: 100%; height: 40px; border: 3px solid var(--text-main); border-radius: 10px; padding: 3px; position: relative; box-sizing: border-box; }
     .battery-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #ff9a9e 0%, #fecfef 99%); border-radius: 5px; }
+/* =========================================
+   NEW AESTHETIC UPGRADES (Bubbles, Fog, Stars)
+   ========================================= */
+
+/* 1. Iridescent Soap Bubbles */
+.bubble-container {
+  position: relative; width: 100%; height: 300px;
+  overflow: hidden; border-radius: 15px; background: transparent;
+}
+/* UPDATED: VISIBLE SOAP BUBBLES */
+    .soap-bubble {
+      position: absolute; 
+      border-radius: 50%;
+      
+      /* 1. Multi-color gradient so it's visible on white AND dark */
+      background: radial-gradient(
+        circle at 30% 30%, 
+        rgba(255, 255, 255, 0.95) 5%,  /* Bright Highlight */
+        rgba(255, 255, 255, 0.1) 20%, 
+        rgba(255, 182, 193, 0.2) 50%,  /* Pink Tint */
+        rgba(135, 206, 235, 0.2) 85%,  /* Blue Tint */
+        rgba(255, 105, 180, 0.1) 100%
+      );
+      
+      /* 2. Darker Pink Border for definition */
+      border: 1px solid rgba(255, 105, 180, 0.4);
+      
+      /* 3. Inner Shadow for depth */
+      box-shadow: inset 0 0 10px rgba(255, 105, 180, 0.3), 0 5px 15px rgba(0,0,0,0.05);
+      
+      cursor: pointer; 
+      opacity: 0; 
+      animation: floatBubble linear forwards;
+      z-index: 10;
+    }
+.soap-bubble::after { /* Reflection */
+  content: ''; position: absolute; top: 15%; left: 15%;
+  width: 20%; height: 10%; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.8); transform: rotate(45deg);
+}
+@keyframes floatBubble {
+  0% { bottom: -50px; opacity: 0; transform: translateX(0) scale(0.8); }
+  10% { opacity: 1; }
+  100% { bottom: 120%; opacity: 0; transform: translateX(var(--drift)) scale(1); }
+}
+.bubble-pop {
+  position: absolute; width: 100%; height: 100%;
+  background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, transparent 60%);
+  opacity: 0; animation: popAnim 0.3s ease-out;
+}
+@keyframes popAnim { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(2); opacity: 0; } }
+
+/* 2. Shooting Stars */
+.shooting-star {
+  position: fixed; top: 0; left: 0; width: 100px; height: 2px;
+  background: linear-gradient(90deg, rgba(255,255,255,1), transparent);
+  transform: rotate(-45deg); pointer-events: auto; cursor: pointer; z-index: -1;
+  animation: shoot 2s linear forwards; opacity: 0;
+}
+.shooting-star::before {
+  content: ''; position: absolute; top: 50%; left: 0; transform: translateY(-50%);
+  width: 4px; height: 4px; background: #fff; border-radius: 50%; box-shadow: 0 0 10px #fff, 0 0 20px #ff00de;
+}
+@keyframes shoot {
+  0% { transform: translate(var(--sx), var(--sy)) rotate(-45deg); opacity: 1; width: 0; }
+  10% { width: 100px; }
+  100% { transform: translate(var(--ex), var(--ey)) rotate(-45deg); opacity: 0; width: 0; }
+}
+
+/* 3. Ambient Fog */
+.fog-layer {
+  position: fixed; bottom: 0; left: 0; width: 200%; height: 30vh;
+  background: linear-gradient(to top, rgba(255,255,255,0.2) 0%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+  animation: fogMove 60s linear infinite alternate; z-index: -2; pointer-events: none;
+}
+@keyframes fogMove { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* 4. Silk Ribbon Cursor */
+#ribbon-canvas {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999;
+}
   </style>
 </head>
 <body>
-
+<div id="bokeh-container"></div>
+<canvas id="ribbon-canvas"></canvas>
+  <div id="star-container" style="position:fixed; inset:0; pointer-events:none; z-index:0;"></div>
+  <div class="fog-layer" style="animation-duration: 40s;"></div>
+  <div class="fog-layer" style="animation-duration: 30s; bottom: -50px; opacity: 0.7;"></div>
   <div id="rainContainer" class="rain-container"></div>
 
   <div id="tab-home" class="tab-section active">
     <div class="header-image">
       <img src="i-love-you.jpg" alt="I Love You" />
     </div>
-    <h1>Our Countdowns ⏳</h1>
+    <h1 id="typingTitle">Our Countdowns ⏳</h1>
 
     <div class="countdowns">
       <div class="card" data-title="Our Anniversary 💞" data-date="09-06" data-note="Celebrating us 💌" data-img="your-anniversary-image.jpg">
@@ -393,6 +570,12 @@
     </div>
 
     <h3 style="margin-top: 30px;">Mini Games 🎮</h3>
+<div class="fun-card">
+        <h3 style="color: var(--heading-color); margin-top:0;">Stress Bubbles 🫧</h3>
+        <p style="font-size:0.8rem;">Pop them before they float away!</p>
+        <div class="bubble-container" id="soapBubbleContainer">
+            </div>
+    </div>
     <div class="fun-card">
       <h3>Jiggly Slime 🦠</h3>
       <div class="slime-blob" onclick="pokeSlime(this)"></div>
@@ -926,6 +1109,285 @@
             };
         });
     }
+/* --- THEME LOGIC --- */
+const themeBtn = document.getElementById('themeToggle');
+
+// Check local storage in case she refreshed (optional, keeps preference)
+if(localStorage.getItem('theme') === 'dark') {
+    themeBtn.checked = true;
+    document.body.setAttribute('data-theme', 'dark');
+}
+
+themeBtn.onclick = () => {
+    if(themeBtn.checked) {
+        document.body.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+    } else {
+        document.body.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'light');
+    }
+};
+/* =========================================
+       MAGIC FAIRY DUST LOGIC
+       ========================================= */
+    const colors = ["#ffafcc", "#a2d2ff", "#ffc8dd", "#cdb4db"];
+    
+    function createSparkle(x, y) {
+        const sparkle = document.createElement('div');
+        sparkle.style.position = 'fixed';
+        sparkle.style.left = x + 'px';
+        sparkle.style.top = y + 'px';
+        sparkle.style.width = (Math.random() * 4 + 2) + 'px';
+        sparkle.style.height = sparkle.style.width;
+        sparkle.style.background = colors[Math.floor(Math.random() * colors.length)];
+        sparkle.style.borderRadius = '50%';
+        sparkle.style.pointerEvents = 'none';
+        sparkle.style.boxShadow = `0 0 10px ${sparkle.style.background}`;
+        sparkle.style.zIndex = '9999';
+        sparkle.style.opacity = '1';
+        sparkle.style.transform = 'translate(-50%, -50%) scale(1)';
+        sparkle.style.transition = 'transform 0.8s ease-out, opacity 0.8s ease-out';
+        
+        document.body.appendChild(sparkle);
+        
+        // Animate away
+        requestAnimationFrame(() => {
+            const destX = (Math.random() - 0.5) * 60;
+            const destY = (Math.random() - 0.5) * 60;
+            sparkle.style.transform = `translate(${destX}px, ${destY}px) scale(0)`;
+            sparkle.style.opacity = '0';
+        });
+        
+        setTimeout(() => sparkle.remove(), 800);
+    }
+
+    // Add Listeners for Mouse and Touch
+    document.addEventListener('mousemove', (e) => {
+        if(Math.random() < 0.3) createSparkle(e.clientX, e.clientY); // 30% chance to prevent lag
+    });
+    
+    document.addEventListener('touchmove', (e) => {
+        const touch = e.touches[0];
+        if(Math.random() < 0.3) createSparkle(touch.clientX, touch.clientY);
+    }, {passive: true});
+/* BOKEH LIGHTS GENERATOR */
+    const bokehCont = document.getElementById('bokeh-container');
+    function createBokeh() {
+        const orb = document.createElement('div');
+        orb.className = 'bokeh-orb';
+        const size = Math.random() * 80 + 20;
+        orb.style.width = size + 'px';
+        orb.style.height = size + 'px';
+        orb.style.left = Math.random() * 100 + '%';
+        orb.style.animationDuration = (Math.random() * 10 + 15) + 's';
+        orb.style.opacity = Math.random() * 0.3 + 0.1;
+        bokehCont.appendChild(orb);
+        setTimeout(() => orb.remove(), 25000);
+    }
+    setInterval(createBokeh, 800); // Add a new light every 0.8 seconds
+/* =========================================
+       PASSIVE "LIVELY" ANIMATIONS
+       ========================================= */
+    
+    // 1. The Heart Stream (Bubbles up from bottom)
+    function spawnPassiveHeart() {
+        const heart = document.createElement('div');
+        heart.innerText = ['❤️', '💖', '✨', '🌸', '🦋'][Math.floor(Math.random() * 5)];
+        heart.style.position = 'fixed';
+        // Random horizontal position
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.bottom = '-50px';
+        // Random size
+        const size = Math.random() * 15 + 10; 
+        heart.style.fontSize = size + 'px';
+        // Random opacity
+        heart.style.opacity = Math.random() * 0.5 + 0.3; 
+        heart.style.zIndex = '-1'; // Behind everything
+        heart.style.pointerEvents = 'none';
+        // Animation
+        heart.style.transition = `transform ${Math.random() * 5 + 5}s linear, opacity 5s ease`;
+        
+        document.body.appendChild(heart);
+        
+        // Trigger animation frame
+        requestAnimationFrame(() => {
+            heart.style.transform = `translateY(-110vh) rotate(${Math.random() * 360}deg)`;
+            heart.style.opacity = '0';
+        });
+
+        // Cleanup
+        setTimeout(() => heart.remove(), 10000);
+    }
+
+    // Start the stream (1 heart every 800ms)
+    setInterval(spawnPassiveHeart, 800);
+/* =========================================
+       TYPING TITLE LOGIC
+       ========================================= */
+    const titles = ["Our Countdowns ⏳", "I Miss You 🥺", "You + Me = ❤️", "See You Soon ✈️"];
+    let titleIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    const titleElement = document.getElementById('typingTitle');
+
+    function typeEffect() {
+        if(!titleElement) return; // Safety check
+        
+        const currentText = titles[titleIndex];
+        
+        if (isDeleting) {
+            titleElement.innerText = currentText.substring(0, charIndex - 1);
+            charIndex--;
+        } else {
+            titleElement.innerText = currentText.substring(0, charIndex + 1);
+            charIndex++;
+        }
+
+        let typeSpeed = 100;
+
+        if (!isDeleting && charIndex === currentText.length) {
+            // Finished typing word, pause before deleting
+            typeSpeed = 2000; 
+            isDeleting = true;
+        } else if (isDeleting && charIndex === 0) {
+            // Finished deleting, move to next word
+            isDeleting = false;
+            titleIndex = (titleIndex + 1) % titles.length;
+            typeSpeed = 500;
+        }
+
+        setTimeout(typeEffect, typeSpeed);
+    }
+
+    // Start typing
+    typeEffect();
+/* =========================================
+       NEW AESTHETIC LOGIC
+       ========================================= */
+
+    /* 1. SILK RIBBON CURSOR */
+    const rCanvas = document.getElementById('ribbon-canvas');
+    const rCtx = rCanvas.getContext('2d');
+    let rPoints = [];
+    
+    function resizeRibbon() {
+        rCanvas.width = window.innerWidth; rCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeRibbon);
+    resizeRibbon();
+
+    function drawRibbon() {
+        rCtx.clearRect(0, 0, rCanvas.width, rCanvas.height);
+        if(rPoints.length < 2) return;
+        
+        rCtx.beginPath();
+        rCtx.moveTo(rPoints[0].x, rPoints[0].y);
+        
+        // Create smooth curve through points
+        for (let i = 1; i < rPoints.length - 1; i++) {
+            const xc = (rPoints[i].x + rPoints[i + 1].x) / 2;
+            const yc = (rPoints[i].y + rPoints[i + 1].y) / 2;
+            rCtx.quadraticCurveTo(rPoints[i].x, rPoints[i].y, xc, yc);
+        }
+        
+        // Glowing style
+        rCtx.shadowBlur = 10; rCtx.shadowColor = "#ff7da5";
+        rCtx.strokeStyle = "rgba(255, 182, 193, 0.6)";
+        rCtx.lineWidth = 3;
+        rCtx.lineCap = 'round';
+        rCtx.stroke();
+        
+        // Update points (fade trail)
+        rPoints.shift();
+        if(rPoints.length > 0) requestAnimationFrame(drawRibbon);
+    }
+
+    const addRibbonPoint = (e) => {
+        const x = e.touches ? e.touches[0].clientX : e.clientX;
+        const y = e.touches ? e.touches[0].clientY : e.clientY;
+        rPoints.push({x, y});
+        if(rPoints.length > 20) rPoints.shift(); // Limit trail length
+        if(rPoints.length > 1) requestAnimationFrame(drawRibbon);
+    };
+    
+    window.addEventListener('mousemove', addRibbonPoint);
+    window.addEventListener('touchmove', addRibbonPoint);
+
+
+    /* 2. SHOOTING STARS */
+    function spawnShootingStar() {
+        const container = document.getElementById('star-container');
+        const star = document.createElement('div');
+        star.className = 'shooting-star';
+        
+        // Random start positions (mostly top right or top left)
+        const startX = Math.random() * window.innerWidth;
+        const startY = Math.random() * (window.innerHeight / 3); // Top third
+        const endX = startX - 300; // Shoot left
+        const endY = startY + 300; // Shoot down
+        
+        star.style.setProperty('--sx', startX + 'px');
+        star.style.setProperty('--sy', startY + 'px');
+        star.style.setProperty('--ex', endX + 'px');
+        star.style.setProperty('--ey', endY + 'px');
+        
+        // Interaction
+        star.onclick = () => alert("You caught a star! Make a wish! 🌠");
+        
+        container.appendChild(star);
+        setTimeout(() => star.remove(), 2000);
+    }
+    // Spawn one every 10-20 seconds randomly
+    setInterval(() => {
+        if(Math.random() > 0.7) spawnShootingStar();
+    }, 3000);
+
+
+    /* 3. IRIDESCENT SOAP BUBBLES */
+    function initSoapBubbles() {
+        const container = document.getElementById('soapBubbleContainer');
+        if(!container) return;
+        
+        function createBubble() {
+            if(container.children.length > 8) return; // Limit max bubbles
+            
+            const b = document.createElement('div');
+            b.className = 'soap-bubble';
+            const size = Math.random() * 40 + 40; // 40px to 80px
+            b.style.width = size + 'px';
+            b.style.height = size + 'px';
+            b.style.left = Math.random() * 80 + '%';
+            b.style.setProperty('--drift', (Math.random() * 100 - 50) + 'px');
+            b.style.animationDuration = (Math.random() * 4 + 4) + 's';
+            
+            b.onclick = (e) => {
+                e.stopPropagation();
+                // Pop animation
+                const pop = document.createElement('div');
+                pop.className = 'bubble-pop';
+                b.appendChild(pop);
+                b.style.border = 'none';
+                b.style.background = 'transparent';
+                b.style.boxShadow = 'none';
+                
+                // Sound effect (optional/simulated)
+                if(navigator.vibrate) navigator.vibrate(5);
+                
+                setTimeout(() => b.remove(), 250);
+            };
+            
+            container.appendChild(b);
+            
+            // Remove if it floats to top
+            setTimeout(() => { if(b.parentNode) b.remove(); }, 8000);
+        }
+        
+        // Spawn frequently
+        setInterval(createBubble, 800);
+    }
+    
+    // Start Bubbles logic immediately
+    initSoapBubbles();
   </script>
 </body>
 </html>
