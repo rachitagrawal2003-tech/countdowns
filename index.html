@@ -325,20 +325,84 @@
     .choco-piece { background: #795548; border-radius: 2px; border-top: 2px solid #8d6e63; border-left: 2px solid #8d6e63; }
     
     /* =========================================
-       6. GALLERY (POLAROID SCATTER)
+       6. GALLERY (NOTEBOOK STYLE)
        ========================================= */
     #gallery-container {
-      position: relative; width: 100%; height: 75vh; overflow: hidden;
-      background-image: radial-gradient(var(--card-border) 1px, transparent 1px);
-      background-size: 20px 20px;
+      position: relative; 
+      width: 100%; 
+      height: 80vh; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      overflow: hidden;
     }
-    .polaroid {
-      position: absolute; background: white; padding: 10px 10px 30px 10px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2); transform-origin: center;
-      width: 140px; cursor: grab; border-radius: 2px; transition: transform 0.2s;
+    .book-scene {
+        width: 300px;
+        height: 420px;
+        perspective: 1500px;
     }
-    .polaroid img { width: 100%; height: auto; display: block; pointer-events: none; }
-    .polaroid.dragging { cursor: grabbing; z-index: 1000 !important; transition: none; }
+    .book {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        transform-style: preserve-3d;
+    }
+    .page {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform-origin: left center;
+        transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+        transform-style: preserve-3d;
+        cursor: pointer;
+        border-radius: 5px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        background: #fff; /* Paper color */
+    }
+    .page-face {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 15px;
+        box-sizing: border-box;
+        background-image: linear-gradient(to right, #e3e3e3 0%, #fff 5%, #fff 100%); /* spine shadow */
+        border: 1px solid #ddd;
+    }
+    .page-back {
+        transform: rotateY(180deg);
+        background-image: linear-gradient(to left, #e3e3e3 0%, #fff 5%, #fff 100%);
+    }
+    .page.flipped {
+        transform: rotateY(-180deg);
+    }
+    /* Polaroid style internal photo */
+    .photo-frame {
+        background: white;
+        padding: 10px 10px 40px 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        transform: rotate(-2deg);
+        width: 90%;
+        transition: transform 0.3s;
+    }
+    .photo-frame img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border: 1px solid #eee;
+    }
+    .page-number {
+        position: absolute;
+        bottom: 10px;
+        font-size: 0.8rem;
+        color: #888;
+    }
 
     /* =========================================
        7. FULL SCREEN GAME OVERLAYS
@@ -818,9 +882,15 @@
   </div>
 
   <div id="tab-gallery" class="tab-section" style="padding:0;">
-    <h1 style="position:absolute; width:100%; top:10px; pointer-events:none; z-index:10;">Photo Gallery 📸</h1>
-    <p style="text-align:center; font-size:0.8rem;">Drag photos around!</p>
-    <div id="gallery-container">
+      <h1 style="position:absolute; width:100%; top:10px; pointer-events:none; z-index:10;">Our Memories 📸</h1>
+      <p style="text-align:center; font-size:0.8rem;">Tap to turn pages!</p>
+      <!-- NEW NOTEBOOK GALLERY CONTAINER -->
+      <div id="gallery-container">
+          <div class="book-scene">
+              <div class="book" id="book">
+                  <!-- Pages will be injected here by JS -->
+              </div>
+          </div>
       </div>
   </div>
 
@@ -1215,6 +1285,7 @@
         document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         window.scrollTo(0,0);
+        // Init gallery only if needed
         if(tabId === 'tab-gallery') initGallery();
     }
     window.switchTab = switchTab; // Make global
@@ -1245,7 +1316,7 @@
 
     const periodToggle = document.getElementById('periodModeToggle');
     periodToggle.addEventListener('change', (e) => {
-        const themeToggle = document.getElementById('themeToggle'); // Get it inside the listener
+        const themeToggle = document.getElementById('themeToggle'); 
         if(e.target.checked) document.body.setAttribute('data-theme', 'comfort');
         else {
              if(themeToggle.checked) document.body.setAttribute('data-theme', 'dark');
@@ -1279,7 +1350,7 @@
     }
     setInterval(createFloatingHeart, 800);
 
-    /* --- Mini Games Logic (Truncated for brevity, assuming original functions are preserved) --- */
+    /* --- Mini Games Logic --- */
     function shredWorry(btn) {
        const input = document.getElementById('worryInput');
        const container = document.getElementById('shredderContainer');
@@ -1307,7 +1378,188 @@
     const startHeat = (e) => { e.preventDefault(); heatBtn.classList.add('active'); if(navigator.vibrate) vibrateInterval = setInterval(() => navigator.vibrate(200), 250); };
     const stopHeat = () => { heatBtn.classList.remove('active'); if(vibrateInterval) clearInterval(vibrateInterval); if(navigator.vibrate) navigator.vibrate(0); };
     heatBtn.addEventListener('mousedown', startHeat); heatBtn.addEventListener('touchstart', startHeat); heatBtn.addEventListener('mouseup', stopHeat); heatBtn.addEventListener('touchend', stopHeat);
+    
+    /* -----------------------------------------
+       NEW GALLERY LOGIC: NOTEBOOK / FLIPBOOK
+       ----------------------------------------- */
+    const imageFiles = ['your-anniversary-image.jpg', 'meeting.jpg', 'kitten-birthday.jpg', 'daddy-birthday.jpg', 'exam-end.jpg', 'images/image.jpg'];
+    for(let i=1; i<=10; i++) imageFiles.push(`images/image${i}.jpg`);
+    
+    let galleryInit = false;
+    
+    function initGallery() {
+        if(galleryInit) return;
+        galleryInit = true;
+        
+        const book = document.getElementById('book');
+        if(!book) return;
+
+        // Cover Page
+        const coverPage = document.createElement('div');
+        coverPage.className = 'page';
+        coverPage.style.zIndex = imageFiles.length + 2;
+        
+        const coverFront = document.createElement('div');
+        coverFront.className = 'page-face';
+        coverFront.innerHTML = `<h2 style="color:#ff5e89; font-size:2rem;">Our Memories</h2><div style="font-size:3rem;">📔</div><p style="margin-top:20px; color:#888;">Tap to open</p>`;
+        
+        const coverBack = document.createElement('div');
+        coverBack.className = 'page-face page-back';
+        coverBack.innerHTML = `<p>Enjoy the trip down memory lane... ❤️</p>`; // Left side of open book
+        
+        coverPage.appendChild(coverFront);
+        coverPage.appendChild(coverBack);
+        
+        // Click logic for cover
+        coverPage.onclick = function() {
+            if(this.classList.contains('flipped')) {
+                this.classList.remove('flipped');
+                this.style.zIndex = imageFiles.length + 2;
+            } else {
+                this.classList.add('flipped');
+                this.style.zIndex = 1; // Move to bottom of left stack
+            }
+        };
+        book.appendChild(coverPage);
+
+        // Create Pages for Images
+        // We will put one image per page (on the front face). 
+        // When you flip page 1, you see its back (blank or pattern) on left, and Page 2 front on right.
+        imageFiles.forEach((src, index) => {
+            const page = document.createElement('div');
+            page.className = 'page';
+            // Stack order: higher index = lower in stack? No, first page is on top.
+            // We need z-index to be high for early pages.
+            let zIndexVal = imageFiles.length - index + 1; 
+            page.style.zIndex = zIndexVal;
+            
+            // Front Face (Photo)
+            const front = document.createElement('div');
+            front.className = 'page-face';
+            front.innerHTML = `
+                <div class="photo-frame">
+                    <img src="${src}" loading="lazy" alt="Memory ${index+1}">
+                </div>
+                <div class="page-number">Page ${index+1}</div>
+            `;
+            
+            // Back Face (Simple pattern or quote)
+            const back = document.createElement('div');
+            back.className = 'page-face page-back';
+            back.style.background = '#fdfdfd';
+            back.innerHTML = `<div style="font-size:2rem; opacity:0.1;">💖</div>`;
+
+            page.appendChild(front);
+            page.appendChild(back);
+            
+            // Flip Logic
+            page.onclick = function() {
+                if (this.classList.contains('flipped')) {
+                    // FLIP BACK (Left to Right)
+                    this.classList.remove('flipped');
+                    // Restore Z-Index so it sits on top of the right stack
+                    // We need a slight delay or just set it immediately? 
+                    // If we set it immediately, it might clip through pages underneath during anim.
+                    // Usually better to set z-index after transition for correct stacking.
+                    // But for simplicity:
+                    setTimeout(() => { this.style.zIndex = zIndexVal; }, 400); 
+                } else {
+                    // FLIP FORWARD (Right to Left)
+                    this.classList.add('flipped');
+                    // It goes to the top of the LEFT stack.
+                    // Z-index behavior: The "latest" flipped page should be on top of left stack.
+                    // Since this page has higher natural zIndexVal than the next page, 
+                    // when it flips, it naturally covers the previous flipped pages if we don't change z-index? 
+                    // Actually, standard HTML stacking: later elements in DOM are on top.
+                    // Here, earlier elements are on top of right stack (via custom z-index).
+                    // We need to manage this carefully.
+                    // Simple hack: When flipped, give it a high z-index based on order?
+                    this.style.zIndex = 100 + index; 
+                }
+            };
+            
+            book.appendChild(page);
+        });
+    }
+    
     /* ... other game functions ... */
+    /* Truncated for brevity, but preserved in functionality */
+    const popContainer = document.getElementById('popItContainer');
+    const popColors = ['#ff7da5', '#ffca85', '#fbfb96', '#baffc9', '#bae1ff'];
+    for(let i=0; i<12; i++) {
+        const b = document.createElement('button');
+        b.className = 'pop-bubble';
+        b.style.background = popColors[i%5];
+        b.onclick = () => { b.classList.toggle('popped'); if(navigator.vibrate) navigator.vibrate(5); };
+        popContainer.appendChild(b);
+    }
+    const lp = document.getElementById('launchpad');
+    for(let i=0; i<12; i++) {
+        const d = document.createElement('div');
+        d.className = 'pad-btn';
+        d.onmouseover = d.ontouchstart = () => { d.classList.add('lit'); setTimeout(()=>d.classList.remove('lit'), 200); };
+        lp.appendChild(d);
+    }
+    function pokeSlime(el) {
+        el.style.transform = `scale(0.9) rotate(${Math.random()*20-10}deg)`;
+        setTimeout(() => el.style.transform = 'scale(1)', 200);
+    }
+    let renderLoop;
+    function openGame(id) {
+        document.getElementById('game-'+id).classList.add('active');
+        if(id === 'constellation') initConstellation();
+        if(id === 'bloom') initBloom();
+        if(id === 'rain') initRain();
+    }
+    window.closeGame = function() {
+        document.querySelectorAll('.game-overlay').forEach(el => el.classList.remove('active'));
+        if(renderLoop) cancelAnimationFrame(renderLoop);
+    }
+    window.openGame = openGame; 
+    function initConstellation() {
+        const c = document.getElementById('constellationCanvas');
+        c.width = window.innerWidth; c.height = window.innerHeight;
+        const ctx = c.getContext('2d');
+        let stars = [];
+        c.onclick = (e) => {
+            const rect = c.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            ctx.fillStyle = "white"; ctx.shadowBlur = 10; ctx.shadowColor = "white";
+            ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI*2); ctx.fill();
+            if(stars.length > 0) {
+                const prev = stars[stars.length-1];
+                ctx.strokeStyle = "rgba(255,255,255,0.4)"; ctx.lineWidth = 1;
+                ctx.beginPath(); ctx.moveTo(prev.x, prev.y); ctx.lineTo(x, y); ctx.stroke();
+            }
+            stars.push({x, y});
+        }
+    }
+    function initBloom() {
+        const c = document.getElementById('bloomCanvas');
+        c.width = window.innerWidth; c.height = window.innerHeight;
+        const ctx = c.getContext('2d');
+        const flowers = [];
+        function drawFlower(x, y, size, hue, alpha) {
+            ctx.save(); ctx.translate(x, y); ctx.fillStyle = `hsla(${hue}, 70%, 70%, ${alpha})`;
+            ctx.shadowBlur = 15; ctx.shadowColor = `hsla(${hue}, 70%, 50%, 0.5)`;
+            for(let i=0; i<6; i++) { ctx.beginPath(); ctx.rotate(Math.PI / 3); ctx.ellipse(0, -size/2, size/4, size/2, 0, 0, Math.PI*2); ctx.fill(); }
+            ctx.beginPath(); ctx.arc(0, 0, size/4, 0, Math.PI*2); ctx.fillStyle = "#fff"; ctx.fill(); ctx.restore();
+        }
+        c.onclick = (e) => {
+            const rect = c.getBoundingClientRect();
+            flowers.push({x: e.clientX - rect.left, y: e.clientY - rect.top, size: 0, targetSize: 30 + Math.random() * 40, hue: Math.random() * 360, growing: true});
+        };
+        function loop() {
+            ctx.clearRect(0,0,c.width,c.height);
+            flowers.forEach(f => {
+                if(f.growing) { f.size += 2; if(f.size >= f.targetSize) f.growing = false; }
+                drawFlower(f.x, f.y, f.size, f.hue, 0.8);
+            });
+            renderLoop = requestAnimationFrame(loop);
+        }
+        loop();
+    }
 
   </script>
 </body>
