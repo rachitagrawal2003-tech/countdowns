@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>Kitten & Daddy 💖</title>
+  <title>Kitten & Daddy 💖 (Live + AI)</title>
   <!-- PRELOAD FONTS -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
@@ -13,6 +13,7 @@
     :root {
       --bg-gradient: linear-gradient(135deg, #ee9ca7 0%, #ffdde1 100%);
       --text-main: #864e66;
+      --text-sub: #b58399;
       --heading-color: #ff5e89;
       --card-bg: rgba(255, 255, 255, 0.65);
       --card-border: rgba(255, 255, 255, 0.8);
@@ -134,6 +135,7 @@
         overflow:hidden; /* Prevents spill */
     }
     .photo-frame img { max-width:100%; max-height:100%; object-fit:contain; }
+    .page-number { position:absolute; bottom:10px; font-size:0.8rem; color:#888; }
 
     /* Chat */
     #chat-messages { height:250px; overflow-y:auto; background:rgba(255,255,255,0.3); border-radius:10px; padding:10px; margin-bottom:10px; display:flex; flex-direction:column; gap:5px; }
@@ -171,6 +173,19 @@
     .rain-drop { position:absolute; width:2px; height:15px; background:#66a6ff; animation:fall 1s linear infinite; }
     @keyframes fall { to { transform:translateY(100vh); } }
     
+    /* Play Grid */
+    .play-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .play-btn-lg { height: 80px; border-radius: 15px; font-size: 1rem; display: flex; align-items: center; justify-content: center; background: var(--card-bg); border: 2px solid var(--card-border); color: var(--text-main); box-shadow: 0 4px 10px var(--card-shadow); flex-direction: column; gap: 5px; }
+
+    /* Bubble Wrap */
+    .bubble-wrap-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; padding: 10px; background: rgba(255,255,255,0.3); border-radius: 10px; }
+    .pop-btn { width: 45px; height: 45px; border-radius: 50%; border: none; background: radial-gradient(circle at 30% 30%, #89f7fe, #66a6ff); box-shadow: inset -2px -2px 5px rgba(0,0,0,0.2), 2px 2px 5px rgba(0,0,0,0.1); cursor: pointer; }
+    .pop-btn.popped { background: #ccc; transform: scale(0.9); box-shadow: inset 2px 2px 5px rgba(0,0,0,0.2); }
+
+    /* Battery */
+    .battery-container { width: 100%; height: 40px; border: 3px solid var(--text-main); border-radius: 10px; padding: 3px; position: relative; }
+    .battery-fill { height: 100%; width: 0%; background: #48bb78; border-radius: 5px; transition: width 0.1s; }
+
   </style>
 </head>
 <body>
@@ -191,6 +206,7 @@
 
 <!-- Backgrounds -->
 <div id="bokeh-container"></div>
+<canvas id="ribbon-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;"></canvas>
 <div id="rainContainer" class="rain-container"></div>
 
 <!-- TAB 1: HOME -->
@@ -285,6 +301,19 @@
         <h3>Bubble Wrap</h3>
         <div id="bubbleWrap" style="display:grid; grid-template-columns:repeat(5,1fr); gap:5px;"></div>
     </div>
+    
+    <div class="fun-card">
+        <h3>Love Battery 🔋</h3>
+        <div class="battery-container"><div class="battery-fill" id="batteryFill"></div></div>
+        <button id="chargeBtn" style="margin-top:10px;">Hold to Charge ⚡</button>
+    </div>
+
+    <div class="fun-card">
+        <h3>Stress Bubbles 🛁</h3>
+        <p style="font-size:0.8rem;">Pop them before they float away!</p>
+        <div class="bubble-container" id="soapBubbleContainer"></div>
+    </div>
+
 </div>
 
 <!-- TAB 4: COMFORT -->
@@ -340,17 +369,9 @@
 <div id="game-lanterns" class="game-overlay" style="background:linear-gradient(to top, #0f2027, #203a43);"><button class="overlay-close" onclick="closeGame()">×</button><div id="lanternContainer" style="width:100%;height:100%;" onclick="spawnLantern(event)"></div></div>
 <div id="game-rain" class="game-overlay"><button class="overlay-close" onclick="closeGame()">×</button><canvas id="rainCanvas" class="fs-canvas"></canvas></div>
 
-<!-- MODAL -->
-<div class="modal" id="modal">
-    <div class="modal-card">
-        <h3 id="modalTitle"></h3>
-        <p id="modalNote"></p>
-        <div class="bigtime" id="liveTime"></div>
-        <button onclick="document.getElementById('modal').classList.remove('open')">Close</button>
-    </div>
-</div>
+<div class="modal" id="modal"><div class="modal-card"><h3 id="modalTitle"></h3><p id="modalNote"></p><div class="bigtime" id="liveTime"></div><button onclick="document.getElementById('modal').classList.remove('open')">Close</button></div></div>
 
-<!-- SCRIPTS -->
+<!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
@@ -388,7 +409,6 @@ window.openModal = function(title, note, dateStr) {
     document.getElementById('modalTitle').textContent = title;
     document.getElementById('modalNote').textContent = note;
     document.getElementById('modal').classList.add('open');
-    // Simple timer logic for modal
     const target = new Date(dateStr);
     const now = new Date();
     if(target < now) target.setFullYear(now.getFullYear() + 1);
@@ -413,12 +433,14 @@ window.eatChocolate = function() {
 }
 
 window.spawnLantern = function(e) {
-    const el = document.createElement('div');
-    el.className = 'lantern';
-    el.style.left = e.clientX + 'px';
-    el.style.bottom = '0px';
-    document.getElementById('lanternContainer').appendChild(el);
-    setTimeout(()=>el.remove(), 7000);
+    const cont = document.getElementById('lanternContainer');
+    const l = document.createElement('div');
+    l.className = 'lantern';
+    l.style.left = e.clientX + 'px';
+    l.style.bottom = '0px';
+    l.style.animationDuration = (4 + Math.random()*3) + 's';
+    cont.appendChild(l);
+    setTimeout(() => l.remove(), 7000);
 }
 
 let renderLoop;
@@ -428,53 +450,55 @@ window.openGame = function(id) {
     if(id==='bloom') initBloom();
     if(id==='rain') initRainGame();
 }
+
 window.closeGame = function() {
-    document.querySelectorAll('.game-overlay').forEach(e=>e.classList.remove('active'));
+    document.querySelectorAll('.game-overlay').forEach(el => el.classList.remove('active'));
     if(renderLoop) cancelAnimationFrame(renderLoop);
 }
 
 /* --- 4. INITIALIZATION --- */
 window.onload = function() {
-    
-    // Auth Check
-    if(currentUser) {
-        document.getElementById('auth-overlay').style.display = 'none';
-    }
-
     // Init Local Games
     setupBubbleWrap();
-    setupHeatPad();
+    setupHeatPad(); // Setup Listeners immediately
     updateCountdowns();
+    initRibbon();
+    setupLoveCharger(); // Ensure local logic is ready
+    
+    // Init User
+    const authOverlay = document.getElementById('auth-overlay');
+    if(currentUser) {
+        authOverlay.style.display = 'none';
+        document.title = `${currentUser}'s View 💖`;
+    } else {
+        authOverlay.style.display = 'flex';
+    }
 
     // Init Firebase
     if(firebaseConfig.apiKey) {
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
-        const status = document.getElementById('connection-status');
-
+        
         auth.signInAnonymously().then(() => {
-            status.style.background = '#48bb78'; // Green
+            document.getElementById('connection-status').style.background = '#48bb78';
             setupMultiplayer(db);
-        }).catch(e => {
-            console.error(e);
-            status.style.background = 'red';
-        });
+        }).catch(e => console.error("Auth Failed:", e));
     }
     
     // Theme Logic
     const themeToggle = document.getElementById('themeToggle');
-    if(localStorage.getItem('theme')==='dark') {
+    if(localStorage.getItem('theme') === 'dark') {
         themeToggle.checked = true;
         document.body.setAttribute('data-theme', 'dark');
     }
     themeToggle.addEventListener('change', (e) => {
         if(e.target.checked) {
             document.body.setAttribute('data-theme', 'dark');
-            localStorage.setItem('theme','dark');
+            localStorage.setItem('theme', 'dark');
         } else {
             document.body.removeAttribute('data-theme');
-            localStorage.setItem('theme','light');
+            localStorage.setItem('theme', 'light');
         }
     });
     
@@ -491,16 +515,13 @@ function setupMultiplayer(db) {
     db.collection('app').doc('shared').onSnapshot(doc => {
         if(doc.exists) {
             const d = doc.data();
-            // Rain
             if(d.rain !== rainToggle.checked) {
                 rainToggle.checked = d.rain;
                 toggleRain(d.rain);
             }
-            // Vibe
             if(d.lastVibe && d.vibeSender !== currentUser && d.vibeTime > Date.now() - 60000) {
                 document.getElementById('vibeOutput').innerText = `Latest: ${d.vibeAnalysis}`;
             }
-            // Emergency
             if(d.emergency && d.emSender !== currentUser && d.emTime > Date.now() - 10000) {
                 if(sessionStorage.getItem('lastEm') != d.emergency) {
                     sessionStorage.setItem('lastEm', d.emergency);
@@ -510,7 +531,6 @@ function setupMultiplayer(db) {
             }
         }
     });
-
     rainToggle.addEventListener('change', (e) => {
         toggleRain(e.target.checked);
         db.collection('app').doc('shared').set({rain: e.target.checked}, {merge:true});
@@ -594,19 +614,51 @@ function setupHeatPad() {
     const btn = document.getElementById('heatPadBtn');
     let int;
     const start = (e) => { e.preventDefault(); btn.classList.add('active'); if(navigator.vibrate) int = setInterval(()=>navigator.vibrate(200),250); };
-    const stop = () => { btn.classList.remove('active'); clearInterval(int); };
+    const stop = () => { btn.classList.remove('active'); clearInterval(int); if(navigator.vibrate) navigator.vibrate(0); };
     btn.addEventListener('mousedown', start); btn.addEventListener('touchstart', start);
     btn.addEventListener('mouseup', stop); btn.addEventListener('touchend', stop);
 }
 
 function setupBubbleWrap() {
     const c = document.getElementById('bubbleWrap');
-    for(let i=0; i<10; i++) {
+    for(let i=0; i<15; i++) {
         const b = document.createElement('button');
         b.className = 'pop-btn';
         b.onclick = () => { b.classList.add('popped'); if(navigator.vibrate) navigator.vibrate(50); setTimeout(()=>b.classList.remove('popped'),2000); };
         c.appendChild(b);
     }
+}
+
+function initSoapBubbles() {
+    const container = document.getElementById('soapBubbleContainer');
+    setInterval(() => {
+        if(container.children.length > 10) return;
+        const b = document.createElement('div');
+        b.className = 'soap-bubble';
+        const size = 30+Math.random()*40;
+        b.style.width = size+'px'; b.style.height = size+'px';
+        b.style.left = Math.random()*80+'%';
+        b.style.animationDuration = (3+Math.random()*4)+'s';
+        b.onclick = (e) => { e.stopPropagation(); b.remove(); if(navigator.vibrate) navigator.vibrate(10); };
+        container.appendChild(b);
+        setTimeout(() => b.remove(), 7000);
+    }, 800);
+}
+
+function setupLoveCharger() {
+    const btn = document.getElementById('chargeBtn');
+    const fill = document.getElementById('batteryFill');
+    let charge = 0, interval;
+    const start = (e) => {
+        e.preventDefault();
+        interval = setInterval(() => {
+            if(charge < 100) { charge+=2; fill.style.width=charge+'%'; if(navigator.vibrate) navigator.vibrate(20); }
+            else { fill.style.background='#ff6b6b'; btn.innerText="FULL LOVE! ❤️"; }
+        }, 50);
+    };
+    const stop = () => clearInterval(interval);
+    btn.addEventListener('mousedown', start); btn.addEventListener('touchstart', start);
+    btn.addEventListener('mouseup', stop); btn.addEventListener('touchend', stop);
 }
 
 function updateCountdowns() {
@@ -706,6 +758,42 @@ document.getElementById('magicDraftBtn').onclick = async () => {
     const d = await res.json();
     area.value = d.candidates[0].content.parts[0].text;
 };
+
+/* --- CANVAS ANIMATION (RIBBON) --- */
+function initRibbon() {
+    const c = document.getElementById('ribbon-canvas');
+    const ctx = c.getContext('2d');
+    let points = [];
+    
+    function resize() { c.width = window.innerWidth; c.height = window.innerHeight; }
+    window.addEventListener('resize', resize); resize();
+
+    function draw() {
+        ctx.clearRect(0,0,c.width,c.height);
+        if(points.length < 2) return;
+        ctx.beginPath();
+        ctx.moveTo(points[0].x, points[0].y);
+        for(let i=1; i<points.length-1; i++) {
+            const xc = (points[i].x + points[i+1].x)/2;
+            const yc = (points[i].y + points[i+1].y)/2;
+            ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
+        }
+        ctx.strokeStyle = "rgba(255,182,193,0.6)";
+        ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.stroke();
+        points.shift();
+        if(points.length > 0) requestAnimationFrame(draw);
+    }
+
+    const addPoint = (e) => {
+        const x = e.touches?e.touches[0].clientX:e.clientX;
+        const y = e.touches?e.touches[0].clientY:e.clientY;
+        points.push({x,y});
+        if(points.length > 20) points.shift();
+        if(points.length > 1) requestAnimationFrame(draw);
+    };
+    window.addEventListener('mousemove', addPoint);
+    window.addEventListener('touchmove', addPoint);
+}
 </script>
 </body>
 </html>
