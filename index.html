@@ -885,12 +885,13 @@
     /* =========================================
        FIREBASE CONFIGURATION
        ========================================= */
-    // You MUST replace the placeholder strings below with your actual Firebase configuration keys.
     const firebaseConfig = {
-      apiKey: "FIREBASE_API_KEY_PLACEHOLDER", 
-      authDomain: "FIREBASE_AUTH_DOMAIN_PLACEHOLDER",
-      projectId: "FIREBASE_PROJECT_ID_PLACEHOLDER",
-      storageBucket: "FIREBASE_STORAGE_BUCKET_PLACEHOLDER",
+      apiKey: "AIzaSyBI2UJvRrGREZPh_zP85puaXrPc5BJXGXY",
+      authDomain: "kittendaddy-94aaf.firebaseapp.com",
+      projectId: "kittendaddy-94aaf",
+      storageBucket: "kittendaddy-94aaf.firebasestorage.app",
+      messagingSenderId: "890387974672",
+      appId: "1:890387974672:web:e493660d1115ebb5b19895"
     };
     
     // =========================================
@@ -914,6 +915,11 @@
             themeToggle.checked = true;
             document.body.setAttribute('data-theme', 'dark');
         }
+
+        themeToggle.addEventListener('change', (e) => {
+            if(e.target.checked) document.body.setAttribute('data-theme', 'dark');
+            else document.body.removeAttribute('data-theme');
+        });
         
         // Restored Logic: Countdowns & Milestone Days
         function toggleDetail(id, dateStr) {
